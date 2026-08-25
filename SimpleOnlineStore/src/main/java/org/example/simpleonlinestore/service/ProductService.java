@@ -8,6 +8,7 @@ import org.example.simpleonlinestore.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -38,6 +39,28 @@ public class ProductService {
 
     public List<Product> getAllProducts(){
             return productRepository.findAll();
+    }
+
+    public Product updateProduct(Long id,ProductRequestDTO request){
+        Product product=productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
+
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setUrl(request.getUrl());
+        product.setDiscount(request.getDiscount() != null ? request.getDiscount() : 0L);
+        product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
+        return productRepository.save(product);
+
+    }
+    public Optional<Product> getProductById(Long id){
+        Product product=productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
+
+        return productRepository.findById(id);
+    }
+    public void deleteProductById(Long id){
+        Product product=productRepository.findById(id) .orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
+        productRepository.deleteById(id);
     }
 
 }

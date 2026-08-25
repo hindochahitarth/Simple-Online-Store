@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -34,6 +35,21 @@ public class ProductController {
     public ResponseEntity<List<Product>> getAllProducts(){
         List<Product>  products=productService.getAllProducts();
         return ResponseEntity.status(HttpStatus.OK).body(products);
+    }
+
+    @PutMapping("/update-product/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id,@RequestBody ProductRequestDTO request){
+        Product updatedProduct=productService.updateProduct(id,request);
+        return ResponseEntity.ok(updatedProduct);
+    }
+    @GetMapping("/{id}")
+    public Optional<Product> getProductById(@PathVariable Long id){
+        return productService.getProductById(id);
+    }
+    @DeleteMapping("/delete-product/{id}")
+    public ResponseEntity<HttpStatus> deleteProductById(@PathVariable Long id){
+        productService.deleteProductById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
