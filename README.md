@@ -23,14 +23,14 @@ localhost:8080/auth/login  --> POST
 
 Authorized Routes:-
 Admin side:-
-localhost:8080/api/products/create-product --> For creating Product {POST}
-localhost:8080/api/products/update-product --> For updating Product {PUT}
-localhost:8080/api/products/delete-product --> For deleting Product {DELETE}
+- `localhost:8080/api/products/create-product` --> For creating Product {POST}
+- `localhost:8080/api/products/update-product` --> For updating Product {PUT}
+- `localhost:8080/api/products/delete-product` --> For deleting Product {DELETE}
 
 User side:-
-localhost:8080/api/cart/add-to-cart{userId}/items/{productId}/{quantity}  --> For adding product items to cart {POST}
-localhost:8080/api/cart/remove-from-cart{userId}/items/{productId}  --> For removing  product items from  cart {DELETE}
-localhost:8080/api/cart/get-cart/{userId}  --> For fetching cart items stored in cart of user {GET}
+- `localhost:8080/api/cart/add-to-cart{userId}/items/{productId}/{quantity}`  --> For adding product items to cart {POST}
+- `localhost:8080/api/cart/remove-from-cart{userId}/items/{productId}`  --> For removing  product items from  cart {DELETE}
+- `localhost:8080/api/cart/get-cart/{userId}`  --> For fetching cart items stored in cart of user {GET}
 
 
 
