@@ -32,7 +32,7 @@ public class Product {
 
     private String brand;
 
-    private Long discount;
+    private Integer discountPercentage;
 
     @Column(name = "stocks")
     private Long stockCount;

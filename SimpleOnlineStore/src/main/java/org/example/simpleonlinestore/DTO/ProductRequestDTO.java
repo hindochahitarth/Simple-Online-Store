@@ -25,7 +25,7 @@ public class ProductRequestDTO {
     private String brand;
     @Min(value = 0)
     @NotBlank(message = "Discount cannot be empty")
-    private Long discount;
+    private int discountPercentage;
 
     @Min(value = 1)
     private Long stockCount;

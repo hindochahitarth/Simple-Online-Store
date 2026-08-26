@@ -29,7 +29,7 @@ public class ProductService {
         product.setManufacturingDate(request.getManufacturingDate());
         product.setUrl(request.getUrl());
         product.setBrand(request.getBrand());
-        product.setDiscount(request.getDiscount() != null ? request.getDiscount() : 0L);
+        product.setDiscountPercentage(request.getDiscountPercentage());
         product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
         product.setExpiryDate(request.getExpiryDate());
 
@@ -48,7 +48,8 @@ public class ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setUrl(request.getUrl());
-        product.setDiscount(request.getDiscount() != null ? request.getDiscount() : 0L);
+        product.setStockCount(request.getStockCount());
+        product.setDiscountPercentage(request.getDiscountPercentage());
         product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
         return productRepository.save(product);
 
@@ -58,6 +59,7 @@ public class ProductService {
 
         return productRepository.findById(id);
     }
+
     public void deleteProductById(Long id){
         Product product=productRepository.findById(id) .orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
         productRepository.deleteById(id);
