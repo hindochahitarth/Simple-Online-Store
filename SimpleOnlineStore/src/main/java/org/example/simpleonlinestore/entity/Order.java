@@ -3,6 +3,7 @@ package org.example.simpleonlinestore.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.simpleonlinestore.enums.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
