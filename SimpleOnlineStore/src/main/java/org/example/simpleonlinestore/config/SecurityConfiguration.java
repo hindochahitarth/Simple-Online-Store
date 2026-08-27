@@ -38,15 +38,6 @@ public class SecurityConfiguration {
 
                 .requestMatchers("/auth/**").permitAll()// allow anyone to access url with /auth
                 .requestMatchers("/error").permitAll()
-                .requestMatchers("/api/delivery/").hasRole(("DELIVERY_PARTNER"))
-
-
-                .requestMatchers(HttpMethod.POST,"/api/restaurants/add-restaurant").hasRole("RESTAURANT_OWNER")
-                .requestMatchers(HttpMethod.POST, "/api/cuisines/**").hasAnyRole("RESTAURANT_OWNER","ADMIN")
-                //.requestMatchers(HttpMethod.POST, "/api/cuisines/**").hasRole("RESTAURANT_OWNER")
-
-                .requestMatchers(HttpMethod.PUT, "/api/cuisines/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/api/cuisines/**").hasRole("ADMIN")
                 .anyRequest()// for every single url
                 .authenticated());// user must be logged in
         httpSecurity.sessionManagement(session -> session

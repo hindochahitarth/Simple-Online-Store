@@ -29,9 +29,9 @@ public class Order {
     private OrderStatus status;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal totalAmount;
+    private BigDecimal totalAmount;//used bigdecimal because in double precision error is there,rounding errors
 
-    @Column(nullable = false, updatable = false)
+        @Column(nullable = false, updatable = false)
     private LocalDateTime orderDate;
 
     @OneToMany(
