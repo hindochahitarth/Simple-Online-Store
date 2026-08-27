@@ -1,6 +1,5 @@
 package org.example.simpleonlinestore.service;
 
-import org.example.simpleonlinestore.DTO.ProductRequestDTO;
 import org.example.simpleonlinestore.DTO.ProductReviewRequestDTO;
 import org.example.simpleonlinestore.entity.Product;
 import org.example.simpleonlinestore.entity.ProductReview;
@@ -12,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductReviewService {
-    private ProductRepository productRepository;
-    private ProductReviewRepository productReviewRepository;
-    private UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final ProductReviewRepository productReviewRepository;
+    private final UserRepository userRepository;
 
     public ProductReviewService(ProductReviewRepository productReviewRepository,UserRepository userRepository,ProductRepository productRepository){
         this.productReviewRepository=productReviewRepository;

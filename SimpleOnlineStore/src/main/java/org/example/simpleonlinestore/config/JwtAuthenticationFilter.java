@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.simpleonlinestore.exception.JwtTokenMissingException;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -67,17 +68,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // access
             // public pages so it will pass the security check
             //filterChain.doFilter(request, response);
-//            JwtTokenMissingException exception =
-//                    new JwtTokenMissingException(
-//                            "Authorization token not found. Please provide a Bearer token."
-//                    );
-//
-//            handlerExceptionResolver.resolveException(
-//                    request,
-//                    response,
-//                    null,
-//                    exception
-//            );
+            JwtTokenMissingException exception =
+                    new JwtTokenMissingException(
+                            "Authorization token not found. Please provide a Bearer token."
+                    );
+
+            handlerExceptionResolver.resolveException(
+                    request,
+                    response,
+                    null,
+                    exception
+            );
 
 
             return;
@@ -126,12 +127,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.error("JWT Filter interception error occurred: ", e);
 
             handlerExceptionResolver.resolveException(request, response, null, e);
-            return;
         }
 
         catch (JwtException e){
             handlerExceptionResolver.resolveException(request,response,null,e);
-            return;
         }
         //filterChain.doFilter(request, response);
         catch (IllegalArgumentException e) {
@@ -142,7 +141,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     request, response, null, e
             );
 
-            return;
         }
     }
 }
