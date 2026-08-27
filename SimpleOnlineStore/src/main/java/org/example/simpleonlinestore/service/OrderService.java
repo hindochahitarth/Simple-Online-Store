@@ -51,6 +51,7 @@ public class OrderService {
             productRepository.save(product);
 
             OrderItem orderItem=new OrderItem();
+
             orderItem.setOrder(order);
             orderItem.setProduct(product);
             orderItem.setQuantity(cartItem.getQuantity());
@@ -63,11 +64,16 @@ public class OrderService {
                             BigDecimal.valueOf(cartItem.getQuantity())
                     )
             );
+
             orderItemList.add(orderItem);
         }
         order.setItems(orderItemList);
         order.setTotalAmount(totalAmount);
 
+        if(orderItemList.isEmpty()) {
+            throw  new RuntimeException("There are no order Items");
+
+        }
         Order savedOrder=orderRepository.save(order);
 
         cart.getItems().clear();
@@ -76,4 +82,15 @@ public class OrderService {
         return savedOrder;
 
     }
+    public List<Order> getOrderByUser(Long userId){
+        if(!userRepository.existsById(userId)){
+            throw new RuntimeException("User does not exist");
+        }
+        return orderRepository.findByUserId(userId);
+    }
+    public Order getOrderById(Long orderId){
+        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order id "+orderId+"does not exist"));
+
+    }
+
 }

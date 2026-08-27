@@ -1,5 +1,6 @@
 package org.example.simpleonlinestore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,8 @@ import java.util.List;
 @Table(name="users")
 @Getter
 @Setter
+@JsonIgnoreProperties({"authorities", "password", "username", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"})
+
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

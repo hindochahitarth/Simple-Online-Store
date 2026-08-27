@@ -24,7 +24,7 @@ public class CartService {
         this.userRepository=userRepository;
     }
     public Cart getCart(Long userId){
-        return cartRepository.findById(userId).orElseThrow(() -> new RuntimeException("USer does not exist"));
+        return cartRepository.findById(userId).orElseThrow(() ->    new RuntimeException("USer does not exist"));
 
     }
     public Cart addToCart(Long userId,Long productId,Integer quantity){
@@ -38,7 +38,7 @@ public class CartService {
         if(quantity > product.getStockCount()){
             throw new RuntimeException("Insufficient Stock ");
         }
-        product.setStockCount(product.getStockCount() - quantity);
+       // product.setStockCount(product.getStockCount() - quantity);
         log.info("product.getStockCount()"+product.getStockCount());
 
         CartItem cartItem=new CartItem();
@@ -80,7 +80,7 @@ public class CartService {
                 updateItem.setQuantity(newQuantity);
         }
         if (updateItem != null){
-            product.setStockCount(product.getStockCount()-updateItem.getQuantity());
+           // product.setStockCount(product.getStockCount()-updateItem.getQuantity());
             productRepository.save(product);
         }
     return cartRepository.save(cart);
