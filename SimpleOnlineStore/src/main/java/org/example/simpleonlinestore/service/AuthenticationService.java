@@ -1,10 +1,12 @@
 package org.example.simpleonlinestore.service;
 
 
+import jakarta.transaction.Transactional;
 import org.example.simpleonlinestore.DTO.LoginUserDTO;
 import org.example.simpleonlinestore.DTO.UserRequestDTO;
 import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.entity.User;
+import org.example.simpleonlinestore.enums.Roles;
 import org.example.simpleonlinestore.repository.CartRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,17 +32,22 @@ public class  AuthenticationService {
 
     }
 
+    @Transactional
     public User signUp(UserRequestDTO input)  {
         User user = new User();
 
-        user.setName(input.getName());
+        user.setFirstName(input.getFirstName());
+        user.setLastName(input.getLastName());
         user.setEmailId(input.getEmailId());
-        user.setRole(input.getRole());
+        user.setRole(Roles.USER);
         user.setPassword(passwordEncoder.encode(input.getPassword()));
+        
+        user.setActive(true);
 
         User savedUser=userRepository.save(user);
+
         Cart cart=new Cart();
-        cart.setUser(user);
+        cart.setUser(savedUser);
         cartRepository.save(cart);
 
 

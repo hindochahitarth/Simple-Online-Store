@@ -5,14 +5,19 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.simpleonlinestore.enums.Roles;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 public class UserRequestDTO {
-    @NotBlank(message = "Name is required ")
-    private String name;
+    @NotBlank(message = "First name is required")
+    private String firstName;
+
+    @NotBlank(message = "Last name is required")
+    private String lastName;
 
     @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
+    @Email(message = "Email must be valid")
     private  String emailId;
 
     @NotBlank(message = "Password is required")
@@ -25,9 +30,8 @@ public class UserRequestDTO {
 
     * */
     private String password;
-
-    @NotNull(message = "Role is required")
-    private Roles role;
-
-
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^\\+?[1-9]\\d{1,10}$", message = "Phone number must be a valid ")
+    private String phoneNumber;
+    
 }

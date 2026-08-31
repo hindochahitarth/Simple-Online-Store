@@ -30,7 +30,6 @@ public class AuthenticationController {
         User registeredUser = authenticationService.signUp(registerUserDto);
         return ResponseEntity.ok(registeredUser);
     }
-
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> authenticate(@RequestBody LoginUserDTO loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
