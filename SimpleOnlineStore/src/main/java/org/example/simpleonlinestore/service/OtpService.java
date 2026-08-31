@@ -36,6 +36,32 @@ public class OtpService {
         boolean isExisting = userRepo.findByEmailId(email).isPresent();
         return isExisting ? "false" : "true";
     }
+    // OTP expiration time limit
+    private static final Duration OTP_EXPIRATION_LIMIT = Duration.ofMinutes(5);
+
+    public boolean verifyOtp(String email, String userInputOtp) {
+        // Check if an OTP exists for this email
+        if (!otpStore.containsKey(email)) {
+            return false;
+        }
+
+        OtpHolder otpHolder = otpStore.get(email);
+
+        // 2. Check if the OTP has expired
+        if (Duration.between(otpHolder.getTime(), LocalDateTime.now()).compareTo(OTP_EXPIRATION_LIMIT) > 0) {
+            otpStore.remove(email); // Clean up expired OTP
+            return false;
+        }
+
+        // 3. Match the user input with the stored OTP
+        if (otpHolder.getOtp().equals(userInputOtp)) {
+            otpStore.remove(email); // Clear OTP so it cannot be reused 
+            return true;
+        }
+
+        return false;
+    }
+
     private static class OtpHolder {
         private final String otp;
         private final LocalDateTime time;
