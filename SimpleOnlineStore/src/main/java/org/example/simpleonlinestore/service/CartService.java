@@ -11,6 +11,7 @@ import org.example.simpleonlinestore.repository.CartRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.context.SecurityContextHolder;
 @Slf4j
 @Service
 public class CartService {
@@ -18,20 +19,31 @@ public class CartService {
     private ProductRepository productRepository;
     private UserRepository userRepository;
 
-    public CartService(CartRepository cartRepository,ProductRepository productRepository,UserRepository userRepositorya){
+    public CartService(CartRepository cartRepository,ProductRepository productRepository,UserRepository userRepository){
         this.cartRepository=cartRepository;
         this.productRepository=productRepository;
         this.userRepository=userRepository;
     }
-    public Cart getCart(Long userId){
-        return cartRepository.findById(userId).orElseThrow(() ->    new RuntimeException("USer does not exist"));
+    private User getLoggedInUser() {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        return userRepository.findByEmailId(email)
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
+    }
+
+    public Cart getCart(){
+        User user = getLoggedInUser();
+        return cartRepository.findByUserId(user.getId()).orElseThrow(() ->    new RuntimeException("USer does not exist"));
 
     }
     public Cart addToCart(Long userId,Long productId,Integer quantity){
             if(quantity == null || quantity <=0){
                 throw new RuntimeException("Quantity cannot be less than or equal to zero ");
             }
-            Cart  cart=getCart(userId);
+            Cart  cart=getCart();
 
         Product product=productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product does not exist"));
 
@@ -50,7 +62,7 @@ public class CartService {
         return cartRepository.save(cart);
     }
     public Cart removeFromCart(Long userId,Long productId) {
-        Cart cart = getCart(userId);
+        Cart cart = getCart()   ;
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product does not exist"));
 
         CartItem cartItem = cart.getItems().stream()

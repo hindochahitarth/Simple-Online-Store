@@ -15,9 +15,9 @@ public class CartController {
     public CartController(CartService cartService){
         this.cartService=cartService;
     }
-    @GetMapping("/get-cart/{userId}")
-    public ResponseEntity<Cart> getCart(@PathVariable Long userId){
-        return ResponseEntity.ok(cartService.getCart(userId));
+    @GetMapping("/get-cart")
+    public ResponseEntity<Cart> getCart(){
+        return ResponseEntity.ok(cartService.getCart());
     }
 
     @PostMapping("/add-to-cart/{userId}/items/{productId}/{quantity}")
