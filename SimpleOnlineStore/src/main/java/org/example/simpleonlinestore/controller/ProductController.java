@@ -23,14 +23,15 @@ public class ProductController {
         this.productService=productService;
     }
 
-    @PostMapping("/create-product")
+    @PostMapping("/create-product/{categoryId}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequestDTO request){
+    public ResponseEntity<Product> createProduct(@PathVariable Long categoryId,@RequestBody ProductRequestDTO request){
         log.info("Inside Create product controller ");
         Product savedProduct=productService.createProduct(request);
 
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
+    
     @GetMapping("/get-all-products")
     public ResponseEntity<List<Product>> getAllProducts(){
         List<Product>  products=productService.getAllProducts();

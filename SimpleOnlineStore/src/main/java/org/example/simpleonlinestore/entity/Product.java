@@ -30,7 +30,9 @@ public class Product {
     @Column(name = "imageURL")
     private String url;
 
-    private String brand;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id",nullable = false)
+    private Category category;
 
     private Integer discountPercentage;
 

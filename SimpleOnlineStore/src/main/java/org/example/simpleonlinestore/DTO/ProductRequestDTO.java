@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.simpleonlinestore.entity.Category;
 
 import java.time.LocalDate;
 
@@ -22,7 +23,7 @@ public class ProductRequestDTO {
 
     private String url; 
 
-    private String brand;
+    private Long categoryId;
     @Min(value = 0)
     @NotBlank(message = "Discount cannot be empty")
     private int discountPercentage;

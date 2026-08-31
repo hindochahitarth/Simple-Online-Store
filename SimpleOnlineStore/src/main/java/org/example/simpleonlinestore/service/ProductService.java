@@ -3,7 +3,9 @@ package org.example.simpleonlinestore.service;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductRequestDTO;
 import org.example.simpleonlinestore.DTO.ProductResponseDTO;
+import org.example.simpleonlinestore.entity.Category;
 import org.example.simpleonlinestore.entity.Product;
+import org.example.simpleonlinestore.repository.CategoryRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +16,17 @@ import java.util.Optional;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    public ProductService(ProductRepository productRepository,CategoryRepository categoryRepository) {
 
-    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository=categoryRepository;
     }
 
     public Product createProduct(ProductRequestDTO request) {
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found with ID: " + request.getCategoryId()));
+
         log.info("Inside create product service");
         Product product = new Product();
         product.setName(request.getName());
@@ -28,7 +35,7 @@ public class ProductService {
         product.setStockCount(request.getStockCount());
         product.setManufacturingDate(request.getManufacturingDate());
         product.setUrl(request.getUrl());
-        product.setBrand(request.getBrand());
+        product.setCategory(category);
         product.setDiscountPercentage(request.getDiscountPercentage());
         product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
         product.setExpiryDate(request.getExpiryDate());
@@ -38,7 +45,8 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts(){
-            return productRepository.findAll();
+
+        return productRepository.findAll();
     }
 
     public Product updateProduct(Long id,ProductRequestDTO request){
