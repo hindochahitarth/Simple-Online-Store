@@ -1,5 +1,6 @@
 package org.example.simpleonlinestore.service;
 
+import jakarta.transaction.Transactional;
 import org.example.simpleonlinestore.entity.*;
 import org.example.simpleonlinestore.enums.OrderStatus;
 import org.example.simpleonlinestore.repository.CartRepository;
@@ -26,6 +27,7 @@ public class OrderService {
         this.userRepository=userRepository;
     }
 
+    @Transactional
     public Order placeOrder(Long userId){
         User user=userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User with id "+userId+" not found "));
 
@@ -40,7 +42,7 @@ public class OrderService {
 
         List<OrderItem> orderItemList=new ArrayList<>();
         BigDecimal totalAmount=BigDecimal.ZERO;
-
+        //checking stocks
         for(CartItem cartItem:cart.getItems()){
             Product product=cartItem.getProduct();
 

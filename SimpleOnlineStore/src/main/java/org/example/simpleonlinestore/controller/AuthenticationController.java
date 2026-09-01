@@ -7,11 +7,11 @@ import org.example.simpleonlinestore.DTO.UserRequestDTO;
 import org.example.simpleonlinestore.config.JwtService;
 import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.service.AuthenticationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RequestMapping("/auth")
 @RestController
@@ -26,9 +26,24 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody @Valid UserRequestDTO registerUserDto) {
-        User registeredUser = authenticationService.signUp(registerUserDto);
-        return ResponseEntity.ok(registeredUser);
+    public ResponseEntity<Map<String,String>> register(@RequestBody @Valid UserRequestDTO registerUserDto) {
+        authenticationService.signUp(registerUserDto);
+        return ResponseEntity.ok(
+                Map.of(
+                        "status","Success",
+                        "message","OTP send to your email"
+                )
+        );
+    }
+    @PostMapping("/verify")
+    public ResponseEntity<Map<String, String>> verifyOtp(@RequestParam String email, @RequestParam String otp) {
+        authenticationService.verifyOtp(email, otp);
+        return ResponseEntity.ok(
+                Map.of(
+                        "status","Success",
+                        "message","Email verified successfully"
+                )
+        );
     }
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> authenticate(@RequestBody LoginUserDTO loginUserDto) {

@@ -59,6 +59,10 @@ public class User implements UserDetails {
     @JsonManagedReference // Prevents infinite recursion during JSON serialization
     private List<Address> addresses = new ArrayList<>();
 
+    @Column(nullable = false)
+    private boolean verified=false;
+
+
     public void addAddress(Address address) {
         addresses.add(address);
         address.setUser(this);

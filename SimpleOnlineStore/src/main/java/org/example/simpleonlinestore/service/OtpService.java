@@ -39,7 +39,7 @@ public class OtpService {
         return isExisting ? "false" : "true";
     }
     // OTP expiration time limit
-    private static final Duration OTP_EXPIRATION_LIMIT = Duration.ofMinutes(5);
+    private static final Duration otp_limit = Duration.ofMinutes(5);
 
     public boolean verifyOtp(String email, String userInputOtp) {
         // Check if an OTP exists for this email in otpStore map
@@ -51,7 +51,7 @@ public class OtpService {
 
         // 2. Check if the OTP has expired
         //Calculates elapsed time and checks if it exceeds our 5-minute constant limit.
-        if (Duration.between(otpHolder.getTime(), LocalDateTime.now()).compareTo(OTP_EXPIRATION_LIMIT) > 0) {
+        if (Duration.between(otpHolder.getTime(), LocalDateTime.now()).compareTo(otp_limit) > 0) {
             otpStore.remove(email); // Clean up expired OTP
             return false;
         }
