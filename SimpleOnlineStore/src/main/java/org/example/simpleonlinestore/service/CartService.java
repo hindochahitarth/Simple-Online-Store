@@ -39,7 +39,7 @@ public class CartService {
         return cartRepository.findByUserId(user.getId()).orElseThrow(() ->    new RuntimeException("USer does not exist"));
 
     }
-    public Cart addToCart(Long userId,Long productId,Integer quantity){
+    public Cart addToCart(Long productId,Integer quantity){
             if(quantity == null || quantity <=0){
                 throw new RuntimeException("Quantity cannot be less than or equal to zero ");
             }
@@ -61,7 +61,7 @@ public class CartService {
         cart.getItems().add(cartItem);
         return cartRepository.save(cart);
     }
-    public Cart removeFromCart(Long userId,Long productId) {
+    public Cart removeFromCart(Long productId) {
         Cart cart = getCart()   ;
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product does not exist"));
 
@@ -78,8 +78,8 @@ public class CartService {
 
     return cartRepository.save(cart);
     }
-    public Cart updateCartItem(Long userId,Long productId,int newQuantity){
-        Cart cart=cartRepository.findById(userId).orElseThrow(()->new RuntimeException(""));
+    public Cart updateCartItem(Long productId,int newQuantity){
+        Cart cart=getCart();
         Product product = productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product does not exist"));
 
         CartItem updateItem=cart.getItems().stream()

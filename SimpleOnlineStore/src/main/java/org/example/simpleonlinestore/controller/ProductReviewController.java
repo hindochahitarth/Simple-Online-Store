@@ -23,13 +23,12 @@ public class ProductReviewController {
     }
 
 
-    @PostMapping("/{productId}/add-review/{userId}")
+    @PostMapping("/{productId}/add-review")
     public ResponseEntity<ProductReview> createProductReview(
-            @PathVariable("userId") Long userId,
             @PathVariable("productId") Long productId,
             @RequestBody ProductReviewRequestDTO request) {
 
-        ProductReview review = productReviewService.addProductReview(userId, productId, request);
+        ProductReview review = productReviewService.addProductReview( productId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(review);
     }
 

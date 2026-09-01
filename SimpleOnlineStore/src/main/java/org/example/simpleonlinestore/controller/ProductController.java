@@ -71,8 +71,4 @@ public class ProductController {
         Product updatedProduct = productService.updateDiscountPercentage(id, discountPercentage);
         return ResponseEntity.ok(updatedProduct);
     }
-
-
-
-
 }

@@ -20,24 +20,24 @@ public class CartController {
         return ResponseEntity.ok(cartService.getCart());
     }
 
-    @PostMapping("/add-to-cart/{userId}/items/{productId}/{quantity}")
-    public ResponseEntity<Cart> addToCart(@PathVariable Long userId,@PathVariable Long productId,@PathVariable Integer quantity){
+    @PostMapping("/add-to-cart/items/{productId}/{quantity}")
+    public ResponseEntity<Cart> addToCart(@PathVariable Long productId,@PathVariable Integer quantity){
         return ResponseEntity.ok(
                 cartService.addToCart(
-                        userId,
+
                         productId,
                         quantity
                 )
         );
     }
-    @PutMapping("/update-cart-item/{userId}/items/{productId}")
-    public ResponseEntity<Cart> updateCartItem(@PathVariable Long userId,@PathVariable Long productId, @RequestParam int quantity){
-        Cart updatedCart=cartService.updateCartItem(userId,productId,quantity);
+    @PutMapping("/update-cart-item/items/{productId}")
+    public ResponseEntity<Cart> updateCartItem(@PathVariable Long productId, @RequestParam int quantity){
+        Cart updatedCart=cartService.updateCartItem(productId,quantity);
         return ResponseEntity.ok(updatedCart);
     }
-    @DeleteMapping("/remove-from-cart/{userId}/items/{productId}")
-    public ResponseEntity<Cart> removeFromCart(@PathVariable Long userId,@PathVariable Long productId){
-        Cart updatedCart=cartService.removeFromCart(userId,productId);
+    @DeleteMapping("/remove-from-cart/items/{productId}")
+    public ResponseEntity<Cart> removeFromCart(@PathVariable Long productId){
+        Cart updatedCart=cartService.removeFromCart(productId);
         return ResponseEntity.ok(updatedCart);
     }
 

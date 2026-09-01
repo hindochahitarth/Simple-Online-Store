@@ -7,6 +7,7 @@ import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.ProductReviewRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,14 +21,21 @@ public class ProductReviewService {
         this.userRepository=userRepository;
         this.productRepository=productRepository;
     }
+    private User getLoggedInUser() {
 
-    public ProductReview addProductReview(Long userId, Long productId, ProductReviewRequestDTO request){
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        return userRepository.findByEmailId(email)
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
+    }
+    public ProductReview addProductReview(Long productId, ProductReviewRequestDTO request){
         if(request.getRating()<1 || request.getRating()>5){
             throw new RuntimeException("Rating must be Between 1 - 5");
         }
         Product product=productRepository.findById(productId).orElseThrow(() ->new RuntimeException("Product with id "+productId+" does not exist"));
-        User user=userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with id "+userId+"does not exist"));
-
+        User user=getLoggedInUser();
 
         ProductReview productReview=new ProductReview();
 

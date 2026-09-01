@@ -24,14 +24,14 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/place-order/{userId}")
-    public ResponseEntity<Order> placeOrder(@PathVariable Long userId) {
-        Order order = orderService.placeOrder(userId);
+    @PostMapping("/place-order")
+    public ResponseEntity<Order> placeOrder() {
+        Order order = orderService.placeOrder();
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
-    @GetMapping("/get-orders/{userId}")
-    public ResponseEntity <List<Order>> getOrder(@PathVariable Long userId){
-        return ResponseEntity.ok(orderService.getOrderByUser(userId));
+    @GetMapping("/get-orders")
+    public ResponseEntity <List<Order>> getOrder(){
+        return ResponseEntity.ok(orderService.getOrderByUser());
     }
     
 }

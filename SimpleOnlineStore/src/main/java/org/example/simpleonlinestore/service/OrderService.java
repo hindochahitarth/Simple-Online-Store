@@ -7,6 +7,7 @@ import org.example.simpleonlinestore.repository.CartRepository;
 import org.example.simpleonlinestore.repository.OrderRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,14 +27,23 @@ public class OrderService {
         this.cartRepository=cartRepository;
         this.userRepository=userRepository;
     }
+    private User getLoggedInUser() {
 
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        return userRepository.findByEmailId(email)
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
+    }
     @Transactional
-    public Order placeOrder(Long userId){
-        User user=userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User with id "+userId+" not found "));
+    public Order placeOrder(){
 
-        Cart cart=cartRepository.findByUserId(userId).orElseThrow(()->new RuntimeException("Cart not found"));
+        User user=getLoggedInUser();
 
-        if(cart.getItems()==null){
+        Cart cart=cartRepository.findByUserId(user.getId()).orElseThrow(()->new RuntimeException("Cart not found"));
+
+        if(cart.getItems()==null || cart.getItems().isEmpty()){
             throw new RuntimeException("Cart is empty ");
         }
         Order order=new Order();
@@ -89,11 +99,12 @@ public class OrderService {
         return savedOrder;
 
     }
-    public List<Order> getOrderByUser(Long userId){
-        if(!userRepository.existsById(userId)){
+    public List<Order> getOrderByUser(){
+        User user=getLoggedInUser();
+        if(!userRepository.existsById(user.getId())){
             throw new RuntimeException("User does not exist");
         }
-        return orderRepository.findByUserId(userId);
+        return orderRepository.findByUserId(user.getId());
     }
     public Order getOrderById(Long orderId){
         return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order id "+orderId+"does not exist"));
