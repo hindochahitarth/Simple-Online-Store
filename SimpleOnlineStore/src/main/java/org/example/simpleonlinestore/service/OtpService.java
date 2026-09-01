@@ -19,15 +19,16 @@ public class OtpService {
     private final Map<String, OtpHolder> otpStore = new HashMap<>();
 
 
-    private EmailService emailService;
-    private UserRepository userRepo;
+    private final EmailService emailService;
+    private final UserRepository userRepo;
     public OtpService(EmailService emailService,UserRepository userRepo){
         this.emailService=emailService;
         this.userRepo=userRepo;
     }
 
     public String sendOtp(String email) {
-        //generates a random 6 digit number between 100000 and 999999
+        // generates a random 6 digit number between 100000 and 999999
+        // chooses 0-899999 then add 100000 so it is always of 6 digits
         String otp = String.valueOf(new Random().nextInt(900000) + 100000);
         //stores otp and current time stamp
         OtpHolder otpHolder = new OtpHolder(otp, LocalDateTime.now());
@@ -35,11 +36,11 @@ public class OtpService {
         //email service to deliver otp to email
         emailService.sendOtp(email, otp);
         //check if user exists
-        boolean isExisting = userRepo.findByEmailId(email).isPresent();
-        return isExisting ? "false" : "true";
+        return !userRepo.findByEmailId(email).isPresent() ? "true" : "false";
+
     }
     // OTP expiration time limit
-    private static final Duration otp_limit = Duration.ofMinutes(5);
+    private static final Duration otp_limit = Duration.ofMinutes(2);
 
     public boolean verifyOtp(String email, String userInputOtp) {
         // Check if an OTP exists for this email in otpStore map
@@ -50,8 +51,11 @@ public class OtpService {
         OtpHolder otpHolder = otpStore.get(email);
 
         // 2. Check if the OTP has expired
-        //Calculates elapsed time and checks if it exceeds our 5-minute constant limit.
+        //Calculates  time .
         if (Duration.between(otpHolder.getTime(), LocalDateTime.now()).compareTo(otp_limit) > 0) {
+        //returns positive value if elapsed time is greater than limit(expired)
+            //returns 0 if they are equal
+            //< 0 if otp is valid 
             otpStore.remove(email); // Clean up expired OTP
             return false;
         }

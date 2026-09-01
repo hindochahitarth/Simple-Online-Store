@@ -1,6 +1,7 @@
 package org.example.simpleonlinestore.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,7 +25,8 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JsonIgnoreProperties({"orders", "addresses", "cart", "password", "authorities"})
+
     private User user;
 
     @Enumerated(EnumType.STRING)
@@ -42,11 +44,19 @@ public class Order {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    @JsonManagedReference
+    @JsonIgnoreProperties("order")
+
     private List<OrderItem> items = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
         orderDate = LocalDateTime.now();
     }
+
+    @Column(name = "razorpay_order_id")
+    private String razorpayOrderId;
+
+    @Column(name = "razorpay_payment_id")
+    private String razorpayPaymentId;
+
 }

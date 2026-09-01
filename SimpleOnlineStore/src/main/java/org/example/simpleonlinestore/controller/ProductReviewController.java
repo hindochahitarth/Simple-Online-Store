@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/product-review")
 public class ProductReviewController {
 
-    private ProductReviewService productReviewService;
+    private final ProductReviewService productReviewService;
 
     public ProductReviewController(ProductReviewService productReviewService){
         this.productReviewService=productReviewService; 

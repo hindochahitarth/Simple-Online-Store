@@ -1,5 +1,7 @@
 package org.example.simpleonlinestore.service;
 
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 import jakarta.transaction.Transactional;
 import org.example.simpleonlinestore.entity.*;
 import org.example.simpleonlinestore.enums.OrderStatus;
@@ -7,12 +9,14 @@ import org.example.simpleonlinestore.repository.CartRepository;
 import org.example.simpleonlinestore.repository.OrderRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.json.JSONObject;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderService {
@@ -20,12 +24,13 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
-
-    public OrderService(OrderRepository orderRepository,UserRepository userRepository,ProductRepository productRepository,CartRepository cartRepository){
+    private final RazorpayService razorpayService;
+    public OrderService(OrderRepository orderRepository,UserRepository userRepository,ProductRepository productRepository,CartRepository cartRepository,RazorpayService razorpayService){
         this.orderRepository=orderRepository;
         this.productRepository=productRepository;
         this.cartRepository=cartRepository;
         this.userRepository=userRepository;
+        this.razorpayService=razorpayService;
     }
     private User getLoggedInUser() {
 
@@ -48,7 +53,7 @@ public class OrderService {
         }
         Order order=new Order();
         order.setUser(user);
-        order.setStatus(OrderStatus.PLACED);
+        order.setStatus(OrderStatus.PAYMENT_PENDING);
 
         List<OrderItem> orderItemList=new ArrayList<>();
         BigDecimal totalAmount=BigDecimal.ZERO;
@@ -86,6 +91,16 @@ public class OrderService {
         }
         order.setItems(orderItemList);
         order.setTotalAmount(totalAmount);
+        try {
+            String receiptId = "txn_" + System.currentTimeMillis();
+            // Convert BigDecimal to Double securely for your method signature
+            Double doubleAmount = totalAmount.doubleValue();
+
+            JSONObject razorpayOrderJson = razorpayService.createOrder(doubleAmount, receiptId);
+            order.setRazorpayOrderId(razorpayOrderJson.getString("id"));
+        } catch (RazorpayException e) {
+            throw new RuntimeException("Failed to generate gateway token: " + e.getMessage());
+        }
 
         if(orderItemList.isEmpty()) {
             throw  new RuntimeException("There are no order Items");
@@ -99,6 +114,34 @@ public class OrderService {
         return savedOrder;
 
     }
+    @Transactional
+    public Order verifyPaymentSignature(Map<String, String> payload) {
+        Long orderId = Long.parseLong(payload.get("orderId"));
+        String razorpayOrderId = payload.get("razorpayOrderId");
+        String razorpayPaymentId = payload.get("razorpayPaymentId");
+        String razorpaySignature = payload.get("razorpaySignature");
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order record not found"));
+
+        boolean isValid = razorpayService.verifySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature);
+
+        if (isValid) {
+            order.setStatus(OrderStatus.PLACED);
+            order.setRazorpayPaymentId(razorpayPaymentId);
+            return orderRepository.save(order);
+        } else {
+            order.setStatus(OrderStatus.PAYMENT_FAILED);
+            // Restock items back into product listings
+            for (OrderItem item : order.getItems()) {
+                Product product = item.getProduct();
+                product.setStockCount(product.getStockCount() + item.getQuantity());
+                productRepository.save(product);
+            }
+            return orderRepository.save(order);
+        }
+    }
+
     public List<Order> getOrderByUser(){
         User user=getLoggedInUser();
         if(!userRepository.existsById(user.getId())){

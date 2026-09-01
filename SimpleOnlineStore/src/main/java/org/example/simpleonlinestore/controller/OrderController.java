@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -29,6 +30,12 @@ public class OrderController {
         Order order = orderService.placeOrder();
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
+    @PostMapping("/verify-payment")
+    public ResponseEntity<Order> verifyPayment(@RequestBody Map<String, String> payload) {
+        Order completedOrder = orderService.verifyPaymentSignature(payload);
+        return ResponseEntity.ok(completedOrder);
+    }
+
     @GetMapping("/get-orders")
     public ResponseEntity <List<Order>> getOrder(){
         return ResponseEntity.ok(orderService.getOrderByUser());
