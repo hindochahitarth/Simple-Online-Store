@@ -63,6 +63,15 @@ public class ProductController {
         Product updatedProduct = productService.addStock(id, quantity);
         return ResponseEntity.ok(updatedProduct);
     }
+    @PatchMapping("/{id}/discount")
+    public ResponseEntity<Product> updateDiscountPercentage(
+            @PathVariable Long id,
+            @RequestParam Integer discountPercentage) {
+
+        Product updatedProduct = productService.updateDiscountPercentage(id, discountPercentage);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
 
 
 

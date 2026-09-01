@@ -82,6 +82,18 @@ public class ProductService {
         product.setStockCount(product.getStockCount() + quantityToAdd);
         return productRepository.save(product);
     }
+    public Product updateDiscountPercentage(Long id, Integer discountPercentage) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
+
+        if (discountPercentage!=null && (discountPercentage<0 || discountPercentage>100)) {
+            throw new RuntimeException("Discount percentage must be between 0 and 100");
+        }
+
+        product.setDiscountPercentage(discountPercentage);
+        return productRepository.save(product);
+    }
+
 
 
 
