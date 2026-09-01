@@ -21,21 +21,26 @@ public class RazorpayService {
     private RazorpayClient client;
 
     @PostConstruct
+    // Initialize the Razorpay client after the service
+    // waits until key and secret key are fully injected
     public void init() throws RazorpayException {
         client = new RazorpayClient(keyId, keySecret);
     }
-
+    //create a new order
     public JSONObject createOrder(Double amount, String receipt) throws RazorpayException {
-        long amountInPaise = Math.round(amount * 100);
+      //  Razorpay  only reads the lowest currency unit.
 
+        long amountInPaise = Math.round(amount * 100);
+        // Razorpay requires specific data fields (amount, currency, tracking receipt) to initialize an order.
         JSONObject orderRequest = new JSONObject();
         orderRequest.put("amount", amountInPaise);
         orderRequest.put("currency", "INR");
         orderRequest.put("receipt", receipt);
 
         // Create Razorpay order
+        //makes network call
         Order order = client.orders.create(orderRequest);
-
+        // JSONObject HERE: The Razorpay SDK function (client.orders.create) is strictly designed
         JSONObject orderJson = new JSONObject();
         orderJson.put("id", order.get("id").toString());
         orderJson.put("amount", amountInPaise);
@@ -43,6 +48,7 @@ public class RazorpayService {
 
         return orderJson;
     }
+    //  security check
     public boolean verifySignature(String razorpayOrderId, String razorpayPaymentId, String razorpaySignature) {
         try {
             JSONObject options = new JSONObject();

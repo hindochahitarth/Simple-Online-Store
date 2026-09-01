@@ -27,7 +27,8 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
+//The parent entity should be annotated with @JsonManagedReference
+//The child entity should be annotated with @JsonBackReference.
 @Entity
 @Table(name = "users")
 @Getter
