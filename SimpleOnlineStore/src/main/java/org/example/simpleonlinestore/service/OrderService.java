@@ -57,8 +57,13 @@ public class OrderService {
             orderItem.setOrder(order);
             orderItem.setProduct(product);
             orderItem.setQuantity(cartItem.getQuantity());
+            long calculatedPrice = product.getPrice();
+            if (product.getDiscountPercentage() != null && product.getDiscountPercentage() > 0) {
+                long discountAmount = (product.getPrice() * product.getDiscountPercentage()) / 100;
+                calculatedPrice = product.getPrice() - discountAmount;
+            }
 
-            BigDecimal price=BigDecimal.valueOf(product.getPrice());
+            BigDecimal price=BigDecimal.valueOf(calculatedPrice);
             orderItem.setPrice(price);
 
             totalAmount=totalAmount.add(

@@ -75,6 +75,15 @@ public class ProductService {
     public List<Product> getProductByCategory(Long categoryId){
         return productRepository.findByCategoryId(categoryId);
     }
+    public Product addStock(Long id, Long quantityToAdd) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
+
+        product.setStockCount(product.getStockCount() + quantityToAdd);
+        return productRepository.save(product);
+    }
+
+
 
 }
 

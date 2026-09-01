@@ -23,9 +23,9 @@ public class ProductController {
         this.productService=productService;
     }
 
-    @PostMapping("/create-product/{categoryId}")
+    @PostMapping("/create-product")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Product> createProduct(@PathVariable Long categoryId,@RequestBody ProductRequestDTO request){
+    public ResponseEntity<Product> createProduct(@RequestBody ProductRequestDTO request){
         log.info("Inside Create product controller ");
         Product savedProduct=productService.createProduct(request);
 
@@ -57,6 +57,11 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProductByCategory(@PathVariable Long categoryId){
         List<Product> products=productService.getProductByCategory(categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(products);
+    }
+    @PatchMapping("/{id}/stock")
+    public ResponseEntity<Product> updateStock(@PathVariable Long id, @RequestBody Long quantity) {
+        Product updatedProduct = productService.addStock(id, quantity);
+        return ResponseEntity.ok(updatedProduct);
     }
 
 
