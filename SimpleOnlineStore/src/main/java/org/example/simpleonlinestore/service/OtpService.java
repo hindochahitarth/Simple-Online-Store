@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.security.SecureRandom;
 
 @Service
 public class OtpService {
@@ -29,7 +30,9 @@ public class OtpService {
     public String sendOtp(String email) {
         // generates a random 6 digit number between 100000 and 999999
         // chooses 0-899999 then add 100000 so it is always of 6 digits
-        String otp = String.valueOf(new Random().nextInt(900000) + 100000);
+        SecureRandom random = new SecureRandom();
+
+        String otp = String.valueOf(random.nextInt(100000,1000000));
         //stores otp and current time stamp
         OtpHolder otpHolder = new OtpHolder(otp, LocalDateTime.now());
         otpStore.put(email, otpHolder);

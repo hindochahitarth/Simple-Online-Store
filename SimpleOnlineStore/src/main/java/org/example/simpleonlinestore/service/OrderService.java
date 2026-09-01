@@ -102,10 +102,7 @@ public class OrderService {
             throw new RuntimeException("Failed to generate gateway token: " + e.getMessage());
         }
 
-        if(orderItemList.isEmpty()) {
-            throw  new RuntimeException("There are no order Items");
 
-        }
         Order savedOrder=orderRepository.save(order);
 
         cart.getItems().clear();
@@ -144,9 +141,7 @@ public class OrderService {
 
     public List<Order> getOrderByUser(){
         User user=getLoggedInUser();
-        if(!userRepository.existsById(user.getId())){
-            throw new RuntimeException("User does not exist");
-        }
+
         return orderRepository.findByUserId(user.getId());
     }
     public Order getOrderById(Long orderId){

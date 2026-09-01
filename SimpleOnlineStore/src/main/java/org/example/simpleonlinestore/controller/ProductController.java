@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 @Slf4j
 @RestController
 @RequestMapping("/api/products")
@@ -31,13 +33,18 @@ public class ProductController {
 
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
-    
-    @GetMapping("/get-all-products")
-    public ResponseEntity<List<Product>> getAllProducts(){
-        List<Product>  products=productService.getAllProducts();
-        return ResponseEntity.status(HttpStatus.OK).body(products);
-    }
 
+    @GetMapping("/get-all-products")
+    public ResponseEntity<Page<Product>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return ResponseEntity.ok(
+                productService.getAllProducts(pageable)
+        );
+    }
     @PutMapping("/update-product/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id,@RequestBody ProductRequestDTO request){
         Product updatedProduct=productService.updateProduct(id,request);
@@ -70,5 +77,17 @@ public class ProductController {
 
         Product updatedProduct = productService.updateDiscountPercentage(id, discountPercentage);
         return ResponseEntity.ok(updatedProduct);
+    }
+    @GetMapping("/search")
+    public ResponseEntity<Page<Product>> searchProducts(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return ResponseEntity.ok(
+                productService.searchProducts(keyword, pageable)
+        );
     }
 }

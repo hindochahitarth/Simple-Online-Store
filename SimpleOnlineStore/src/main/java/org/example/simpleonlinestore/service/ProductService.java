@@ -8,7 +8,8 @@ import org.example.simpleonlinestore.entity.Product;
 import org.example.simpleonlinestore.repository.CategoryRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,11 +45,9 @@ public class ProductService {
 
     }
 
-    public List<Product> getAllProducts(){
-
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
-
     public Product updateProduct(Long id,ProductRequestDTO request){
         Product product=productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
 
@@ -93,7 +92,9 @@ public class ProductService {
         product.setDiscountPercentage(discountPercentage);
         return productRepository.save(product);
     }
-
+    public Page<Product> searchProducts(String keyword, Pageable pageable) {
+        return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
+    }
 
 
 
