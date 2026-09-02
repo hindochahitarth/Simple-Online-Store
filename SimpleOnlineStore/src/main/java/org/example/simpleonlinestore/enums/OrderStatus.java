@@ -3,7 +3,7 @@ package org.example.simpleonlinestore.enums;
 public enum OrderStatus {
     PENDING,
     CONFIRMED,
-    CANCELLED,
+    CANCELED,
     PLACED,
     PAYMENT_PENDING,
     PAYMENT_FAILED

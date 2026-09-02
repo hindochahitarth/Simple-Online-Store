@@ -140,12 +140,35 @@ public class OrderService {
 
     public List<Order> getOrderByUser(){
         User user=getLoggedInUser();
-
+        
         return orderRepository.findByUserId(user.getId());
     }
     public Order getOrderById(Long orderId){
         return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order id "+orderId+"does not exist"));
 
+    }
+    @Transactional
+    public Order cancelOrder(Long orderId) {
+        User user = getLoggedInUser();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized action: This order does not belong to you.");
+        }
+
+        if (order.getStatus() != OrderStatus.PLACED && order.getStatus() != OrderStatus.PAYMENT_PENDING) {
+            throw new RuntimeException("Order cannot be canceled in its current state: " + order.getStatus());
+        }
+
+        order.setStatus(OrderStatus.CANCELED);
+        for (OrderItem item : order.getItems()) {
+            Product product = item.getProduct();
+            product.setStockCount(product.getStockCount() + item.getQuantity());
+            productRepository.save(product);
+        }
+
+        return orderRepository.save(order);
     }
 
 }

@@ -109,17 +109,5 @@ public class ProductService {
     public Page<Product> searchProducts(String keyword, Pageable pageable) {
         return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
     }
-    public String uploadImage(MultipartFile file) throws IOException {
-        Image image= Image.builder()
-                .name(file.getOriginalFilename()) //'file.getOriginalFilename()' extracts the original name of the uploaded file
-                .type(file.getContentType()) //'file.getContentType()' extracts the MIME type (jpg or png)
-                .imageData(file.getBytes()) //'file.getBytes()' reads the raw binary payload of the image directly from memory into a byte array (byte[]).
-                .build();
-        imageRepository.save(image);
-        return file.getOriginalFilename()+"Uploaded ";
-    }
-
-
-
 }
 
