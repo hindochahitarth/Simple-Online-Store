@@ -93,7 +93,6 @@ public class OrderService {
         order.setTotalAmount(totalAmount);
         try {
             String receiptId = "txn_" + System.currentTimeMillis();
-            // Convert BigDecimal to Double securely for your method signature
             Double doubleAmount = totalAmount.doubleValue();
 
             JSONObject razorpayOrderJson = razorpayService.createOrder(doubleAmount, receiptId);

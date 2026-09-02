@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.simpleonlinestore.entity.Category;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -34,4 +35,6 @@ public class ProductRequestDTO {
     private LocalDate manufacturingDate;
     private LocalDate expiryDate;
     private Boolean isActive;
+
+    private MultipartFile file;
 }

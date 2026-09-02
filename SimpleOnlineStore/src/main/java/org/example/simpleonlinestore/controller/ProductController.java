@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -25,9 +26,9 @@ public class ProductController {
         this.productService=productService;
     }
 
-    @PostMapping("/create-product")
+    @PostMapping(value = "/create-product", consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequestDTO request){
+    public ResponseEntity<Product> createProduct(@ModelAttribute ProductRequestDTO request) throws IOException {
         log.info("Inside Create product controller ");
         Product savedProduct=productService.createProduct(request);
 

@@ -1,16 +1,12 @@
 package org.example.simpleonlinestore.service;
 
-import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.security.SecureRandom;
 
 @Service
@@ -27,9 +23,7 @@ public class OtpService {
         this.userRepo=userRepo;
     }
 
-    public String sendOtp(String email) {
-        // generates a random 6 digit number between 100000 and 999999
-        // chooses 0-899999 then add 100000 so it is always of 6 digits
+    public void sendOtp(String email) {
         SecureRandom random = new SecureRandom();
 
         String otp = String.valueOf(random.nextInt(100000,1000000));
@@ -39,7 +33,7 @@ public class OtpService {
         //email service to deliver otp to email
         emailService.sendOtp(email, otp);
         //check if user exists
-        return !userRepo.findByEmailId(email).isPresent() ? "true" : "false";
+        userRepo.findByEmailId(email);
 
     }
     // OTP expiration time limit
