@@ -71,8 +71,8 @@ public class ProductService {
         Product product=productRepository.findById(id) .orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
         productRepository.deleteById(id);
     }
-    public List<Product> getProductByCategory(Long categoryId){
-        return productRepository.findByCategoryId(categoryId);
+    public List<Product> getProductByCategory(String categoryName){
+        return productRepository.findByCategoryName(categoryName);
     }
     public Product addStock(Long id, Long quantityToAdd) {
         Product product = productRepository.findById(id)

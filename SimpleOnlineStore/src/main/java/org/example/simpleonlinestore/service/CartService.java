@@ -12,6 +12,9 @@ import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class CartService {
@@ -47,18 +50,30 @@ public class CartService {
 
         Product product=productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product does not exist"));
 
-        if(quantity > product.getStockCount()){
+        Optional<CartItem> existItem=cart.getItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst();
+        int newQuant=quantity;
+        if(existItem.isPresent()){
+            newQuant+=existItem.get().getQuantity();
+        }
+        if(newQuant > product.getStockCount()){
             throw new RuntimeException("Insufficient Stock ");
+        }
+        if(existItem.isPresent()){
+            CartItem existingItem=existItem.get();
+            existingItem.setQuantity(newQuant);
+        }
+        else{
+            CartItem cartItem=new CartItem();
+            cartItem.setCart(cart);
+            cartItem.setProduct(product);
+            cartItem.setQuantity(quantity);
+            cart.getItems().add(cartItem);
         }
        // product.setStockCount(product.getStockCount() - quantity);
         log.info("product.getStockCount()"+product.getStockCount());
 
-        CartItem cartItem=new CartItem();
-        cartItem.setCart(cart);
-        cartItem.setProduct(product);
-        cartItem.setQuantity(quantity);
-
-        cart.getItems().add(cartItem);
         return cartRepository.save(cart);
     }
     public Cart removeFromCart(Long productId) {
