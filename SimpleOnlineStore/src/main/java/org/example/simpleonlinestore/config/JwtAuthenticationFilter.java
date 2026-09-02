@@ -106,11 +106,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     //wildcard used java does not know roles are stored in plain strings ("ROLE_USER")
                     List<?> roles = jwtService.extractClaim(jwt, claims -> claims.get("roles", java.util.List.class));
                     List<SimpleGrantedAuthority> authorities = new ArrayList<>();//used to hold roles as security cant understand raw strings
+
                     if (roles != null) {
                         authorities = roles.stream()
-                                .map(role -> new SimpleGrantedAuthority(role.toString()))
+                                .map(role -> {
+                                    String roleStr = role.toString();
+                                    if (!roleStr.startsWith("ROLE_")) {
+                                        roleStr = "ROLE_" + roleStr;
+                                    }
+                                    return new SimpleGrantedAuthority(roleStr);
+                                })
                                 .toList();
                     }
+
                     // loads user profile from databases
                     // 2nd field is null because field is for psasword
                     // create authentication object ,3rd field for user roles /permissions
