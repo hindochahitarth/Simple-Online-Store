@@ -1,6 +1,7 @@
 package org.example.simpleonlinestore.controller;
 
 import org.aspectj.weaver.ast.Or;
+import org.example.simpleonlinestore.DTO.OrderRequestDTO;
 import org.example.simpleonlinestore.entity.Order;
 import org.example.simpleonlinestore.entity.OrderItem;
 import org.example.simpleonlinestore.repository.OrderItemRepository;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.RuntimeMBeanException;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +30,13 @@ public class OrderController {
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PostMapping("/place-order")
-    public ResponseEntity<Order> placeOrder() {
-        Order order = orderService.placeOrder();
+
+    public ResponseEntity<Order> placeOrder(@RequestBody OrderRequestDTO requestDTO) {
+        if(requestDTO.getAddressId()==null)
+        {
+            throw new RuntimeException("Address is required ");
+        }
+        Order order = orderService.placeOrder(requestDTO.getAddressId());
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 

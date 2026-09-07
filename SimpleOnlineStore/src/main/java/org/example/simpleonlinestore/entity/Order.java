@@ -47,6 +47,9 @@ public class Order {
     @JsonIgnoreProperties("order")
 
     private List<OrderItem> items = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
 
     @PrePersist
     protected void onCreate() {

@@ -38,8 +38,7 @@ public class SecurityConfiguration {
         httpSecurity.authorizeHttpRequests(auth -> auth
 
                 .requestMatchers("/error").permitAll()
-                .requestMatchers("/api/auth/signup", "/api/auth/verify-otp", "/api/auth/login","/api/auth").permitAll()
-
+                .requestMatchers("/auth/**").permitAll()
 
 
                 .anyRequest()// for every single url

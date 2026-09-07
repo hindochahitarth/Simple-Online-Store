@@ -5,10 +5,7 @@ import com.razorpay.RazorpayException;
 import jakarta.transaction.Transactional;
 import org.example.simpleonlinestore.entity.*;
 import org.example.simpleonlinestore.enums.OrderStatus;
-import org.example.simpleonlinestore.repository.CartRepository;
-import org.example.simpleonlinestore.repository.OrderRepository;
-import org.example.simpleonlinestore.repository.ProductRepository;
-import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.repository.*;
 import org.json.JSONObject;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,12 +22,14 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
     private final RazorpayService razorpayService;
-    public OrderService(OrderRepository orderRepository,UserRepository userRepository,ProductRepository productRepository,CartRepository cartRepository,RazorpayService razorpayService){
+    private final AddressRepository addressRepository;
+    public OrderService(OrderRepository orderRepository,UserRepository userRepository,ProductRepository productRepository,CartRepository cartRepository,RazorpayService razorpayService,AddressRepository addressRepository){
         this.orderRepository=orderRepository;
         this.productRepository=productRepository;
         this.cartRepository=cartRepository;
         this.userRepository=userRepository;
         this.razorpayService=razorpayService;
+        this.addressRepository=addressRepository;
     }
     private User getLoggedInUser() {
 
@@ -42,10 +41,14 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
     }
     @Transactional
-    public Order placeOrder(){
+    public Order placeOrder(Long addressId){
 
         User user=getLoggedInUser();
+        Address address=addressRepository.findById(addressId).orElseThrow(() ->  new RuntimeException("Address Not Found"));
 
+        if(!address.getUser().getId().equals(user.getId())){
+            throw new RuntimeException("This address does not belong to you.");
+        }
         Cart cart=cartRepository.findByUserId(user.getId()).orElseThrow(()->new RuntimeException("Cart not found"));
 
         if(cart.getItems()==null || cart.getItems().isEmpty()){
@@ -54,6 +57,7 @@ public class OrderService {
         Order order=new Order();
         order.setUser(user);
         order.setStatus(OrderStatus.PAYMENT_PENDING);
+        order.setAddress(address);
 
         List<OrderItem> orderItemList=new ArrayList<>();
         BigDecimal totalAmount=BigDecimal.ZERO;
