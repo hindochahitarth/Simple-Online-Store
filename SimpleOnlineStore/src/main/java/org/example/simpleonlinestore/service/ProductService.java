@@ -2,7 +2,6 @@ package org.example.simpleonlinestore.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductRequestDTO;
-import org.example.simpleonlinestore.DTO.ProductResponseDTO;
 import org.example.simpleonlinestore.entity.Category;
 import org.example.simpleonlinestore.entity.Image;
 import org.example.simpleonlinestore.entity.Product;

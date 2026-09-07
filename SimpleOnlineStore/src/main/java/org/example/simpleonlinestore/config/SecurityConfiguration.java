@@ -37,9 +37,9 @@ public class SecurityConfiguration {
         // opens rules who can access which url path
         httpSecurity.authorizeHttpRequests(auth -> auth
 
-                .requestMatchers("/auth/**").permitAll()// allow anyone to access url with /auth
                 .requestMatchers("/error").permitAll()
-                
+                .requestMatchers("/api/auth/signup", "/api/auth/verify-otp", "/api/auth/login","/api/auth").permitAll()
+
 
 
                 .anyRequest()// for every single url

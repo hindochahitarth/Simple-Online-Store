@@ -48,5 +48,12 @@ public class CartController {
         Cart updatedCart=cartService.removeFromCart(productId);
         return ResponseEntity.ok(updatedCart);
     }
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @DeleteMapping("/clear")
+    public ResponseEntity<Cart> clearCart() {
+        Cart emptyCart = cartService.clearCart();
+        return ResponseEntity.ok(emptyCart);
+    }
+
 
 }

@@ -49,7 +49,7 @@ public class OtpService {
 
         // 2. Check if the OTP has expired
         //Calculates  time .
-        if (Duration.between(otpHolder.getTime(), LocalDateTime.now()).compareTo(otp_limit) > 0) {
+        if (Duration.between(otpHolder.time(), LocalDateTime.now()).compareTo(otp_limit) > 0) {
         //returns positive value if elapsed time is greater than limit(expired)
             //returns 0 if they are equal
             //< 0 if otp is valid 
@@ -58,23 +58,13 @@ public class OtpService {
         }
 
         // 3. Match the user input with the stored OTP
-        if (otpHolder.getOtp().equals(userInputOtp)) {
+        if (otpHolder.otp().equals(userInputOtp)) {
             otpStore.remove(email); // Clear OTP so it cannot be reused
             return true;
         }
 //if entered wrong otp then return false.
         return false;
     }
-    private static class OtpHolder {
-        private final String otp;
-        private final LocalDateTime time;
+    private record OtpHolder(String otp,LocalDateTime time){}
 
-        public OtpHolder(String otp, LocalDateTime time) {
-            this.otp = otp;
-            this.time = time;
-        }
-
-        public String getOtp() { return otp; }
-        public LocalDateTime getTime() { return time; }
-    }
 }

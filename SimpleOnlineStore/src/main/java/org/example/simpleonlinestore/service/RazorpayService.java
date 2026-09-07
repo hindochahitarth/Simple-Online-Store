@@ -40,7 +40,7 @@ public class RazorpayService {
         // Create Razorpay order
         //makes network call
         Order order = client.orders.create(orderRequest);
-        // JSONObject HERE: The Razorpay SDK function (client.orders.create) is strictly designed
+        // The Razorpay SDK function (client.orders.create) is strictly designed
         JSONObject orderJson = new JSONObject();
         orderJson.put("id", order.get("id").toString());
         orderJson.put("amount", amountInPaise);

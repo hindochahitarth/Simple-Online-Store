@@ -113,4 +113,9 @@ public class CartService {
     return cartRepository.save(cart);
 
     }
+    public Cart clearCart(){
+        Cart cart=getCart();
+        cart.getItems().clear();
+        return cartRepository.save(cart);
+    }
 }

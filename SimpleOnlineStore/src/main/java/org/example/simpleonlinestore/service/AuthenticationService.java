@@ -8,6 +8,7 @@ import org.example.simpleonlinestore.DTO.UserRequestDTO;
 import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.enums.Roles;
+import org.example.simpleonlinestore.exception.UserAlreadyExistsException;
 import org.example.simpleonlinestore.repository.CartRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,7 +40,7 @@ public class  AuthenticationService {
     @Transactional
     public User signUp(UserRequestDTO input)  {
         if(userRepository.findByEmailId(input.getEmailId()).isPresent()){
-            throw new RuntimeException("User with this email id already exist");
+            throw new UserAlreadyExistsException("User with this email id already exist");
         }
         User user = new User();
 
