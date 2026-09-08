@@ -2,9 +2,11 @@ package org.example.simpleonlinestore.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductRequestDTO;
+import org.example.simpleonlinestore.DTO.ProductResponseDTO;
 import org.example.simpleonlinestore.entity.Category;
 import org.example.simpleonlinestore.entity.Image;
 import org.example.simpleonlinestore.entity.Product;
+import org.example.simpleonlinestore.mapper.ProductMapper;
 import org.example.simpleonlinestore.repository.CategoryRepository;
 import org.example.simpleonlinestore.repository.ImageRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
@@ -23,14 +25,17 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ImageRepository imageRepository;
-    public ProductService(ProductRepository productRepository,CategoryRepository categoryRepository,ImageRepository imageRepository) {
+    private final ProductMapper productMapper;
+
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ImageRepository imageRepository, ProductMapper productMapper) {
 
         this.productRepository = productRepository;
         this.categoryRepository=categoryRepository;
         this.imageRepository=imageRepository;
+        this.productMapper = productMapper;
     }
 
-    public Product createProduct(ProductRequestDTO request) throws IOException {
+    public ProductResponseDTO createProduct(ProductRequestDTO request) throws IOException {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found with ID: " + request.getCategoryId()));
         MultipartFile file = request.getFile();
@@ -41,21 +46,12 @@ public class ProductService {
                 .build();
 
         log.info("Inside create product service");
-        Product product = new Product();
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
-        product.setStockCount(request.getStockCount());
-        product.setManufacturingDate(request.getManufacturingDate());
-        //product.setUrl(request.getUrl());
+        Product product = productMapper.toEntity(request);
         product.setImage(image);
         product.setCategory(category);
-        product.setDiscountPercentage(request.getDiscountPercentage());
-        product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
-        product.setExpiryDate(request.getExpiryDate());
-
-        return productRepository.save(product);
-
+        product.setImageUrl(file.getOriginalFilename());
+        Product savedProduct= productRepository.save(product);
+        return productMapper.toResponseDTO(savedProduct);
     }
 
     public Page<Product> getAllProducts(Pageable pageable) {

@@ -48,6 +48,10 @@ public class Product {
 
     private LocalDate manufacturingDate;
     private LocalDate expiryDate;
+    // Add this inside your Product.java class
+    @Column(name = "imageurl") // This targets your existing DB column
+    private String imageUrl;
+
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -2,6 +2,7 @@ package org.example.simpleonlinestore.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductRequestDTO;
+import org.example.simpleonlinestore.DTO.ProductResponseDTO;
 import org.example.simpleonlinestore.entity.Product;
 import org.example.simpleonlinestore.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -28,9 +29,9 @@ public class ProductController {
 
     @PostMapping(value = "/create-product", consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Product> createProduct(@ModelAttribute ProductRequestDTO request) throws IOException {
+    public ResponseEntity<ProductResponseDTO> createProduct(@ModelAttribute ProductRequestDTO request) throws IOException {
         log.info("Inside Create product controller ");
-        Product savedProduct=productService.createProduct(request);
+        ProductResponseDTO savedProduct=productService.createProduct(request);
 
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
