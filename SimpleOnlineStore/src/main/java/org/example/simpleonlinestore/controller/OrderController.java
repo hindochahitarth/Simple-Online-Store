@@ -1,5 +1,6 @@
 package org.example.simpleonlinestore.controller;
 
+import lombok.Getter;
 import org.aspectj.weaver.ast.Or;
 import org.example.simpleonlinestore.DTO.OrderRequestDTO;
 import org.example.simpleonlinestore.entity.Order;
@@ -57,6 +58,12 @@ public class OrderController {
     public ResponseEntity<Order> cancelOrder(@PathVariable Long orderId){
         Order canceledOrder=orderService.cancelOrder(orderId);
         return ResponseEntity.ok(canceledOrder);
+    }
+    @GetMapping("/{orderId}/invoice")
+    public ResponseEntity<String> getInvoiceSummary(@PathVariable Long orderId){
+        String invoice=orderService.generateInvoiceSummary(orderId);
+        return ResponseEntity.ok(invoice);
+
     }
 }
 
