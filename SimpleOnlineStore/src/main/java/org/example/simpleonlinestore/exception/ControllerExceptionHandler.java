@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.ErrorResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -94,19 +96,54 @@ public class ControllerExceptionHandler {
         );
 
     }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorMessage> handleRuntimeException(RuntimeException e,WebRequest request){
+            ErrorMessage errorMessage=new ErrorMessage(
+                    HttpStatus.BAD_REQUEST.value(),
+                    new Date(),
+                    e.getMessage(),
+                    request.getDescription(false)
+
+            );
+            return new ResponseEntity<>(errorMessage,HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, List<String>>> handleTypeMismatch(HttpMessageNotReadableException e) {
+        String message = "Invalid input type provided.";
+
+        // Simple trick to extract the field name from the exception message
+        String details = e.getMostSpecificCause().getMessage();
+        if (details != null && details.contains("[\"")) {
+            String fieldName = details.substring(details.lastIndexOf("[\"") + 2, details.lastIndexOf("\"]"));
+            message = "Invalid value provided for field: '" + fieldName + "'. Please enter a valid number.";
+        }
+
+        return new ResponseEntity<>(getErrorsMap(List.of(message)), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, List<String>>> invalidUserDetails(MethodArgumentNotValidException e, WebRequest request){
-        List<String> errors=e.getBindingResult().getFieldErrors()
-                .stream().map(FieldError::getDefaultMessage)
+        List<String> errors = e.getBindingResult().getFieldErrors()
+                .stream().map(fieldError -> {
+                    // Check if it's a type mismatch conversion error (like letters in a number field)
+                    if ("typeMismatch".equals(fieldError.getCode())) {
+                        Object rejectedValue = fieldError.getRejectedValue();
+                        return "Invalid value '" + rejectedValue + "' for field '" + fieldError.getField() + "'. Please enter a valid number.";
+                    }
+                    return fieldError.getDefaultMessage();
+                })
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(getErrorsMap(errors),new HttpHeaders(),HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
+
     private Map<String,List<String>> getErrorsMap(List<String> errors){
         Map<String,List<String>> errorResponse=new HashMap<>();
         errorResponse.put("errors",errors);
         return errorResponse;
     }
+
 
 
 }

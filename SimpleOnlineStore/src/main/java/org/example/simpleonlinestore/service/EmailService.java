@@ -15,7 +15,7 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject("Your OTP for Simple Store Login");
-        message.setText("Your OTP is: " + otp + "\nThis OTP is valid for 5 minutes.");
+        message.setText("Your OTP is: " + otp + "\nThis OTP is valid for 2 minutes.");
 
         mailSender.send(message);
         System.out.println("OTP sent to email: " + toEmail);

@@ -3,6 +3,7 @@ package org.example.simpleonlinestore.DTO;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.simpleonlinestore.entity.Category;
@@ -19,19 +20,23 @@ public class ProductRequestDTO {
     private String description;
 
     @Min(value = 1,message = "Price cannot be less than or equal to 0")
-    @NotBlank(message = "Price cannot be empty")
+    @NotNull(message = "Price cannot be empty")
     private Long price;
 
     private String url; 
 
     private Long categoryId;
-    @Min(value = 0)
-    @NotBlank(message = "Discount cannot be empty")
-    private int discountPercentage;
+    @Min(value = 0, message = "Discount cannot be a negative number.")
+    @NotNull(message = "Discount cannot be empty")
+    private Integer discountPercentage;
 
-    @Min(value = 1)
+    @NotNull(message = "Stock count is required.")
+    @Min(value = 1, message = "Stock count cannot be a zero negative number.")
+
     private Long stockCount;
 
+    @NotNull(message = "Manufacturing Date is required")
+    @PastOrPresent(message = "Manufacturing Date cannot be in future")
     private LocalDate manufacturingDate;
     private LocalDate expiryDate;
     private Boolean isActive;

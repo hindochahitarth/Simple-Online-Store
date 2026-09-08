@@ -31,7 +31,6 @@ public class UserRequestDTO {
     * */
     private String password;
     @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^\\+?[1-9]\\d{1,10}$", message = "Phone number must be a valid ")
     private String phoneNumber;
     
 }

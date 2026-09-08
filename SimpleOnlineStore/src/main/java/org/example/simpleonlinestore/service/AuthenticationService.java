@@ -49,6 +49,7 @@ public class  AuthenticationService {
         user.setEmailId(input.getEmailId());
         user.setRole(Roles.USER);
         user.setPassword(passwordEncoder.encode(input.getPassword()));
+        user.setPhoneNumber(input.getPhoneNumber());
         
         user.setActive(true);
         user.setVerified(false);

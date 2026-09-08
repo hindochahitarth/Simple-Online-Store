@@ -1,5 +1,6 @@
 package org.example.simpleonlinestore.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductRequestDTO;
 import org.example.simpleonlinestore.DTO.ProductResponseDTO;
@@ -29,7 +30,7 @@ public class ProductController {
 
     @PostMapping(value = "/create-product", consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductResponseDTO> createProduct(@ModelAttribute ProductRequestDTO request) throws IOException {
+    public ResponseEntity<ProductResponseDTO> createProduct(@Valid @ModelAttribute ProductRequestDTO request) throws IOException {
         log.info("Inside Create product controller ");
         ProductResponseDTO savedProduct=productService.createProduct(request);
 
