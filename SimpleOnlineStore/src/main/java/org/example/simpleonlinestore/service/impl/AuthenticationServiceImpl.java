@@ -1,4 +1,4 @@
-package org.example.simpleonlinestore.service;
+package org.example.simpleonlinestore.service.impl;
 
 
 import jakarta.transaction.Transactional;
@@ -11,6 +11,7 @@ import org.example.simpleonlinestore.enums.Roles;
 import org.example.simpleonlinestore.exception.UserAlreadyExistsException;
 import org.example.simpleonlinestore.repository.CartRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.AuthenticationService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,17 +19,17 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class  AuthenticationService {
+public class  AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
     private final CartRepository cartRepository;
-    private final OtpService otpService;
+    private final OtpServiceImpl otpService;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                                 AuthenticationManager authenticationManager,CartRepository cartRepository,OtpService otpService) {
+    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                                 AuthenticationManager authenticationManager,CartRepository cartRepository,OtpServiceImpl otpService) {
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;

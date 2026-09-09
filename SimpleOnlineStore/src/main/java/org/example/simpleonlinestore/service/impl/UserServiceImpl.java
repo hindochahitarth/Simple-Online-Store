@@ -1,17 +1,18 @@
-package org.example.simpleonlinestore.service;
+package org.example.simpleonlinestore.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.example.simpleonlinestore.DTO.AddressDTO;
 import org.example.simpleonlinestore.entity.Address;
 import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository){
+    public UserServiceImpl(UserRepository userRepository){
         this.userRepository=userRepository;
     }
     @Transactional

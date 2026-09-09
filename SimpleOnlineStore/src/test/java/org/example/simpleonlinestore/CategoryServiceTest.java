@@ -2,7 +2,7 @@ package org.example.simpleonlinestore;
 
 
 import org.example.simpleonlinestore.repository.CategoryRepository;
-import org.example.simpleonlinestore.service.CategoryService;
+import org.example.simpleonlinestore.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +21,7 @@ class CategoryServiceTest {
     private CategoryRepository categoryRepository;
 
     @InjectMocks
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryService;
 
     @Test
     void testGetCategoryById() {

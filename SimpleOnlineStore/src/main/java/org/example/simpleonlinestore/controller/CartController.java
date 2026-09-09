@@ -2,7 +2,7 @@ package org.example.simpleonlinestore.controller;
 
 import lombok.Getter;
 import org.example.simpleonlinestore.entity.Cart;
-import org.example.simpleonlinestore.service.CartService;
+import org.example.simpleonlinestore.service.impl.CartServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/cart")
 
 public class CartController {
-    private final CartService cartService;
+    private final CartServiceImpl cartService;
 
-    public CartController(CartService cartService){
+    public CartController(CartServiceImpl cartService){
         this.cartService=cartService;
     }
 

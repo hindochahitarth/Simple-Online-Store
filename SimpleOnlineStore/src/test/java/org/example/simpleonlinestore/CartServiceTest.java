@@ -4,7 +4,7 @@ import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.entity.CartItem;
 import org.example.simpleonlinestore.entity.Product;
 import org.example.simpleonlinestore.entity.User;
-import org.example.simpleonlinestore.service.CartService;
+import org.example.simpleonlinestore.service.impl.CartServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,13 +27,12 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CartServiceTest {
 
-    // Declared to let Mockito initialize the service safely
     @Mock private CartRepository cartRepository;
     @Mock private ProductRepository productRepository;
     @Mock private UserRepository userRepository;
 
     @InjectMocks
-    private CartService cartService;
+    private CartServiceImpl cartService;
     @BeforeEach
     void setupSecurityContext() {
         Authentication auth = mock(Authentication.class);
@@ -49,7 +48,7 @@ class CartServiceTest {
             cartService.addToCart(1L, 0); // Testing with a zero quantity
         });
 
-        // Verify the exact error message your method throws
+        // Verify the exact error message method throws
         assertEquals("Quantity cannot be less than or equal to zero ", exception.getMessage());
     }
     @Test

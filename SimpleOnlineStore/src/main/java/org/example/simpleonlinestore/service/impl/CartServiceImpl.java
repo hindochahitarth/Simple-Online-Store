@@ -1,8 +1,6 @@
-package org.example.simpleonlinestore.service;
+package org.example.simpleonlinestore.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.simpleonlinestore.DTO.ProductRequestDTO;
-import org.example.simpleonlinestore.DTO.UserRequestDTO;
 import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.entity.CartItem;
 import org.example.simpleonlinestore.entity.Product;
@@ -10,6 +8,7 @@ import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.repository.CartRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.CartService;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -17,12 +16,12 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-public class CartService {
+public class CartServiceImpl implements CartService {
     private CartRepository cartRepository;
     private ProductRepository productRepository;
     private UserRepository userRepository;
 
-    public CartService(CartRepository cartRepository,ProductRepository productRepository,UserRepository userRepository){
+    public CartServiceImpl(CartRepository cartRepository,ProductRepository productRepository,UserRepository userRepository){
         this.cartRepository=cartRepository;
         this.productRepository=productRepository;
         this.userRepository=userRepository;

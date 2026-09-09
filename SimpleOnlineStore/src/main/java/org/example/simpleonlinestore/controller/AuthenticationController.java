@@ -6,7 +6,7 @@ import org.example.simpleonlinestore.DTO.LoginUserDTO;
 import org.example.simpleonlinestore.DTO.UserRequestDTO;
 import org.example.simpleonlinestore.config.JwtService;
 import org.example.simpleonlinestore.entity.User;
-import org.example.simpleonlinestore.service.AuthenticationService;
+import org.example.simpleonlinestore.service.impl.AuthenticationServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +18,9 @@ import java.util.Map;
 public class AuthenticationController {
     private final JwtService jwtService;
 
-    private final AuthenticationService authenticationService;
+    private final AuthenticationServiceImpl authenticationService;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationServiceImpl authenticationService) {
         this.authenticationService = authenticationService;
         this.jwtService = jwtService;
     }

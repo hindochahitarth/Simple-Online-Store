@@ -1,11 +1,11 @@
-package org.example.simpleonlinestore.service;
+package org.example.simpleonlinestore.service.impl;
 
-import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import jakarta.transaction.Transactional;
 import org.example.simpleonlinestore.entity.*;
 import org.example.simpleonlinestore.enums.OrderStatus;
 import org.example.simpleonlinestore.repository.*;
+import org.example.simpleonlinestore.service.interfaces.OrderService;
 import org.json.JSONObject;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,14 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class OrderService {
+public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
-    private final RazorpayService razorpayService;
+    private final RazorpayServiceImpl razorpayService;
     private final AddressRepository addressRepository;
-    public OrderService(OrderRepository orderRepository,UserRepository userRepository,ProductRepository productRepository,CartRepository cartRepository,RazorpayService razorpayService,AddressRepository addressRepository){
+    public OrderServiceImpl(OrderRepository orderRepository,UserRepository userRepository,ProductRepository productRepository,CartRepository cartRepository,RazorpayServiceImpl razorpayService,AddressRepository addressRepository){
         this.orderRepository=orderRepository;
         this.productRepository=productRepository;
         this.cartRepository=cartRepository;
@@ -161,9 +161,6 @@ public class OrderService {
             throw new RuntimeException("Unauthorized action: This order does not belong to you.");
         }
 
-        if (order.getStatus() != OrderStatus.PLACED && order.getStatus() != OrderStatus.PAYMENT_PENDING) {
-            throw new RuntimeException("Order cannot be canceled in its current state: " + order.getStatus());
-        }
 
         order.setStatus(OrderStatus.CANCELED);
         for (OrderItem item : order.getItems()) {

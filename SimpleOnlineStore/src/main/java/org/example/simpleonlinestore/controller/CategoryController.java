@@ -2,7 +2,7 @@ package org.example.simpleonlinestore.controller;
 
 import org.example.simpleonlinestore.entity.Category;
 import org.example.simpleonlinestore.entity.Product;
-import org.example.simpleonlinestore.service.CategoryService;
+import org.example.simpleonlinestore.service.impl.CategoryServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,9 +13,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/categories")
 public class CategoryController {
-    private final CategoryService categoryService;
+    private final CategoryServiceImpl categoryService;
 
-    public CategoryController(CategoryService categoryService){
+    public CategoryController(CategoryServiceImpl categoryService){
         this.categoryService=categoryService;
     }
 

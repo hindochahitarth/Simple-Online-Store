@@ -1,6 +1,7 @@
-package org.example.simpleonlinestore.service;
+package org.example.simpleonlinestore.service.impl;
 
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.OtpService;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -10,15 +11,15 @@ import java.util.Map;
 import java.security.SecureRandom;
 
 @Service
-public class OtpService {
+public class OtpServiceImpl implements OtpService {
 
     //in memory data storage where otp and timestamp are stored
     private final Map<String, OtpHolder> otpStore = new HashMap<>();
 
 
-    private final EmailService emailService;
+    private final EmailServiceImpl emailService;
     private final UserRepository userRepo;
-    public OtpService(EmailService emailService,UserRepository userRepo){
+    public OtpServiceImpl(EmailServiceImpl emailService,UserRepository userRepo){
         this.emailService=emailService;
         this.userRepo=userRepo;
     }

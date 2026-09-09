@@ -1,4 +1,4 @@
-package org.example.simpleonlinestore.service;
+package org.example.simpleonlinestore.service.impl;
 
 import org.example.simpleonlinestore.DTO.ProductReviewRequestDTO;
 import org.example.simpleonlinestore.entity.Product;
@@ -7,16 +7,17 @@ import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.ProductReviewRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.ProductReviewService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProductReviewService {
+public class ProductReviewServiceImpl implements ProductReviewService {
     private final ProductRepository productRepository;
     private final ProductReviewRepository productReviewRepository;
     private final UserRepository userRepository;
 
-    public ProductReviewService(ProductReviewRepository productReviewRepository,UserRepository userRepository,ProductRepository productRepository){
+    public ProductReviewServiceImpl(ProductReviewRepository productReviewRepository,UserRepository userRepository,ProductRepository productRepository){
         this.productReviewRepository=productReviewRepository;
         this.userRepository=userRepository;
         this.productRepository=productRepository;

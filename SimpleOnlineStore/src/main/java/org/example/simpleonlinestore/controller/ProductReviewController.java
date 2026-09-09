@@ -3,8 +3,7 @@ package org.example.simpleonlinestore.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductReviewRequestDTO;
 import org.example.simpleonlinestore.entity.Product;
-import org.example.simpleonlinestore.service.ProductReviewService;
-import org.example.simpleonlinestore.service.ProductService;
+import org.example.simpleonlinestore.service.impl.ProductReviewServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.example.simpleonlinestore.entity.ProductReview;
@@ -16,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/product-review")
 public class ProductReviewController {
 
-    private final ProductReviewService productReviewService;
+    private final ProductReviewServiceImpl productReviewService;
 
-    public ProductReviewController(ProductReviewService productReviewService){
+    public ProductReviewController(ProductReviewServiceImpl productReviewService){
         this.productReviewService=productReviewService; 
     }
 

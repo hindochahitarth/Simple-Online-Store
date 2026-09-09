@@ -3,7 +3,7 @@ package org.example.simpleonlinestore.controller;
 import jakarta.validation.Valid;
 import org.example.simpleonlinestore.DTO.AddressDTO;
 import org.example.simpleonlinestore.entity.User;
-import org.example.simpleonlinestore.service.UserService;
+import org.example.simpleonlinestore.service.impl.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public UserController(UserService userService){
+    public UserController(UserServiceImpl userService){
         this.userService=userService;
     }
     @PostMapping("/addresses")

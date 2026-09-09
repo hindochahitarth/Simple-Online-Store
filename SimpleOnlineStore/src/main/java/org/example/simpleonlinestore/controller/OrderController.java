@@ -9,7 +9,7 @@ import org.example.simpleonlinestore.repository.OrderItemRepository;
 import org.example.simpleonlinestore.repository.OrderRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
-import org.example.simpleonlinestore.service.OrderService;
+import org.example.simpleonlinestore.service.impl.OrderServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,9 +23,9 @@ import java.util.Map;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderServiceImpl orderService) {
         this.orderService = orderService;
     }
 

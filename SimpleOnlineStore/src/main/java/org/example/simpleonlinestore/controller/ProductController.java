@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductRequestDTO;
 import org.example.simpleonlinestore.DTO.ProductResponseDTO;
 import org.example.simpleonlinestore.entity.Product;
-import org.example.simpleonlinestore.service.ProductService;
+import org.example.simpleonlinestore.service.impl.ProductServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,9 +22,9 @@ import org.springframework.data.domain.Pageable;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
 
-    public ProductController(ProductService productService){
+    public ProductController(ProductServiceImpl productService){
         this.productService=productService;
     }
 
