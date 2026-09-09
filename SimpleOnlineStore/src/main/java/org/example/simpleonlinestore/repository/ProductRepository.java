@@ -14,4 +14,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
             Pageable pageable
     );
     Page<Product> findAll(Pageable pageable);
+    boolean existsByName(String name);
+
 }

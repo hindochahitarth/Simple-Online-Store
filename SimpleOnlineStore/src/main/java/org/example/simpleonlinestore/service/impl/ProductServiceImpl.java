@@ -37,6 +37,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductResponseDTO createProduct(ProductRequestDTO request) throws IOException {
+        if(productRepository.existsByName(request.getName())){
+            throw new RuntimeException("Product Already exists");
+        }
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found with ID: " + request.getCategoryId()));
         MultipartFile file = request.getFile();

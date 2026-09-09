@@ -84,7 +84,7 @@ public class CartServiceImpl implements CartService {
                 .findFirst()
                 .orElse(null);
         if (cartItem != null){
-            product.setStockCount(product.getStockCount()+cartItem.getQuantity());
+           // product.setStockCount(product.getStockCount()+cartItem.getQuantity());
             productRepository.save(product);
 
             cart.getItems().remove(cartItem);
