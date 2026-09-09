@@ -88,6 +88,17 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
                         input.getPassword()));
         return userRepository.findByEmailId(input.getEmailId()).orElseThrow();
     }
+
+    @Override
+    public void resendOtp(String email) {
+        User user=userRepository.findByEmailId(email).orElseThrow(() -> new RuntimeException("User does not exist"));
+        if(user.isVerified()){
+            throw new RuntimeException("This User Account is already Verified.Please proceed to Login");
+        }
+        otpService.sendOtp(email);
+        
+
+    }
 }
 
 

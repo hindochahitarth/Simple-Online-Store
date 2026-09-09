@@ -53,5 +53,15 @@ public class AuthenticationController {
                 .setExpiresIn(jwtService.getExpirationTime());
         return ResponseEntity.ok(loginResponse);
     }
+    @PostMapping("/resendOtp")
+    public ResponseEntity<Map<String,String>> resendOtp(@RequestParam String email){
+        authenticationService.resendOtp(email);
+        return ResponseEntity.ok(
+                Map.of(
+                        "status","Success",
+                        "message","New OTP Resend successfully"
+                )
+        );
+    }
 }
 
