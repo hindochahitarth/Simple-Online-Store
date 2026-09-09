@@ -59,6 +59,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Page<Product> getAllProducts(Pageable pageable) {
+
+        if (pageable.getPageSize() <= 0) {
+            throw new IllegalArgumentException("Page size must be greater than zero");
+        }
         return productRepository.findAll(pageable);
     }
     public Product updateProduct(Long id,ProductRequestDTO request){
@@ -106,6 +110,9 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(product);
     }
     public Page<Product> searchProducts(String keyword, Pageable pageable) {
+        if (pageable.getPageSize() <= 0) {
+            throw new IllegalArgumentException("Page size must be greater than zero");
+        }
         return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
     }
 }

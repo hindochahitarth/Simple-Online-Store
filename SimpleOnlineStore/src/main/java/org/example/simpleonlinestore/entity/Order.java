@@ -33,6 +33,8 @@ public class Order {
     @Column(nullable = false)
     private OrderStatus status;
 
+    //precision - total number of digits
+    //scale - after fraction (8+2)
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;//used bigdecimal because in double precision error is there,rounding errors
 
