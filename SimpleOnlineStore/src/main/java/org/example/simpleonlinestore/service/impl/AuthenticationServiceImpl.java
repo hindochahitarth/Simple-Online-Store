@@ -104,6 +104,23 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
     public void logout() {
         SecurityContextHolder.clearContext();
     }
+    @Override
+    public void resetPassword(String email, String newPassword) {
+        // Fetch the user profile
+        User user = userRepository.findByEmailId(email)
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
+
+        // Encrypt and save the new password
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        if (!user.isVerified()) {
+            user.setVerified(true);
+        }
+
+        userRepository.save(user);
+        log.info("Password successfully reset for user: {}", email);
+
+    }
 }
 
 

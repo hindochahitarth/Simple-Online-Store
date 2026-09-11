@@ -3,6 +3,7 @@ package org.example.simpleonlinestore.controller;
 import jakarta.validation.Valid;
 import org.example.simpleonlinestore.DTO.LoginResponseDTO;
 import org.example.simpleonlinestore.DTO.LoginUserDTO;
+import org.example.simpleonlinestore.DTO.ResetPasswordRequestDTO;
 import org.example.simpleonlinestore.DTO.UserRequestDTO;
 import org.example.simpleonlinestore.config.JwtService;
 import org.example.simpleonlinestore.entity.User;
@@ -62,6 +63,14 @@ public class AuthenticationController {
                         "message","New OTP Resend successfully"
                 )
         );
+    }
+    @PostMapping("/resetPassword")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
+        authenticationService.resetPassword(
+                request.getEmailId(),
+                request.getNewPassword()
+        );
+        return ResponseEntity.ok("Password reset successfully. You can now login with your new password.");
     }
 }
 
