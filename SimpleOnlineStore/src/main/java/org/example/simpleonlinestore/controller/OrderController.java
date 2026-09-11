@@ -9,6 +9,7 @@ import org.example.simpleonlinestore.repository.OrderItemRepository;
 import org.example.simpleonlinestore.repository.OrderRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.impl.EmailServiceImpl;
 import org.example.simpleonlinestore.service.impl.OrderServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +25,11 @@ import java.util.Map;
 public class OrderController {
 
     private final OrderServiceImpl orderService;
+    private final EmailServiceImpl emailService;
 
-    public OrderController(OrderServiceImpl orderService) {
+    public OrderController(OrderServiceImpl orderService,EmailServiceImpl emailService) {
         this.orderService = orderService;
+        this.emailService=emailService;
     }
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
@@ -65,5 +68,22 @@ public class OrderController {
         return ResponseEntity.ok(invoice);
 
     }
+    @PostMapping("/{orderId}/send-invoice")
+    public ResponseEntity<String> sendInvoice(@PathVariable Long orderId) {
+        // 1. Fetch the order from the database
+        Order order = orderService.getOrderById(orderId);
+
+        // 2. Extract the customer's email directly from the order record
+        String customerEmail = order.getUser().getEmailId();
+
+        // 3. Generate the invoice string layout
+        String summary = orderService.generateInvoiceSummary(orderId);
+
+        // 4. Send the invoice straight to their inbox
+        emailService.sendNotification(customerEmail, summary);
+
+        return ResponseEntity.ok("Invoice email sent successfully to " + customerEmail);
+    }
+
 }
 

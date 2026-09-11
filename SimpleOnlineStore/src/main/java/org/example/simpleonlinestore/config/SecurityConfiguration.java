@@ -1,5 +1,6 @@
 package org.example.simpleonlinestore.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -47,7 +48,19 @@ public class SecurityConfiguration {
 
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))// never to create session
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);// filter jwt
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .logoutSuccessHandler(((request, response, authentication) -> {
+                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.getWriter().write("{\"message\":\"Logout Success\"}"); // Fixed variable and added closing quote/brace
+                            response.getWriter().flush();
+
+                        })
+                ))
+        ;// filter jwt
         // first
 
         return httpSecurity.build();// locks in all settings and configurations

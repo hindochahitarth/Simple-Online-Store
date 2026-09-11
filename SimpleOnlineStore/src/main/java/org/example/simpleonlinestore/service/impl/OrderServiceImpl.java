@@ -23,13 +23,15 @@ public class OrderServiceImpl implements OrderService {
     private final CartRepository cartRepository;
     private final RazorpayServiceImpl razorpayService;
     private final AddressRepository addressRepository;
-    public OrderServiceImpl(OrderRepository orderRepository,UserRepository userRepository,ProductRepository productRepository,CartRepository cartRepository,RazorpayServiceImpl razorpayService,AddressRepository addressRepository){
+    private final EmailServiceImpl emailService;
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, CartRepository cartRepository, RazorpayServiceImpl razorpayService, AddressRepository addressRepository, EmailServiceImpl emailService){
         this.orderRepository=orderRepository;
         this.productRepository=productRepository;
         this.cartRepository=cartRepository;
         this.userRepository=userRepository;
         this.razorpayService=razorpayService;
         this.addressRepository=addressRepository;
+        this.emailService=emailService;
     }
     private User getLoggedInUser() {
 

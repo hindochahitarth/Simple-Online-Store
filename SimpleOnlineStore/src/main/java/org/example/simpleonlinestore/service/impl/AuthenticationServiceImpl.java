@@ -14,6 +14,7 @@ import org.example.simpleonlinestore.repository.UserRepository;
 import org.example.simpleonlinestore.service.interfaces.AuthenticationService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -98,6 +99,10 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
         otpService.sendOtp(email);
         
 
+    }
+    @Override
+    public void logout() {
+        SecurityContextHolder.clearContext();
     }
 }
 

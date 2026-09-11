@@ -21,4 +21,12 @@ public class EmailServiceImpl implements EmailService {
         mailSender.send(message);
         System.out.println("OTP sent to email: " + toEmail);
     }
+    @Override
+    public void sendNotification(String toEmail, String mssg) {
+        SimpleMailMessage message=new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Your Order Details ");
+        message.setText("Your Order details "+mssg);
+        mailSender.send(message);
+    }
 }
