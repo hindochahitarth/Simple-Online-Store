@@ -1,8 +1,8 @@
-package org.example.simpleonlinestore;
+package com.niyantras.simpleonlinestore;
 
 
-import org.example.simpleonlinestore.repository.CategoryRepository;
-import org.example.simpleonlinestore.service.impl.CategoryServiceImpl;
+import com.niyantras.simpleonlinestore.repository.CategoryRepository;
+import com.niyantras.simpleonlinestore.service.impl.CategoryServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

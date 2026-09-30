@@ -1,21 +1,16 @@
-package org.example.simpleonlinestore;
+package com.niyantras.simpleonlinestore;
 
-import org.example.simpleonlinestore.DTO.ProductRequestDTO;
-import org.example.simpleonlinestore.entity.Category;
-import org.example.simpleonlinestore.entity.Product;
-import org.example.simpleonlinestore.repository.CategoryRepository;
-import org.example.simpleonlinestore.repository.ImageRepository;
-import org.example.simpleonlinestore.repository.ProductRepository;
-import org.example.simpleonlinestore.service.impl.ProductServiceImpl;
+import com.niyantras.simpleonlinestore.entity.Product;
+import com.niyantras.simpleonlinestore.repository.CategoryRepository;
+import com.niyantras.simpleonlinestore.repository.ImageRepository;
+import com.niyantras.simpleonlinestore.repository.ProductRepository;
+import com.niyantras.simpleonlinestore.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

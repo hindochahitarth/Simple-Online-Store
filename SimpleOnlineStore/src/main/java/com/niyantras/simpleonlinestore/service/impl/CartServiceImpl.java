@@ -64,12 +64,14 @@ public class CartServiceImpl implements CartService {
             existingItem.setQuantity(newQuant);
         }
         else{
+            // ----- use builder pattern from here to build order
             CartItem cartItem=new CartItem();
             cartItem.setCart(cart);
             cartItem.setProduct(product);
             cartItem.setQuantity(quantity);
             cart.getItems().add(cartItem);
         }
+        // ----- use builder pattern upto here to build order
        // product.setStockCount(product.getStockCount() - quantity);
         log.info("product.getStockCount()"+product.getStockCount());
 

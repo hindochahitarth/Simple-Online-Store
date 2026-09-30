@@ -1,10 +1,13 @@
-package org.example.simpleonlinestore;
+package com.niyantras.simpleonlinestore;
 
-import org.example.simpleonlinestore.entity.Cart;
-import org.example.simpleonlinestore.entity.CartItem;
-import org.example.simpleonlinestore.entity.Product;
-import org.example.simpleonlinestore.entity.User;
-import org.example.simpleonlinestore.service.impl.CartServiceImpl;
+import com.niyantras.simpleonlinestore.entity.Cart;
+import com.niyantras.simpleonlinestore.entity.CartItem;
+import com.niyantras.simpleonlinestore.entity.Product;
+import com.niyantras.simpleonlinestore.entity.User;
+import com.niyantras.simpleonlinestore.repository.CartRepository;
+import com.niyantras.simpleonlinestore.repository.ProductRepository;
+import com.niyantras.simpleonlinestore.repository.UserRepository;
+import com.niyantras.simpleonlinestore.service.impl.CartServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

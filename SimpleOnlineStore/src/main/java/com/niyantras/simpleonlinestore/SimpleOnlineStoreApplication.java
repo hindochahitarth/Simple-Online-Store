@@ -1,4 +1,4 @@
-package org.example.simpleonlinestore;
+package com.niyantras.simpleonlinestore;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

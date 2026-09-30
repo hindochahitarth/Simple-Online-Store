@@ -4,9 +4,9 @@ import com.niyantras.simpleonlinestore.entity.*;
 import com.niyantras.simpleonlinestore.repository.*;
 import com.razorpay.RazorpayException;
 import jakarta.transaction.Transactional;
-import org.example.simpleonlinestore.entity.*;
+import com.niyantras.simpleonlinestore.entity.*;
 import com.niyantras.simpleonlinestore.enums.OrderStatus;
-import org.example.simpleonlinestore.repository.*;
+import com.niyantras.simpleonlinestore.repository.*;
 import com.niyantras.simpleonlinestore.service.interfaces.OrderService;
 import org.json.JSONObject;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,6 +75,7 @@ public class OrderServiceImpl implements OrderService {
             product.setStockCount(product.getStockCount()-cartItem.getQuantity());
             productRepository.save(product);
 
+            // change to builder pattern
             OrderItem orderItem=new OrderItem();
 
             orderItem.setOrder(order);
@@ -89,6 +90,7 @@ public class OrderServiceImpl implements OrderService {
             BigDecimal price=BigDecimal.valueOf(calculatedPrice);
             orderItem.setPrice(price);
 
+            // ----- use builder pattern upto here to build order
             totalAmount=totalAmount.add(
                     price.multiply(
                             BigDecimal.valueOf(cartItem.getQuantity())
