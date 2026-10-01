@@ -1,7 +1,7 @@
-package org.example.service;
+package org.example.simpleonlinestore.service;
 
-import org.example.entity.Image;
-import org.example.repository.ImageRepository;
+import org.example.simpleonlinestore.entity.Image;
+import org.example.simpleonlinestore.repository.ImageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

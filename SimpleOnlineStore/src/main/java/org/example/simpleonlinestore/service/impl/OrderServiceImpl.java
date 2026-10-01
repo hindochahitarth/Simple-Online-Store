@@ -1,12 +1,14 @@
-package org.example.service.impl;
+package org.example.simpleonlinestore.service.impl;
 
-import org.example.repository.*;
 import com.razorpay.RazorpayException;
 import jakarta.transaction.Transactional;
-import org.example.entity.*;
-import org.example.enums.OrderStatus;
-import org.example.repository.*;
-import org.example.service.interfaces.OrderService;
+import lombok.extern.slf4j.Slf4j;
+import org.example.simpleonlinestore.entity.*;
+import org.example.simpleonlinestore.entity.*;
+import org.example.simpleonlinestore.enums.OrderStatus;
+import org.example.simpleonlinestore.repository.*;
+import org.example.simpleonlinestore.repository.*;
+import org.example.simpleonlinestore.service.interfaces.OrderService;
 import org.json.JSONObject;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
@@ -94,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
             }
 
             BigDecimal price=BigDecimal.valueOf(calculatedPrice);
-            OrderItem.builder()
+           orderItem= OrderItem.builder()
                     .price(price)
                     .build();
            // orderItem.setPrice(price);
@@ -105,13 +108,15 @@ public class OrderServiceImpl implements OrderService {
                             BigDecimal.valueOf(cartItem.getQuantity())
                     )
             );
-
+    log.warn(String.valueOf(totalAmount));
             orderItemList.add(orderItem);
         }
-        Order.builder()
+        order=Order.builder()
                         .items(orderItemList)
                         .totalAmount(totalAmount)
                         .build();
+
+        log.warn(String.valueOf(totalAmount));
 //        order.setItems(orderItemList);
 //        order.setTotalAmount(totalAmount);
         try {

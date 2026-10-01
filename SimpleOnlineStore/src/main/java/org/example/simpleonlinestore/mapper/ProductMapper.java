@@ -1,8 +1,8 @@
-package org.example.mapper;
+package org.example.simpleonlinestore.mapper;
 
-import org.example.DTO.ProductRequestDTO;
-import org.example.DTO.ProductResponseDTO;
-import org.example.entity.Product;
+import org.example.simpleonlinestore.DTO.ProductRequestDTO;
+import org.example.simpleonlinestore.DTO.ProductResponseDTO;
+import org.example.simpleonlinestore.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

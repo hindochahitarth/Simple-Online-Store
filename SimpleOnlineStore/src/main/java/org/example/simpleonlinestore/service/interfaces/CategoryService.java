@@ -1,6 +1,6 @@
-package org.example.service.interfaces;
+package org.example.simpleonlinestore.service.interfaces;
 
-import org.example.entity.Category;
+import org.example.simpleonlinestore.entity.Category;
 import java.util.List;
 
 public interface CategoryService {

@@ -1,8 +1,8 @@
-package org.example.service.impl;
+package org.example.simpleonlinestore.service.impl;
 
-import org.example.entity.Category;
-import org.example.repository.CategoryRepository;
-import org.example.service.interfaces.CategoryService;
+import org.example.simpleonlinestore.entity.Category;
+import org.example.simpleonlinestore.repository.CategoryRepository;
+import org.example.simpleonlinestore.service.interfaces.CategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

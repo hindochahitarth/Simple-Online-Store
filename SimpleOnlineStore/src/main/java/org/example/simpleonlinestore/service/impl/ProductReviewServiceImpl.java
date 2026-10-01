@@ -1,13 +1,13 @@
-package org.example.service.impl;
+package org.example.simpleonlinestore.service.impl;
 
-import org.example.DTO.ProductReviewRequestDTO;
-import org.example.entity.Product;
-import org.example.entity.ProductReview;
-import org.example.entity.User;
-import org.example.repository.ProductRepository;
-import org.example.repository.ProductReviewRepository;
-import org.example.repository.UserRepository;
-import org.example.service.interfaces.ProductReviewService;
+import org.example.simpleonlinestore.DTO.ProductReviewRequestDTO;
+import org.example.simpleonlinestore.entity.Product;
+import org.example.simpleonlinestore.entity.ProductReview;
+import org.example.simpleonlinestore.entity.User;
+import org.example.simpleonlinestore.repository.ProductRepository;
+import org.example.simpleonlinestore.repository.ProductReviewRepository;
+import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.ProductReviewService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

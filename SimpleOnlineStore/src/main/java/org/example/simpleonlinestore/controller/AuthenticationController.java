@@ -1,13 +1,13 @@
-package org.example.controller;
+package org.example.simpleonlinestore.controller;
 
 import jakarta.validation.Valid;
-import org.example.DTO.LoginResponseDTO;
-import org.example.DTO.LoginUserDTO;
-import org.example.DTO.ResetPasswordRequestDTO;
-import org.example.DTO.UserRequestDTO;
-import org.example.config.JwtService;
-import org.example.entity.User;
-import org.example.service.impl.AuthenticationServiceImpl;
+import org.example.simpleonlinestore.DTO.LoginResponseDTO;
+import org.example.simpleonlinestore.DTO.LoginUserDTO;
+import org.example.simpleonlinestore.DTO.ResetPasswordRequestDTO;
+import org.example.simpleonlinestore.DTO.UserRequestDTO;
+import org.example.simpleonlinestore.config.JwtService;
+import org.example.simpleonlinestore.entity.User;
+import org.example.simpleonlinestore.service.impl.AuthenticationServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.simpleonlinestore.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

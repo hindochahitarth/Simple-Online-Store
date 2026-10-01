@@ -1,4 +1,4 @@
-package org.example.DTO;
+package org.example.simpleonlinestore.DTO;
 
 public class LoginUserDTO {
     private String emailId;

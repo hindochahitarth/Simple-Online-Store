@@ -1,11 +1,11 @@
-package org.example.controller;
+package org.example.simpleonlinestore.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.example.DTO.ProductRequestDTO;
-import org.example.DTO.ProductResponseDTO;
-import org.example.entity.Product;
-import org.example.service.impl.ProductServiceImpl;
+import org.example.simpleonlinestore.DTO.ProductRequestDTO;
+import org.example.simpleonlinestore.DTO.ProductResponseDTO;
+import org.example.simpleonlinestore.entity.Product;
+import org.example.simpleonlinestore.service.impl.ProductServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

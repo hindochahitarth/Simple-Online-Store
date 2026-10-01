@@ -1,4 +1,4 @@
-package org.example.service.interfaces;
+package org.example.simpleonlinestore.service.interfaces;
 
 import com.razorpay.RazorpayException;
 import org.json.JSONObject;

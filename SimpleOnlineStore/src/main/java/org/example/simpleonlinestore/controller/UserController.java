@@ -1,9 +1,9 @@
-package org.example.controller;
+package org.example.simpleonlinestore.controller;
 
 import jakarta.validation.Valid;
-import org.example.DTO.AddressDTO;
-import org.example.entity.User;
-import org.example.service.impl.UserServiceImpl;
+import org.example.simpleonlinestore.DTO.AddressDTO;
+import org.example.simpleonlinestore.entity.User;
+import org.example.simpleonlinestore.service.impl.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;

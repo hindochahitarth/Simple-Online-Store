@@ -1,7 +1,7 @@
-package org.example.service.impl;
+package org.example.simpleonlinestore.service.impl;
 
-import org.example.repository.UserRepository;
-import org.example.service.interfaces.OtpService;
+import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.OtpService;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;

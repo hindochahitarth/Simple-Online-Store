@@ -1,9 +1,9 @@
-package org.example.controller;
+package org.example.simpleonlinestore.controller;
 
-import org.example.DTO.OrderRequestDTO;
-import org.example.entity.Order;
-import org.example.service.impl.EmailServiceImpl;
-import org.example.service.impl.OrderServiceImpl;
+import org.example.simpleonlinestore.DTO.OrderRequestDTO;
+import org.example.simpleonlinestore.entity.Order;
+import org.example.simpleonlinestore.service.impl.EmailServiceImpl;
+import org.example.simpleonlinestore.service.impl.OrderServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,4 +1,4 @@
-package org.example.DTO;
+package org.example.simpleonlinestore.DTO;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;

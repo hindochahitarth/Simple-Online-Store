@@ -1,6 +1,6 @@
-package org.example.service.interfaces;
+package org.example.simpleonlinestore.service.interfaces;
 
-import org.example.entity.Order;
+import org.example.simpleonlinestore.entity.Order;
 import java.util.List;
 import java.util.Map;
 
