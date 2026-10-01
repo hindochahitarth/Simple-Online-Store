@@ -1,0 +1,56 @@
+package org.example.service.impl;
+
+import org.example.DTO.ProductReviewRequestDTO;
+import org.example.entity.Product;
+import org.example.entity.ProductReview;
+import org.example.entity.User;
+import org.example.repository.ProductRepository;
+import org.example.repository.ProductReviewRepository;
+import org.example.repository.UserRepository;
+import org.example.service.interfaces.ProductReviewService;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ProductReviewServiceImpl implements ProductReviewService {
+    private final ProductRepository productRepository;
+    private final ProductReviewRepository productReviewRepository;
+    private final UserRepository userRepository;
+
+    public ProductReviewServiceImpl(ProductReviewRepository productReviewRepository,UserRepository userRepository,ProductRepository productRepository){
+        this.productReviewRepository=productReviewRepository;
+        this.userRepository=userRepository;
+        this.productRepository=productRepository;
+    }
+    private User getLoggedInUser() {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        return userRepository.findByEmailId(email)
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
+    }
+    public ProductReview addProductReview(Long productId, ProductReviewRequestDTO request){
+        if(request.getRating()<1 || request.getRating()>5){
+            throw new RuntimeException("Rating must be Between 1 - 5");
+        }
+        Product product=productRepository.findById(productId).orElseThrow(() ->new RuntimeException("Product with id "+productId+" does not exist"));
+        User user=getLoggedInUser();
+
+        ProductReview productReview=ProductReview
+                .builder()
+                        .comment(request.getComment())
+                        .product(product)
+                        .user(user)
+                        .rating(request.getRating())
+                        .build();
+
+//        productReview.setComment(request.getComment());
+//        productReview.setProduct(product);
+//        productReview.setUser(user);
+//        productReview.setRating(request.getRating());
+
+        return productReviewRepository.save(productReview);
+    }
+}

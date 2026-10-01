@@ -1,0 +1,46 @@
+package org.example.service.impl;
+
+import org.example.entity.Category;
+import org.example.repository.CategoryRepository;
+import org.example.service.interfaces.CategoryService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class CategoryServiceImpl implements CategoryService {
+    private final CategoryRepository categoryRepository;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository){
+        this.categoryRepository=categoryRepository;
+    }
+
+    public List<Category> getAllCategories(){
+        return categoryRepository.findAll();
+    }
+
+    public Category getCategoryById(Long id){
+        return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category with id "+id+" not found"));
+    }
+    public Category createCategory(Category category){
+        return categoryRepository.save(category);
+    }
+
+    public Category updateCategory(Long categoryId,Category categoryDetails){
+        //Category category=getCategoryById(categoryId);
+            Category category=Category.builder()
+                            .name(categoryDetails.getName())
+                            .description(categoryDetails.getDescription())
+                            .build();
+
+//        category.setName(categoryDetails.getName());
+//        category.setDescription(categoryDetails.getDescription());
+        return categoryRepository.save(category);
+    }
+    public void deleteCategory(Long categoryId){
+        Category category=getCategoryById(categoryId);
+        categoryRepository.delete(category);
+    }
+
+}
+

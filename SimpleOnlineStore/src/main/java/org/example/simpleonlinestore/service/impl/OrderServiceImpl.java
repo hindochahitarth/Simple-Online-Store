@@ -1,0 +1,228 @@
+package org.example.service.impl;
+
+import org.example.repository.*;
+import com.razorpay.RazorpayException;
+import jakarta.transaction.Transactional;
+import org.example.entity.*;
+import org.example.enums.OrderStatus;
+import org.example.repository.*;
+import org.example.service.interfaces.OrderService;
+import org.json.JSONObject;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class OrderServiceImpl implements OrderService {
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final RazorpayServiceImpl razorpayService;
+    private final AddressRepository addressRepository;
+    private final EmailServiceImpl emailService;
+    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, CartRepository cartRepository, RazorpayServiceImpl razorpayService, AddressRepository addressRepository, EmailServiceImpl emailService){
+        this.orderRepository=orderRepository;
+        this.productRepository=productRepository;
+        this.cartRepository=cartRepository;
+        this.userRepository=userRepository;
+        this.razorpayService=razorpayService;
+        this.addressRepository=addressRepository;
+        this.emailService=emailService;
+    }
+    private User getLoggedInUser() {
+
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+
+        return userRepository.findByEmailId(email)
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
+    }
+    @Transactional
+    public Order placeOrder(Long addressId){
+
+        User user=getLoggedInUser();
+        Address address=addressRepository.findById(addressId).orElseThrow(() ->  new RuntimeException("Address Not Found"));
+
+        if(!address.getUser().getId().equals(user.getId())){
+            throw new RuntimeException("This address does not belong to you.");
+        }
+        Cart cart=cartRepository.findByUserId(user.getId()).orElseThrow(()->new RuntimeException("Cart not found"));
+
+        if(cart.getItems()==null || cart.getItems().isEmpty()){
+            throw new RuntimeException("Cart is empty ");
+        }
+        Order order=Order.builder()
+                        .user(user)
+                        .status(OrderStatus.PAYMENT_PENDING)
+                        .address(address)
+                        .build();
+//        order.setUser(user);
+//        order.setStatus(OrderStatus.PAYMENT_PENDING);
+//        order.setAddress(address);
+
+        List<OrderItem> orderItemList=new ArrayList<>();
+        BigDecimal totalAmount=BigDecimal.ZERO;
+        //checking stocks
+        for(CartItem cartItem:cart.getItems()){
+            Product product=cartItem.getProduct();
+
+            if(product.getStockCount()<cartItem.getQuantity()){
+                throw new RuntimeException("Insufficient Stock ");
+            }
+            product.setStockCount(product.getStockCount()-cartItem.getQuantity());
+            productRepository.save(product);
+
+            // change to builder pattern
+            OrderItem orderItem=OrderItem
+                        .builder()
+                        .order(order)
+                        .product(product)
+                                .quantity(cartItem.getQuantity()).build();
+//            orderItem.setOrder(order);
+//            orderItem.setProduct(product);
+//            orderItem.setQuantity(cartItem.getQuantity());
+            long calculatedPrice = product.getPrice();
+            if (product.getDiscountPercentage() != null && product.getDiscountPercentage() > 0) {
+                long discountAmount = (product.getPrice() * product.getDiscountPercentage()) / 100;
+                calculatedPrice = product.getPrice() - discountAmount;
+            }
+
+            BigDecimal price=BigDecimal.valueOf(calculatedPrice);
+            OrderItem.builder()
+                    .price(price)
+                    .build();
+           // orderItem.setPrice(price);
+
+            // ----- use builder pattern upto here to build order
+            totalAmount=totalAmount.add(
+                    price.multiply(
+                            BigDecimal.valueOf(cartItem.getQuantity())
+                    )
+            );
+
+            orderItemList.add(orderItem);
+        }
+        Order.builder()
+                        .items(orderItemList)
+                        .totalAmount(totalAmount)
+                        .build();
+//        order.setItems(orderItemList);
+//        order.setTotalAmount(totalAmount);
+        try {
+            String receiptId = "txn_" + System.currentTimeMillis();
+            Double doubleAmount = totalAmount.doubleValue();
+
+            JSONObject razorpayOrderJson = razorpayService.createOrder(doubleAmount, receiptId);
+            Order.builder()
+                            .razorpayOrderId(razorpayOrderJson.getString("id"))
+                                    .build();
+            //order.setRazorpayOrderId(razorpayOrderJson.getString("id"));
+        } catch (RazorpayException e) {
+            throw new RuntimeException("Failed to generate gateway token: " + e.getMessage());
+        }
+
+
+        Order savedOrder=orderRepository.save(order);
+
+        cart.getItems().clear();
+        cartRepository.save(cart);
+
+        return savedOrder;
+
+    }
+    @Transactional
+    public Order verifyPaymentSignature(Map<String, String> payload) {
+        Long orderId = Long.parseLong(payload.get("orderId"));
+        String razorpayOrderId = payload.get("razorpayOrderId");
+        String razorpayPaymentId = payload.get("razorpayPaymentId");
+        String razorpaySignature = payload.get("razorpaySignature");
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order record not found"));
+
+        boolean isValid = razorpayService.verifySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature);
+
+        if (isValid) {
+            Order.builder()
+                            .status(OrderStatus.PLACED)
+                            .razorpayPaymentId(razorpayPaymentId)
+                            .build();
+//            order.setStatus(OrderStatus.PLACED);
+//            order.setRazorpayPaymentId(razorpayPaymentId);
+            return orderRepository.save(order);
+        } else {
+            order.setStatus(OrderStatus.PAYMENT_FAILED);
+            // Restock items back into product listings
+            for (OrderItem item : order.getItems()) {
+                Product product = item.getProduct();
+                Product.builder()
+                                .stockCount(product.getStockCount()+item.getQuantity());
+                //product.setStockCount(product.getStockCount() + item.getQuantity());
+                productRepository.save(product);
+            }
+            return orderRepository.save(order);
+        }
+    }
+
+    public List<Order> getOrderByUser(){
+        User user=getLoggedInUser();
+        
+        return orderRepository.findByUserId(user.getId());
+    }
+    public Order getOrderById(Long orderId){
+        return orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order id "+orderId+"does not exist"));
+
+    }
+    @Transactional
+    public Order cancelOrder(Long orderId) {
+        User user = getLoggedInUser();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+
+        if (!order.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized action: This order does not belong to you.");
+        }
+
+
+        order.setStatus(OrderStatus.CANCELED);
+        for (OrderItem item : order.getItems()) {
+            Product product = item.getProduct();
+            product.setStockCount(product.getStockCount() + item.getQuantity());
+            productRepository.save(product);
+        }
+
+        return orderRepository.save(order);
+    }
+    public String generateInvoiceSummary(Long orderId) {
+        Order order = getOrderById(orderId);
+        StringBuilder invoice = new StringBuilder();
+        invoice.append("=== INVOICE FOR ORDER ID: ").append(order.getId()).append(" ===\n");
+        invoice.append("Customer Name: "+order.getUser().getFirstName());
+        invoice.append(order.getUser().getLastName());
+        invoice.append("\nStatus: ").append(order.getStatus()).append("\n");
+        invoice.append("Deliver To: ").append(order.getAddress().getAddressLine1());
+        invoice.append(" "+order.getAddress().getAddressLine2());
+        invoice.append(" "+order.getAddress().getCity())
+        .append("\n\n");
+        for (OrderItem item : order.getItems()) {
+            invoice.append("- ")
+                    .append(item.getProduct().getName())
+                    .append(" x ")
+                    .append(item.getQuantity())
+                    .append(" = INR ")
+                    .append(item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                    .append("\n"+item.getProduct().getDescription())
+                    .append("\n");
+        }
+        invoice.append("\nTotal : INR ").append(order.getTotalAmount());
+        return invoice.toString();
+    }
+
+
+}
