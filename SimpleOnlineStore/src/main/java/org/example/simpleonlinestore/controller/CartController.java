@@ -1,7 +1,7 @@
-package org.example.controller;
+package org.example.simpleonlinestore.controller;
 
-import org.example.entity.Cart;
-import org.example.service.impl.CartServiceImpl;
+import org.example.simpleonlinestore.entity.Cart;
+import org.example.simpleonlinestore.service.impl.CartServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

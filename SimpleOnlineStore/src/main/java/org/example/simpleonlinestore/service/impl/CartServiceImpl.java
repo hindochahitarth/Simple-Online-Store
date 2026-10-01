@@ -1,14 +1,14 @@
-package org.example.service.impl;
+package org.example.simpleonlinestore.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.entity.Cart;
-import org.example.entity.CartItem;
-import org.example.entity.Product;
-import org.example.entity.User;
-import org.example.repository.CartRepository;
-import org.example.repository.ProductRepository;
-import org.example.repository.UserRepository;
-import org.example.service.interfaces.CartService;
+import org.example.simpleonlinestore.entity.Cart;
+import org.example.simpleonlinestore.entity.CartItem;
+import org.example.simpleonlinestore.entity.Product;
+import org.example.simpleonlinestore.entity.User;
+import org.example.simpleonlinestore.repository.CartRepository;
+import org.example.simpleonlinestore.repository.ProductRepository;
+import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.CartService;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
 

@@ -1,6 +1,6 @@
-package org.example.repository;
+package org.example.simpleonlinestore.repository;
 
-import org.example.entity.Product;
+import org.example.simpleonlinestore.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.simpleonlinestore.config;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package org.example.DTO;
+package org.example.simpleonlinestore.DTO;
 
 
 import jakarta.validation.constraints.NotBlank;

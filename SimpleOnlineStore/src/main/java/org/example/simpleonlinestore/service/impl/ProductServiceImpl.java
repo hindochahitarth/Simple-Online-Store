@@ -1,16 +1,16 @@
-package org.example.service.impl;
+package org.example.simpleonlinestore.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.DTO.ProductRequestDTO;
-import org.example.DTO.ProductResponseDTO;
-import org.example.entity.Category;
-import org.example.entity.Image;
-import org.example.entity.Product;
-import org.example.mapper.ProductMapper;
-import org.example.repository.CategoryRepository;
-import org.example.repository.ImageRepository;
-import org.example.repository.ProductRepository;
-import org.example.service.interfaces.ProductService;
+import org.example.simpleonlinestore.DTO.ProductRequestDTO;
+import org.example.simpleonlinestore.DTO.ProductResponseDTO;
+import org.example.simpleonlinestore.entity.Category;
+import org.example.simpleonlinestore.entity.Image;
+import org.example.simpleonlinestore.entity.Product;
+import org.example.simpleonlinestore.mapper.ProductMapper;
+import org.example.simpleonlinestore.repository.CategoryRepository;
+import org.example.simpleonlinestore.repository.ImageRepository;
+import org.example.simpleonlinestore.repository.ProductRepository;
+import org.example.simpleonlinestore.service.interfaces.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

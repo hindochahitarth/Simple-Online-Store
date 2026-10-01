@@ -1,10 +1,10 @@
 package com.niyantras.simpleonlinestore;
 
-import com.niyantras.simpleonlinestore.entity.Product;
-import com.niyantras.simpleonlinestore.repository.CategoryRepository;
-import com.niyantras.simpleonlinestore.repository.ImageRepository;
-import com.niyantras.simpleonlinestore.repository.ProductRepository;
-import com.niyantras.simpleonlinestore.service.impl.ProductServiceImpl;
+import org.example.simpleonlinestore.entity.Product;
+import org.example.simpleonlinestore.repository.CategoryRepository;
+import org.example.simpleonlinestore.repository.ImageRepository;
+import org.example.simpleonlinestore.repository.ProductRepository;
+import org.example.simpleonlinestore.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

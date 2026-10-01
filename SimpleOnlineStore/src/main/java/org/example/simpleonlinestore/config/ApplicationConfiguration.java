@@ -1,6 +1,6 @@
-package org.example.config;
+package org.example.simpleonlinestore.config;
 
-import org.example.repository.UserRepository;
+import org.example.simpleonlinestore.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

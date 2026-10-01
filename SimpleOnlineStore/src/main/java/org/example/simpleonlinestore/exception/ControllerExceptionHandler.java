@@ -1,4 +1,4 @@
-package org.example.exception;
+package org.example.simpleonlinestore.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

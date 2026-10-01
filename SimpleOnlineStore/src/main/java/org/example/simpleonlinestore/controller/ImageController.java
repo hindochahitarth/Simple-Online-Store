@@ -1,6 +1,6 @@
-package org.example.controller;
+package org.example.simpleonlinestore.controller;
 
-import org.example.service.ImageService;
+import org.example.simpleonlinestore.service.ImageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

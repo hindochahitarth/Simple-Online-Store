@@ -1,6 +1,6 @@
-package org.example.repository;
+package org.example.simpleonlinestore.repository;
 
-import org.example.entity.Cart;
+import org.example.simpleonlinestore.entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,17 +1,17 @@
-package org.example.service.impl;
+package org.example.simpleonlinestore.service.impl;
 
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.example.DTO.LoginUserDTO;
-import org.example.DTO.UserRequestDTO;
-import org.example.entity.Cart;
-import org.example.entity.User;
-import org.example.enums.Roles;
-import org.example.exception.UserAlreadyExistsException;
-import org.example.repository.CartRepository;
-import org.example.repository.UserRepository;
-import org.example.service.interfaces.AuthenticationService;
+import org.example.simpleonlinestore.DTO.LoginUserDTO;
+import org.example.simpleonlinestore.DTO.UserRequestDTO;
+import org.example.simpleonlinestore.entity.Cart;
+import org.example.simpleonlinestore.entity.User;
+import org.example.simpleonlinestore.enums.Roles;
+import org.example.simpleonlinestore.exception.UserAlreadyExistsException;
+import org.example.simpleonlinestore.repository.CartRepository;
+import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.AuthenticationService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

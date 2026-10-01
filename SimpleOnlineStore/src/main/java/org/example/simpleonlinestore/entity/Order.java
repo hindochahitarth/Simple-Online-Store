@@ -1,9 +1,9 @@
-package org.example.entity;
+package org.example.simpleonlinestore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.enums.OrderStatus;
+import org.example.simpleonlinestore.enums.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

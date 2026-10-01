@@ -1,8 +1,8 @@
-package org.example.service.interfaces;
+package org.example.simpleonlinestore.service.interfaces;
 
-import org.example.DTO.ProductRequestDTO;
-import org.example.DTO.ProductResponseDTO;
-import org.example.entity.Product;
+import org.example.simpleonlinestore.DTO.ProductRequestDTO;
+import org.example.simpleonlinestore.DTO.ProductResponseDTO;
+import org.example.simpleonlinestore.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

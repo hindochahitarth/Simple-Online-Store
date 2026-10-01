@@ -1,4 +1,4 @@
-package org.example.service.interfaces;
+package org.example.simpleonlinestore.service.interfaces;
 
 public interface EmailService {
     void sendOtp(String toEmail, String otp);

@@ -1,11 +1,11 @@
-package org.example.entity;
+package org.example.simpleonlinestore.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.example.enums.Roles;
+import org.example.simpleonlinestore.enums.Roles;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

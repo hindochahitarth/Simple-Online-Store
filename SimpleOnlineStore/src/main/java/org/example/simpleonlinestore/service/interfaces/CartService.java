@@ -1,5 +1,5 @@
-package org.example.service.interfaces;
-import org.example.entity.Cart;
+package org.example.simpleonlinestore.service.interfaces;
+import org.example.simpleonlinestore.entity.Cart;
 
 public interface CartService {
     Cart getCart();

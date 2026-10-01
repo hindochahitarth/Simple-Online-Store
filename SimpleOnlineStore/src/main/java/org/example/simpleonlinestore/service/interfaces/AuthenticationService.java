@@ -1,8 +1,8 @@
-package org.example.service.interfaces;
+package org.example.simpleonlinestore.service.interfaces;
 
-import org.example.DTO.LoginUserDTO;
-import org.example.DTO.UserRequestDTO;
-import org.example.entity.User;
+import org.example.simpleonlinestore.DTO.LoginUserDTO;
+import org.example.simpleonlinestore.DTO.UserRequestDTO;
+import org.example.simpleonlinestore.entity.User;
 
 public interface AuthenticationService {
     User signUp(UserRequestDTO input);

@@ -1,6 +1,6 @@
-package org.example.repository;
+package org.example.simpleonlinestore.repository;
 
-import org.example.entity.ProductReview;
+import org.example.simpleonlinestore.entity.ProductReview;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

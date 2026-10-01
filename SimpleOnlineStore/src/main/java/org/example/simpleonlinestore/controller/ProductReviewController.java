@@ -1,11 +1,11 @@
-package org.example.controller;
+package org.example.simpleonlinestore.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.DTO.ProductReviewRequestDTO;
-import org.example.service.impl.ProductReviewServiceImpl;
+import org.example.simpleonlinestore.DTO.ProductReviewRequestDTO;
+import org.example.simpleonlinestore.service.impl.ProductReviewServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.example.entity.ProductReview;
+import org.example.simpleonlinestore.entity.ProductReview;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j

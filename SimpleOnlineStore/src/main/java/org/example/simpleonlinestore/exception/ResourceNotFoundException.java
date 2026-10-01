@@ -1,4 +1,4 @@
-package org.example.exception;
+package org.example.simpleonlinestore.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 

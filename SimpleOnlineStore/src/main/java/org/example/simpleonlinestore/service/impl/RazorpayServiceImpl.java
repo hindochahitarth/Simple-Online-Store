@@ -1,11 +1,11 @@
-package org.example.service.impl;
+package org.example.simpleonlinestore.service.impl;
 
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.razorpay.Utils;
 import jakarta.annotation.PostConstruct;
-import org.example.service.interfaces.RazorpayService;
+import org.example.simpleonlinestore.service.interfaces.RazorpayService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
