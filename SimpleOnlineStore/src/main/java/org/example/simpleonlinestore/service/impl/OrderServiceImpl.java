@@ -9,6 +9,7 @@ import org.example.simpleonlinestore.entity.*;
 import org.example.simpleonlinestore.enums.OrderStatus;
 import org.example.simpleonlinestore.repository.*;
 import org.example.simpleonlinestore.repository.*;
+import org.example.simpleonlinestore.service.interfaces.InvoiceGenerator;
 import org.example.simpleonlinestore.service.interfaces.OrderService;
 import org.json.JSONObject;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -101,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
     log.warn(String.valueOf(totalAmount));
             orderItemList.add(orderItem);
         }
-        
+
         log.warn(String.valueOf(totalAmount));
 
         log.warn(String.valueOf(totalAmount));
@@ -203,29 +204,19 @@ public class OrderServiceImpl implements OrderService {
 
         return orderRepository.save(order);
     }
-    public String generateInvoiceSummary(Long orderId) {
+
+    @Override
+    public String generateInvoiceSummary(Long orderId,String format) {
         Order order = getOrderById(orderId);
-        StringBuilder invoice = new StringBuilder();
-        invoice.append("=== INVOICE FOR ORDER ID: ").append(order.getId()).append(" ===\n");
-        invoice.append("Customer Name: "+order.getUser().getFirstName());
-        invoice.append(order.getUser().getLastName());
-        invoice.append("\nStatus: ").append(order.getStatus()).append("\n");
-        invoice.append("Deliver To: ").append(order.getAddress().getAddressLine1());
-        invoice.append(" "+order.getAddress().getAddressLine2());
-        invoice.append(" "+order.getAddress().getCity())
-        .append("\n\n");
-        for (OrderItem item : order.getItems()) {
-            invoice.append("- ")
-                    .append(item.getProduct().getName())
-                    .append(" x ")
-                    .append(item.getQuantity())
-                    .append(" = INR ")
-                    .append(item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                    .append("\n"+item.getProduct().getDescription())
-                    .append("\n");
+        InvoiceGenerator generator=new PlainTextInvoiceGenerator();
+
+        if("TAX_PLAIN".equalsIgnoreCase(format)){
+            generator=new TaxInvoiceDecorator(generator);
         }
-        invoice.append("\nTotal : INR ").append(order.getTotalAmount());
-        return invoice.toString();
+        else if("HTML_EMAIL".equalsIgnoreCase(format)){
+            generator=new HtmlInvoiceDecorator(new TaxInvoiceDecorator(generator));
+        }
+        return generator.generate(order);
     }
 
 

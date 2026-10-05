@@ -55,21 +55,21 @@ public class OrderController {
         return ResponseEntity.ok(canceledOrder);
     }
     @GetMapping("/{orderId}/invoice")
-    public ResponseEntity<String> getInvoiceSummary(@PathVariable Long orderId){
-        String invoice=orderService.generateInvoiceSummary(orderId);
+    public ResponseEntity<String> getInvoiceSummary(@PathVariable Long orderId,@RequestParam(defaultValue = "plain") String format){
+        String invoice=orderService.generateInvoiceSummary(orderId,format);
         return ResponseEntity.ok(invoice);
 
     }
-    @PostMapping("/{orderId}/send-invoice")
-    public ResponseEntity<String> sendInvoice(@PathVariable Long orderId) {
-        // Fetch the order from the database
-        Order order = orderService.getOrderById(orderId);
-        String customerEmail = order.getUser().getEmailId();
-        String summary = orderService.generateInvoiceSummary(orderId);
-        emailService.sendNotification(customerEmail, summary);
-
-        return ResponseEntity.ok("Invoice email sent successfully to " + customerEmail);
-    }
+//    @PostMapping("/{orderId}/send-invoice")
+//    public ResponseEntity<String> sendInvoice(@PathVariable Long orderId) {
+//        // Fetch the order from the database
+//        Order order = orderService.getOrderById(orderId);
+//        String customerEmail = order.getUser().getEmailId();
+//        String summary = orderService.generateInvoiceSummary(orderId);
+//        emailService.sendNotification(customerEmail, summary);
+//
+//        return ResponseEntity.ok("Invoice email sent successfully to " + customerEmail);
+//    }
 
 }
 

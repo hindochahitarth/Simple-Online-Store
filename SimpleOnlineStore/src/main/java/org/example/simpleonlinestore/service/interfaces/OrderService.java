@@ -10,5 +10,5 @@ public interface OrderService {
     List<Order> getOrderByUser();
     Order getOrderById(Long orderId);
     Order cancelOrder(Long orderId);
-    String generateInvoiceSummary(Long orderId);
+    String generateInvoiceSummary(Long orderId,String format);
 }
