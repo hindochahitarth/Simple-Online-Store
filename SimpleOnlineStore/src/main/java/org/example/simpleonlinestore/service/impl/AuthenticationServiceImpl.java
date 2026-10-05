@@ -60,13 +60,14 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
 //        user.setRole(Roles.USER);
 //        user.setPassword(passwordEncoder.encode(input.getPassword()));
 //        user.setPhoneNumber(input.getPhoneNumber());
-        
-        user.setActive(true);
-        user.setVerified(false);
+//        user.setActive(true);
+//        user.setVerified(false);
         User savedUser=userRepository.save(user);
         otpService.sendOtp(user.getEmailId());
-        Cart cart=new Cart();
-        cart.setUser(savedUser);
+        Cart cart=Cart.builder()
+                        .user(savedUser)
+                                .build();
+        //cart.setUser(savedUser);
         cartRepository.save(cart);
 
 

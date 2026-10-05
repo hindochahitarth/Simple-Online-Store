@@ -60,11 +60,11 @@ public class OrderServiceImpl implements OrderService {
         if(cart.getItems()==null || cart.getItems().isEmpty()){
             throw new RuntimeException("Cart is empty ");
         }
-        Order order=Order.builder()
-                        .user(user)
-                        .status(OrderStatus.PAYMENT_PENDING)
-                        .address(address)
-                        .build();
+//        Order order=Order.builder()
+//                        .user(user)
+//                        .status(OrderStatus.PAYMENT_PENDING)
+//                        .address(address)
+//                        .build();
 //        order.setUser(user);
 //        order.setStatus(OrderStatus.PAYMENT_PENDING);
 //        order.setAddress(address);
@@ -81,15 +81,6 @@ public class OrderServiceImpl implements OrderService {
             product.setStockCount(product.getStockCount()-cartItem.getQuantity());
             productRepository.save(product);
 
-            // change to builder pattern
-            OrderItem orderItem=OrderItem
-                        .builder()
-                        .order(order)
-                        .product(product)
-                                .quantity(cartItem.getQuantity()).build();
-//            orderItem.setOrder(order);
-//            orderItem.setProduct(product);
-//            orderItem.setQuantity(cartItem.getQuantity());
             long calculatedPrice = product.getPrice();
             if (product.getDiscountPercentage() != null && product.getDiscountPercentage() > 0) {
                 long discountAmount = (product.getPrice() * product.getDiscountPercentage()) / 100;
@@ -97,7 +88,19 @@ public class OrderServiceImpl implements OrderService {
             }
 
             BigDecimal price=BigDecimal.valueOf(calculatedPrice);
-           orderItem= OrderItem.builder()
+
+            // change to builder pattern
+//            OrderItem orderItem=OrderItem
+//                        .builder()
+//                        .order(order)
+//                        .product(product)
+//                                .quantity(cartItem.getQuantity()).build();
+//            orderItem.setOrder(order);
+//            orderItem.setProduct(product);
+//            orderItem.setQuantity(cartItem.getQuantity());
+         OrderItem  orderItem= OrderItem.builder()
+                 .product(product)
+                 .quantity(cartItem.getQuantity())
                     .price(price)
                     .build();
            // orderItem.setPrice(price);
@@ -111,25 +114,32 @@ public class OrderServiceImpl implements OrderService {
     log.warn(String.valueOf(totalAmount));
             orderItemList.add(orderItem);
         }
-        order=Order.builder()
-                        .items(orderItemList)
-                        .totalAmount(totalAmount)
-                        .build();
 
         log.warn(String.valueOf(totalAmount));
 //        order.setItems(orderItemList);
 //        order.setTotalAmount(totalAmount);
+        String razorpayOrderId=null;
         try {
             String receiptId = "txn_" + System.currentTimeMillis();
             Double doubleAmount = totalAmount.doubleValue();
 
             JSONObject razorpayOrderJson = razorpayService.createOrder(doubleAmount, receiptId);
-            Order.builder()
-                            .razorpayOrderId(razorpayOrderJson.getString("id"))
-                                    .build();
+            razorpayOrderId=razorpayOrderJson.getString("id");
+
             //order.setRazorpayOrderId(razorpayOrderJson.getString("id"));
         } catch (RazorpayException e) {
             throw new RuntimeException("Failed to generate gateway token: " + e.getMessage());
+        }
+        Order order=Order.builder()
+                .user(user)
+                .status(OrderStatus.PAYMENT_PENDING)
+                .address(address)
+                .items(orderItemList)
+                .totalAmount(totalAmount)
+                .razorpayOrderId(razorpayOrderId)
+                .build();
+        for (OrderItem item : orderItemList) {
+            item.setOrder(order);
         }
 
 
