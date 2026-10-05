@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "products")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class Product {
 
     @Id

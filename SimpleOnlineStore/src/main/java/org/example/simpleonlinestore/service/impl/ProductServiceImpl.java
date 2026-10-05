@@ -50,10 +50,14 @@ public class ProductServiceImpl implements ProductService {
                 .build();
 
         log.info("Inside create product service");
-        Product product = productMapper.toEntity(request);
-        product.setImage(image);
-        product.setCategory(category);
-        product.setImageUrl(file.getOriginalFilename());
+        Product product = Product.builder()
+                        .name(request.getName())
+                        .price(request.getPrice())
+                        .description(request.getDescription())
+                        .image(image)
+                        .category(category)
+                        .imageUrl(file.getOriginalFilename())
+                        .build();
         Product savedProduct= productRepository.save(product);
         return productMapper.toResponseDTO(savedProduct);
     }
@@ -68,13 +72,22 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Long id,ProductRequestDTO request){
         Product product=productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
 
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setPrice(request.getPrice());
-        //product.setUrl(request.getUrl());
-        product.setStockCount(request.getStockCount());
-        product.setDiscountPercentage(request.getDiscountPercentage());
-        product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
+        Product updatedProduct=Product.builder()
+                                .name(request.getName())
+                                .description(request.getDescription())
+                                .price(request.getPrice())
+                                .stockCount(request.getStockCount())
+                                .discountPercentage(request.getDiscountPercentage())
+                                .isActive(request.getIsActive()!=null ? request.getIsActive():true)
+                                .build();
+
+//        product.setName(request.getName());
+//        product.setDescription(request.getDescription());
+//        product.setPrice(request.getPrice());
+//        //product.setUrl(request.getUrl());
+//        product.setStockCount(request.getStockCount());
+//        product.setDiscountPercentage(request.getDiscountPercentage());
+//        product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
         return productRepository.save(product);
 
     }
@@ -95,7 +108,10 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
 
-        product.setStockCount(product.getStockCount() + quantityToAdd);
+        Product updatedProduct=product.toBuilder()
+                .stockCount(product.getStockCount()+quantityToAdd)
+                .build();
+//        product.setStockCount(product.getStockCount() + quantityToAdd);
         return productRepository.save(product);
     }
     public Product updateDiscountPercentage(Long id, Integer discountPercentage) {
@@ -105,8 +121,10 @@ public class ProductServiceImpl implements ProductService {
         if (discountPercentage!=null && (discountPercentage<0 || discountPercentage>100)) {
             throw new RuntimeException("Discount percentage must be between 0 and 100");
         }
-
-        product.setDiscountPercentage(discountPercentage);
+            Product updatedProduct=product.toBuilder()
+                    .discountPercentage(discountPercentage)
+                    .build();
+//        product.setDiscountPercentage(discountPercentage);
         return productRepository.save(product);
     }
     public Page<Product> searchProducts(String keyword, Pageable pageable) {
