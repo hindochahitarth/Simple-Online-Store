@@ -1,5 +1,6 @@
 package org.example.simpleonlinestore.service.impl;
 
+import org.example.repository.*;
 import com.razorpay.RazorpayException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -60,11 +61,11 @@ public class OrderServiceImpl implements OrderService {
         if(cart.getItems()==null || cart.getItems().isEmpty()){
             throw new RuntimeException("Cart is empty ");
         }
-//        Order order=Order.builder()
-//                        .user(user)
-//                        .status(OrderStatus.PAYMENT_PENDING)
-//                        .address(address)
-//                        .build();
+        Order order=Order.builder()
+                        .user(user)
+                        .status(OrderStatus.PAYMENT_PENDING)
+                        .address(address)
+                        .build();
 //        order.setUser(user);
 //        order.setStatus(OrderStatus.PAYMENT_PENDING);
 //        order.setAddress(address);
@@ -88,19 +89,7 @@ public class OrderServiceImpl implements OrderService {
             }
 
             BigDecimal price=BigDecimal.valueOf(calculatedPrice);
-
-            // change to builder pattern
-//            OrderItem orderItem=OrderItem
-//                        .builder()
-//                        .order(order)
-//                        .product(product)
-//                                .quantity(cartItem.getQuantity()).build();
-//            orderItem.setOrder(order);
-//            orderItem.setProduct(product);
-//            orderItem.setQuantity(cartItem.getQuantity());
-         OrderItem  orderItem= OrderItem.builder()
-                 .product(product)
-                 .quantity(cartItem.getQuantity())
+            OrderItem.builder()
                     .price(price)
                     .build();
            // orderItem.setPrice(price);
@@ -114,6 +103,12 @@ public class OrderServiceImpl implements OrderService {
     log.warn(String.valueOf(totalAmount));
             orderItemList.add(orderItem);
         }
+        order=Order.builder()
+                        .items(orderItemList)
+                        .totalAmount(totalAmount)
+                        .build();
+
+        log.warn(String.valueOf(totalAmount));
 
         log.warn(String.valueOf(totalAmount));
 //        order.setItems(orderItemList);
