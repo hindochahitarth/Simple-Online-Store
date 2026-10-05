@@ -4,6 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.simpleonlinestore.enums.OrderStatus;
+import org.example.simpleonlinestore.service.impl.CancelledState;
+import org.example.simpleonlinestore.service.impl.PaymentFailedState;
+import org.example.simpleonlinestore.service.impl.PaymentPendingState;
+import org.example.simpleonlinestore.service.impl.PlacedState;
+import org.example.simpleonlinestore.service.interfaces.OrderState;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,6 +33,20 @@ public class Order {
     @JsonIgnoreProperties({"orders", "addresses", "cart", "password", "authorities"})
 
     private User user;
+
+    @Transient
+    private OrderState state;
+    @PostLoad
+    public void initRuntimeState() {
+        this.state = switch (this.status) {
+            case PAYMENT_PENDING -> new PaymentPendingState();
+            case PLACED -> new PlacedState();
+            case PAYMENT_FAILED -> new PaymentFailedState();
+            case PENDING -> null;
+            case CONFIRMED -> null;
+            case CANCELED -> new CancelledState();
+        };
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
