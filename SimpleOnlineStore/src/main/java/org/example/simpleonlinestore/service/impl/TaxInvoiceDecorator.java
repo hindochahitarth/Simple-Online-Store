@@ -14,7 +14,7 @@ public class TaxInvoiceDecorator extends InvoiceDecorator{
     public String generate(Order order){
         String baseInvoice=super.generate(order);
 
-        BigDecimal gstAmount= order.getTotalAmount().multiply(BigDecimal.valueOf(0.18));
+        BigDecimal gstAmount= order.getTotalAmount().add(order.getTotalAmount().multiply(BigDecimal.valueOf(0.18)));
 
         return baseInvoice+"\n Included 18% GST  Total :"+gstAmount;
 

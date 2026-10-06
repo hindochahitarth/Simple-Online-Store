@@ -56,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
                         .description(request.getDescription())
                         .image(image)
                         .category(category)
+                .stockCount(request.getStockCount())
                         .imageUrl(file.getOriginalFilename())
                         .build();
         Product savedProduct= productRepository.save(product);
