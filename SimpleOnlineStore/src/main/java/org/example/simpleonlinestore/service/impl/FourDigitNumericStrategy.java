@@ -1,0 +1,15 @@
+package org.example.simpleonlinestore.service.impl;
+
+import org.example.simpleonlinestore.service.interfaces.OtpGenerationStrategy;
+import org.springframework.stereotype.Component;
+
+import java.security.SecureRandom;
+
+@Component("fourDigit")
+public class FourDigitNumericStrategy implements OtpGenerationStrategy {
+    private final SecureRandom random=new SecureRandom();
+    @Override
+    public String generate() {
+        return String.valueOf(random.nextInt(1000,10000));
+    }
+}

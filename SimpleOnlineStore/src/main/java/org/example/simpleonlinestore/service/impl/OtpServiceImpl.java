@@ -1,6 +1,8 @@
 package org.example.simpleonlinestore.service.impl;
 
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.OtpDeliveryStrategy;
+import org.example.simpleonlinestore.service.interfaces.OtpGenerationStrategy;
 import org.example.simpleonlinestore.service.interfaces.OtpService;
 import org.springframework.stereotype.Service;
 
@@ -19,23 +21,22 @@ public class OtpServiceImpl implements OtpService {
 
     private final EmailServiceImpl emailService;
     private final UserRepository userRepo;
-    public OtpServiceImpl(EmailServiceImpl emailService,UserRepository userRepo){
+    private final OtpGenerationStrategy otpGenerationStrategy;
+    private final OtpDeliveryStrategy otpDeliveryStrategy;
+    public OtpServiceImpl(EmailServiceImpl emailService,UserRepository userRepo,OtpGenerationStrategy otpGenerationStrategy,OtpDeliveryStrategy otpDeliveryStrategy){
         this.emailService=emailService;
         this.userRepo=userRepo;
+        this.otpGenerationStrategy=otpGenerationStrategy;
+        this.otpDeliveryStrategy=otpDeliveryStrategy;
     }
 
-    public void sendOtp(String email) {
-        SecureRandom random = new SecureRandom();
+    public void sendOtp(String target) {
+            String otp=otpGenerationStrategy.generate();
 
-        String otp = String.valueOf(random.nextInt(100000,1000000));
-        //stores otp and current time stamp
-        OtpHolder otpHolder = new OtpHolder(otp, LocalDateTime.now());
-        otpStore.put(email, otpHolder);
-        //email service to deliver otp to email
-        emailService.sendOtp(email, otp);
-        //check if user exists
-        userRepo.findByEmailId(email);
+            OtpHolder otpHolder=new OtpHolder(otp,LocalDateTime.now());
+            otpStore.put(target,otpHolder);
 
+            otpDeliveryStrategy.send(target,otp);
     }
     // OTP expiration time limit
     private static final Duration otp_limit = Duration.ofMinutes(2);
