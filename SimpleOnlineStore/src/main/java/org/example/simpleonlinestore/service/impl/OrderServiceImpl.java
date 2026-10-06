@@ -1,5 +1,6 @@
 package org.example.simpleonlinestore.service.impl;
 
+import org.example.simpleonlinestore.controller.OrderController;
 import org.example.simpleonlinestore.repository.*;
 import com.razorpay.RazorpayException;
 import jakarta.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.example.simpleonlinestore.enums.OrderStatus;
 import org.example.simpleonlinestore.repository.*;
 import org.example.simpleonlinestore.repository.*;
 import org.example.simpleonlinestore.service.interfaces.InvoiceGenerator;
+import org.example.simpleonlinestore.service.interfaces.OrderHandler;
 import org.example.simpleonlinestore.service.interfaces.OrderService;
 import org.json.JSONObject;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +32,8 @@ public class OrderServiceImpl implements OrderService {
     private final RazorpayServiceImpl razorpayService;
     private final AddressRepository addressRepository;
     private final EmailServiceImpl emailService;
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, CartRepository cartRepository, RazorpayServiceImpl razorpayService, AddressRepository addressRepository, EmailServiceImpl emailService){
+    private final List<OrderHandler> orderHandlers;
+     public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, CartRepository cartRepository, RazorpayServiceImpl razorpayService, AddressRepository addressRepository, EmailServiceImpl emailService, List<OrderHandler> orderHandlers){
         this.orderRepository=orderRepository;
         this.productRepository=productRepository;
         this.cartRepository=cartRepository;
@@ -38,7 +41,8 @@ public class OrderServiceImpl implements OrderService {
         this.razorpayService=razorpayService;
         this.addressRepository=addressRepository;
         this.emailService=emailService;
-    }
+         this.orderHandlers = orderHandlers;
+     }
     private User getLoggedInUser() {
 
         String email = SecurityContextHolder.getContext()
@@ -51,92 +55,99 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order placeOrder(Long addressId){
 
-        User user=getLoggedInUser();
-        Address address=addressRepository.findById(addressId).orElseThrow(() ->  new RuntimeException("Address Not Found"));
-
-        if(!address.getUser().getId().equals(user.getId())){
-            throw new RuntimeException("This address does not belong to you.");
-        }
-        Cart cart=cartRepository.findByUserId(user.getId()).orElseThrow(()->new RuntimeException("Cart not found"));
-
-        if(cart.getItems()==null || cart.getItems().isEmpty()){
-            throw new RuntimeException("Cart is empty ");
-        }
-
-//        order.setUser(user);
-//        order.setStatus(OrderStatus.PAYMENT_PENDING);
-//        order.setAddress(address);
-
-        List<OrderItem> orderItemList=new ArrayList<>();
-        BigDecimal totalAmount=BigDecimal.ZERO;
-        //checking stocks
-        for(CartItem cartItem:cart.getItems()){
-            Product product=cartItem.getProduct();
-
-            if(product.getStockCount()<cartItem.getQuantity()){
-                throw new RuntimeException("Insufficient Stock ");
-            }
-            product.setStockCount(product.getStockCount()-cartItem.getQuantity());
-            productRepository.save(product);
-
-            long calculatedPrice = product.getPrice();
-            if (product.getDiscountPercentage() != null && product.getDiscountPercentage() > 0) {
-                long discountAmount = (product.getPrice() * product.getDiscountPercentage()) / 100;
-                calculatedPrice = product.getPrice() - discountAmount;
-            }
-
-            BigDecimal price=BigDecimal.valueOf(calculatedPrice);
-            OrderItem orderItem=OrderItem.builder()
-                    .product(product)
-                    .quantity(cartItem.getQuantity())
-                    .price(price)
-                    .build();
-           // orderItem.setPrice(price);
-
-            // ----- use builder pattern upto here to build order
-            totalAmount=totalAmount.add(
-                    price.multiply(
-                            BigDecimal.valueOf(cartItem.getQuantity())
-                    )
-            );
-    log.warn(String.valueOf(totalAmount));
-            orderItemList.add(orderItem);
-        }
-
-        log.warn(String.valueOf(totalAmount));
-
-        log.warn(String.valueOf(totalAmount));
-//        order.setItems(orderItemList);
-//        order.setTotalAmount(totalAmount);
-        String razorpayOrderId=null;
-        try {
-            String receiptId = "txn_" + System.currentTimeMillis();
-            Double doubleAmount = totalAmount.doubleValue();
-
-            JSONObject razorpayOrderJson = razorpayService.createOrder(doubleAmount, receiptId);
-            razorpayOrderId=razorpayOrderJson.getString("id");
-
-            //order.setRazorpayOrderId(razorpayOrderJson.getString("id"));
-        } catch (RazorpayException e) {
-            throw new RuntimeException("Failed to generate gateway token: " + e.getMessage());
-        }
+         OrderContext orderContext= OrderContext.builder()
+                 .addressId(addressId)
+                 .user(getLoggedInUser())
+                 .build();
+         for(OrderHandler handler:orderHandlers){
+             handler.handle(orderContext);
+         }
+//        User user=getLoggedInUser();
+//        Address address=addressRepository.findById(addressId).orElseThrow(() ->  new RuntimeException("Address Not Found"));
+//
+//        if(!address.getUser().getId().equals(user.getId())){
+//            throw new RuntimeException("This address does not belong to you.");
+//        }
+//        Cart cart=cartRepository.findByUserId(user.getId()).orElseThrow(()->new RuntimeException("Cart not found"));
+//
+//        if(cart.getItems()==null || cart.getItems().isEmpty()){
+//            throw new RuntimeException("Cart is empty ");
+//        }
+//
+////        order.setUser(user);
+////        order.setStatus(OrderStatus.PAYMENT_PENDING);
+////        order.setAddress(address);
+//
+//        List<OrderItem> orderItemList=new ArrayList<>();
+//        BigDecimal totalAmount=BigDecimal.ZERO;
+//        //checking stocks
+//        for(CartItem cartItem:cart.getItems()){
+//            Product product=cartItem.getProduct();
+//
+//            if(product.getStockCount()<cartItem.getQuantity()){
+//                throw new RuntimeException("Insufficient Stock ");
+//            }
+//            product.setStockCount(product.getStockCount()-cartItem.getQuantity());
+//            productRepository.save(product);
+//
+//            long calculatedPrice = product.getPrice();
+//            if (product.getDiscountPercentage() != null && product.getDiscountPercentage() > 0) {
+//                long discountAmount = (product.getPrice() * product.getDiscountPercentage()) / 100;
+//                calculatedPrice = product.getPrice() - discountAmount;
+//            }
+//
+//            BigDecimal price=BigDecimal.valueOf(calculatedPrice);
+//            OrderItem orderItem=OrderItem.builder()
+//                    .product(product)
+//                    .quantity(cartItem.getQuantity())
+//                    .price(price)
+//                    .build();
+//           // orderItem.setPrice(price);
+//
+//            // ----- use builder pattern upto here to build order
+//            totalAmount=totalAmount.add(
+//                    price.multiply(
+//                            BigDecimal.valueOf(cartItem.getQuantity())
+//                    )
+//            );
+//    log.warn(String.valueOf(totalAmount));
+//            orderItemList.add(orderItem);
+//        }
+//
+//        log.warn(String.valueOf(totalAmount));
+//
+//        log.warn(String.valueOf(totalAmount));
+////        order.setItems(orderItemList);
+////        order.setTotalAmount(totalAmount);
+//        String razorpayOrderId=null;
+//        try {
+//            String receiptId = "txn_" + System.currentTimeMillis();
+//            Double doubleAmount = totalAmount.doubleValue();
+//
+//            JSONObject razorpayOrderJson = razorpayService.createOrder(doubleAmount, receiptId);
+//            razorpayOrderId=razorpayOrderJson.getString("id");
+//
+//            //order.setRazorpayOrderId(razorpayOrderJson.getString("id"));
+//        } catch (RazorpayException e) {
+//            throw new RuntimeException("Failed to generate gateway token: " + e.getMessage());
+//        }
         Order order=Order.builder()
-                .user(user)
+                .user(orderContext.getUser())
                 .status(OrderStatus.PAYMENT_PENDING)
-                .address(address)
-                .items(orderItemList)
-                .totalAmount(totalAmount)
-                .razorpayOrderId(razorpayOrderId)
+                .address(orderContext.getAddress())
+                .items(orderContext.getOrderItems())
+                .totalAmount(orderContext.getTotalAmount())
+                .razorpayOrderId(orderContext.getRazorpayOrderId())
                 .build();
-        for (OrderItem item : orderItemList) {
+        for (OrderItem item : orderContext.getOrderItems()) {
             item.setOrder(order);
         }
 
 
         Order savedOrder=orderRepository.save(order);
 
-        cart.getItems().clear();
-        cartRepository.save(cart);
+       orderContext.getCart().getItems().clear();
+        cartRepository.save(orderContext.getCart());
 
         return savedOrder;
 
