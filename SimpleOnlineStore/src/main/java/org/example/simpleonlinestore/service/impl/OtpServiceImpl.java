@@ -4,6 +4,7 @@ import org.example.simpleonlinestore.repository.UserRepository;
 import org.example.simpleonlinestore.service.interfaces.OtpDeliveryStrategy;
 import org.example.simpleonlinestore.service.interfaces.OtpGenerationStrategy;
 import org.example.simpleonlinestore.service.interfaces.OtpService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -23,7 +24,7 @@ public class OtpServiceImpl implements OtpService {
     private final UserRepository userRepo;
     private final OtpGenerationStrategy otpGenerationStrategy;
     private final OtpDeliveryStrategy otpDeliveryStrategy;
-    public OtpServiceImpl(EmailServiceImpl emailService,UserRepository userRepo,OtpGenerationStrategy otpGenerationStrategy,OtpDeliveryStrategy otpDeliveryStrategy){
+    public OtpServiceImpl(EmailServiceImpl emailService, UserRepository userRepo, @Qualifier("sixDigit") OtpGenerationStrategy otpGenerationStrategy, OtpDeliveryStrategy otpDeliveryStrategy){
         this.emailService=emailService;
         this.userRepo=userRepo;
         this.otpGenerationStrategy=otpGenerationStrategy;

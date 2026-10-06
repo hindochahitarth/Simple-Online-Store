@@ -8,6 +8,7 @@ import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.repository.CartRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
+import org.example.simpleonlinestore.service.interfaces.CartItemState;
 import org.example.simpleonlinestore.service.interfaces.CartService;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,31 +50,38 @@ public class CartServiceImpl implements CartService {
 
         Product product=productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product does not exist"));
 
-        Optional<CartItem> existItem=cart.getItems().stream()
+        CartItemState state=cart.getItems().stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst();
-        int newQuant=quantity;
-        if(existItem.isPresent()){
-            newQuant+=existItem.get().getQuantity();
-        }
+                .findFirst()
+                .<CartItemState> map(ExistingItemState::new)
+                .orElseGet(NewItemState::new);
+//        Optional<CartItem> existItem=cart.getItems().stream()
+//                .filter(item -> item.getProduct().getId().equals(productId))
+//                .findFirst();
+//        int newQuant=quantity;
+//        if(existItem.isPresent()){
+//            newQuant+=existItem.get().getQuantity();
+//        }
+        int newQuant=state.getCurrentQuantity()+quantity;
         log.info("product.getStockCount()"+product.getStockCount());
 
         if(newQuant > product.getStockCount()){
             throw new RuntimeException("Insufficient Stock ");
         }
-        if(existItem.isPresent()){
-            CartItem existingItem=existItem.get();
-            existingItem.setQuantity(newQuant);
-        }
-        else{
-            // ----- use builder pattern from here to build order
-            CartItem cartItem= CartItem.builder()
-                    .cart(cart)
-                    .product(product)
-                    .quantity(quantity)
-                    .build();
-            cart.getItems().add(cartItem);
-        }
+        state.applyChange(cart,product,newQuant);
+//        if(existItem.isPresent()){
+//            CartItem existingItem=existItem.get();
+//            existingItem.setQuantity(newQuant);
+//        }
+//        else{
+//            // ----- use builder pattern from here to build order
+//            CartItem cartItem= CartItem.builder()
+//                    .cart(cart)
+//                    .product(product)
+//                    .quantity(quantity)
+//                    .build();
+//            cart.getItems().add(cartItem);
+//        }
         // ----- use builder pattern upto here to build order
        // product.setStockCount(product.getStockCount() - quantity);
         log.info("product.getStockCount()"+product.getStockCount());
