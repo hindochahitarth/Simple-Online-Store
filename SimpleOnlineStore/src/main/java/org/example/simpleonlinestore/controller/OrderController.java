@@ -3,7 +3,9 @@ package org.example.simpleonlinestore.controller;
 import org.example.simpleonlinestore.DTO.OrderRequestDTO;
 import org.example.simpleonlinestore.entity.Order;
 import org.example.simpleonlinestore.service.impl.EmailServiceImpl;
+import org.example.simpleonlinestore.service.impl.OrderPlacedEvent;
 import org.example.simpleonlinestore.service.impl.OrderServiceImpl;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +20,11 @@ public class OrderController {
 
     private final OrderServiceImpl orderService;
     private final EmailServiceImpl emailService;
-
-    public OrderController(OrderServiceImpl orderService,EmailServiceImpl emailService) {
+    private final ApplicationEventPublisher applicationEventPublisher;
+    public OrderController(OrderServiceImpl orderService, EmailServiceImpl emailService, ApplicationEventPublisher applicationEventPublisher) {
         this.orderService = orderService;
         this.emailService=emailService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
@@ -62,13 +65,8 @@ public class OrderController {
     }
     @PostMapping("/{orderId}/send-invoice")
     public ResponseEntity<String> sendInvoice(@PathVariable Long orderId) {
-        // Fetch the order from the database
-        Order order = orderService.getOrderById(orderId);
-        String customerEmail = order.getUser().getEmailId();
-        String summary = orderService.generateInvoiceSummary(orderId,"TAX_PLAIN");
-        emailService.sendNotification(customerEmail, summary);
-
-        return ResponseEntity.ok("Invoice email sent successfully to " + customerEmail);
+        applicationEventPublisher.publishEvent(new OrderPlacedEvent(orderId));
+        return ResponseEntity.ok("Invoice email sent successfully to ");
     }
 
 }
