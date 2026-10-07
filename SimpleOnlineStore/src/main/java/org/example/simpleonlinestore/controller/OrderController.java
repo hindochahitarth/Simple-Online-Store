@@ -60,16 +60,16 @@ public class OrderController {
         return ResponseEntity.ok(invoice);
 
     }
-//    @PostMapping("/{orderId}/send-invoice")
-//    public ResponseEntity<String> sendInvoice(@PathVariable Long orderId) {
-//        // Fetch the order from the database
-//        Order order = orderService.getOrderById(orderId);
-//        String customerEmail = order.getUser().getEmailId();
-//        String summary = orderService.generateInvoiceSummary(orderId);
-//        emailService.sendNotification(customerEmail, summary);
-//
-//        return ResponseEntity.ok("Invoice email sent successfully to " + customerEmail);
-//    }
+    @PostMapping("/{orderId}/send-invoice")
+    public ResponseEntity<String> sendInvoice(@PathVariable Long orderId) {
+        // Fetch the order from the database
+        Order order = orderService.getOrderById(orderId);
+        String customerEmail = order.getUser().getEmailId();
+        String summary = orderService.generateInvoiceSummary(orderId,"TAX_PLAIN");
+        emailService.sendNotification(customerEmail, summary);
+
+        return ResponseEntity.ok("Invoice email sent successfully to " + customerEmail);
+    }
 
 }
 
