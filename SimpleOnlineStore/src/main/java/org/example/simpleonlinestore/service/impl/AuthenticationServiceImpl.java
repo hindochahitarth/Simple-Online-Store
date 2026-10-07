@@ -28,15 +28,19 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final CartRepository cartRepository;
     private final OtpServiceImpl otpService;
+    private final UserFactory userFactory;
+    private final  CartFactory cartFactory;
 
     public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                                 AuthenticationManager authenticationManager,CartRepository cartRepository,OtpServiceImpl otpService) {
+                                     AuthenticationManager authenticationManager, CartRepository cartRepository, OtpServiceImpl otpService, UserFactory userFactory, CartFactory cartFactory) {
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.cartRepository=cartRepository;
         this.otpService=otpService;
 
+        this.userFactory = userFactory;
+        this.cartFactory = cartFactory;
     }
 
     @Transactional
@@ -44,16 +48,16 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
         if(userRepository.findByEmailId(input.getEmailId()).isPresent()){
             throw new UserAlreadyExistsException("User with this email id already exist");
         }
-        User user = User.builder()
-                        .firstName(input.getFirstName())
-                        .lastName(input.getLastName())
-                        .emailId(input.getEmailId())
-                        .role(Roles.USER)
-                        .password(passwordEncoder.encode(input.getPassword()))
-                        .phoneNumber(input.getPhoneNumber())
-                        .isActive(true)
-                        .verified(false)
-                        .build();
+//        User user = User.builder()
+//                        .firstName(input.getFirstName())
+//                        .lastName(input.getLastName())
+//                        .emailId(input.getEmailId())
+//                        .role(Roles.USER)
+//                        .password(passwordEncoder.encode(input.getPassword()))
+//                        .phoneNumber(input.getPhoneNumber())
+//                        .isActive(true)
+//                        .verified(false)
+//                        .build();
 //        user.setFirstName(input.getFirstName());
 //        user.setLastName(input.getLastName());
 //        user.setEmailId(input.getEmailId());
@@ -62,12 +66,14 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
 //        user.setPhoneNumber(input.getPhoneNumber());
 //        user.setActive(true);
 //        user.setVerified(false);
+        User user=userFactory.createUser(input);
         User savedUser=userRepository.save(user);
         otpService.sendOtp(user.getEmailId());
-        Cart cart=Cart.builder()
-                        .user(savedUser)
-                                .build();
+//        Cart cart=Cart.builder()
+//                        .user(savedUser)
+//                                .build();
         //cart.setUser(savedUser);
+        Cart cart=cartFactory.createCartForUser(savedUser);
         cartRepository.save(cart);
 
 
