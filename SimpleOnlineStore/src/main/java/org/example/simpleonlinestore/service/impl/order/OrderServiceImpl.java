@@ -9,6 +9,7 @@ import org.example.simpleonlinestore.service.impl.auth.EmailServiceImpl;
 import org.example.simpleonlinestore.service.interfaces.InvoiceGenerator;
 import org.example.simpleonlinestore.service.interfaces.OrderHandler;
 import org.example.simpleonlinestore.service.interfaces.OrderService;
+import org.example.simpleonlinestore.service.interfaces.PaymentStrategy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +23,18 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
-    private final RazorpayServiceImpl razorpayService;
+    private final List<PaymentStrategy> paymentStrategies;
     private final AddressRepository addressRepository;
     private final EmailServiceImpl emailService;
     private final List<OrderHandler> orderHandlers;
-     public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, CartRepository cartRepository, RazorpayServiceImpl razorpayService, AddressRepository addressRepository, EmailServiceImpl emailService, List<OrderHandler> orderHandlers){
+     public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository, CartRepository cartRepository, RazorpayServiceImpl razorpayService, List<PaymentStrategy> paymentStrategies, AddressRepository addressRepository, EmailServiceImpl emailService, List<OrderHandler> orderHandlers){
         this.orderRepository=orderRepository;
         this.productRepository=productRepository;
         this.cartRepository=cartRepository;
         this.userRepository=userRepository;
-        this.razorpayService=razorpayService;
-        this.addressRepository=addressRepository;
+         this.paymentStrategies = paymentStrategies;
+
+         this.addressRepository=addressRepository;
         this.emailService=emailService;
          this.orderHandlers = orderHandlers;
      }
@@ -156,15 +158,20 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order record not found"));
 
-        boolean isValid = razorpayService.verifySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature);
+        PaymentStrategy strategy = paymentStrategies.stream()
+                .filter(s -> s.getProviderName().equalsIgnoreCase("RAZORPAY"))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Payment provider engine not found"));
+
+        boolean isValid = strategy.verifySignature(payload);
 
         if (isValid) {
 
-            order.getState().paymentSuccess(order,razorpayPaymentId);
-            Order.builder()
-                            .status(OrderStatus.PLACED)
-                            .razorpayPaymentId(razorpayPaymentId)
-                            .build();
+            order.getState().paymentSuccess(order,payload.get("razorpay"));
+//            Order.builder()
+//                            .status(OrderStatus.PLACED)
+//                            .razorpayPaymentId(razorpayPaymentId)
+//                            .build();
 //            order.setStatus(OrderStatus.PLACED);
 //            order.setRazorpayPaymentId(razorpayPaymentId);
             return orderRepository.save(order);
