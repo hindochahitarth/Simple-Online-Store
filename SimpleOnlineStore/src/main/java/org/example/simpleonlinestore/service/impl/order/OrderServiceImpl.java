@@ -228,7 +228,7 @@ public class OrderServiceImpl implements OrderService {
             generator=new TaxInvoiceDecorator(generator);
         }
         else if("HTML_EMAIL".equalsIgnoreCase(format)){
-            generator=new HtmlInvoiceDecorator(new TaxInvoiceDecorator(generator));
+            generator=new HtmlInvoiceDecorator(new TaxInvoiceDecorator(new PlainTextInvoiceGenerator()));
         }
         return generator.generate(order);
     }

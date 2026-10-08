@@ -1,9 +1,8 @@
-package org.example.simpleonlinestore.service.impl.cart;
+package org.example.simpleonlinestore.service.impl.order;
 
 import lombok.RequiredArgsConstructor;
 import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.repository.CartRepository;
-import org.example.simpleonlinestore.service.impl.order.OrderContext;
 import org.example.simpleonlinestore.service.interfaces.OrderHandler;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;

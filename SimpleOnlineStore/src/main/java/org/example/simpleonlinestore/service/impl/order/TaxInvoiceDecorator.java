@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 public class TaxInvoiceDecorator extends InvoiceDecorator{
 
-    protected TaxInvoiceDecorator(InvoiceGenerator decoratedGenerator) {
+    public TaxInvoiceDecorator(InvoiceGenerator decoratedGenerator) {
         super(decoratedGenerator);
     }
     public String generate(Order order){

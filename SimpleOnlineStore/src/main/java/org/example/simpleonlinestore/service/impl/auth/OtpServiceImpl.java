@@ -23,7 +23,7 @@ public class OtpServiceImpl implements OtpService {
     private final UserRepository userRepo;
     private final OtpGenerationStrategy otpGenerationStrategy;
     private final OtpDeliveryStrategy otpDeliveryStrategy;
-    public OtpServiceImpl(EmailServiceImpl emailService, UserRepository userRepo, @Qualifier("alphaNumeric") OtpGenerationStrategy otpGenerationStrategy, OtpDeliveryStrategy otpDeliveryStrategy){
+    public OtpServiceImpl(EmailServiceImpl emailService, UserRepository userRepo, @Qualifier("alphaNumeric") OtpGenerationStrategy otpGenerationStrategy, @Qualifier("emailDelivery") OtpDeliveryStrategy otpDeliveryStrategy){
         this.emailService=emailService;
         this.userRepo=userRepo;
         this.otpGenerationStrategy=otpGenerationStrategy;
