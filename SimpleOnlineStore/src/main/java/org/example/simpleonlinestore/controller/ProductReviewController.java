@@ -2,7 +2,7 @@ package org.example.simpleonlinestore.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductReviewRequestDTO;
-import org.example.simpleonlinestore.service.impl.ProductReviewServiceImpl;
+import org.example.simpleonlinestore.service.impl.product.ProductReviewServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.example.simpleonlinestore.entity.ProductReview;

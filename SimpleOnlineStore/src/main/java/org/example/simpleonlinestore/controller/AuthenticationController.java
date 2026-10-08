@@ -7,7 +7,7 @@ import org.example.simpleonlinestore.DTO.ResetPasswordRequestDTO;
 import org.example.simpleonlinestore.DTO.UserRequestDTO;
 import org.example.simpleonlinestore.config.JwtService;
 import org.example.simpleonlinestore.entity.User;
-import org.example.simpleonlinestore.service.impl.AuthenticationServiceImpl;
+import org.example.simpleonlinestore.service.impl.auth.AuthenticationServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

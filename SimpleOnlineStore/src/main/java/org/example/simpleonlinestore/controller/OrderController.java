@@ -2,9 +2,9 @@ package org.example.simpleonlinestore.controller;
 
 import org.example.simpleonlinestore.DTO.OrderRequestDTO;
 import org.example.simpleonlinestore.entity.Order;
-import org.example.simpleonlinestore.service.impl.EmailServiceImpl;
-import org.example.simpleonlinestore.service.impl.OrderPlacedEvent;
-import org.example.simpleonlinestore.service.impl.OrderServiceImpl;
+import org.example.simpleonlinestore.service.impl.auth.EmailServiceImpl;
+import org.example.simpleonlinestore.service.impl.order.OrderPlacedEvent;
+import org.example.simpleonlinestore.service.impl.order.OrderServiceImpl;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

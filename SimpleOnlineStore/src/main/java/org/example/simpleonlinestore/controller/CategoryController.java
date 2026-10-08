@@ -1,7 +1,7 @@
 package org.example.simpleonlinestore.controller;
 
 import org.example.simpleonlinestore.entity.Category;
-import org.example.simpleonlinestore.service.impl.CategoryServiceImpl;
+import org.example.simpleonlinestore.service.impl.product.CategoryServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductRequestDTO;
 import org.example.simpleonlinestore.DTO.ProductResponseDTO;
 import org.example.simpleonlinestore.entity.Product;
-import org.example.simpleonlinestore.service.impl.ProductServiceImpl;
+import org.example.simpleonlinestore.service.impl.product.ProductServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

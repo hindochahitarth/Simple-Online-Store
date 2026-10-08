@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.simpleonlinestore.enums.OrderStatus;
-import org.example.simpleonlinestore.service.impl.CancelledState;
-import org.example.simpleonlinestore.service.impl.PaymentFailedState;
-import org.example.simpleonlinestore.service.impl.PaymentPendingState;
-import org.example.simpleonlinestore.service.impl.PlacedState;
+import org.example.simpleonlinestore.service.impl.order.CancelledState;
+import org.example.simpleonlinestore.service.impl.order.PaymentFailedState;
+import org.example.simpleonlinestore.service.impl.order.PaymentPendingState;
+import org.example.simpleonlinestore.service.impl.order.PlacedState;
 import org.example.simpleonlinestore.service.interfaces.OrderState;
 
 import java.math.BigDecimal;
