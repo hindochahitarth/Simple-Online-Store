@@ -127,6 +127,7 @@ public class OrderServiceImpl implements OrderService {
         Order order=Order.builder()
                 .user(orderContext.getUser())
                 .status(OrderStatus.PAYMENT_PENDING)
+                .state(new PaymentPendingState())
                 .address(orderContext.getAddress())
                 .items(orderContext.getOrderItems())
                 .totalAmount(orderContext.getTotalAmount())
@@ -146,7 +147,7 @@ public class OrderServiceImpl implements OrderService {
 
     }
     @Transactional
-    public Order verifyPaymentSignature(Map<String, String> payload) {
+    public Order    verifyPaymentSignature(Map<String, String> payload) {
         Long orderId = Long.parseLong(payload.get("orderId"));
         String razorpayOrderId = payload.get("razorpayOrderId");
         String razorpayPaymentId = payload.get("razorpayPaymentId");
@@ -158,6 +159,8 @@ public class OrderServiceImpl implements OrderService {
         boolean isValid = razorpayService.verifySignature(razorpayOrderId, razorpayPaymentId, razorpaySignature);
 
         if (isValid) {
+
+            order.getState().paymentSuccess(order,razorpayPaymentId);
             Order.builder()
                             .status(OrderStatus.PLACED)
                             .razorpayPaymentId(razorpayPaymentId)
@@ -166,8 +169,9 @@ public class OrderServiceImpl implements OrderService {
 //            order.setRazorpayPaymentId(razorpayPaymentId);
             return orderRepository.save(order);
         } else {
-            order.setStatus(OrderStatus.PAYMENT_FAILED);
-            // Restock items back into product listings
+                order.getState().paymentFailed(order,productRepository);
+            //    order.setStatus(OrderStatus.PAYMENT_FAILED);
+                // Restock items back into product listings
             for (OrderItem item : order.getItems()) {
                 Product product = item.getProduct();
                 Product.builder()
@@ -199,7 +203,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
 
-        order.setStatus(OrderStatus.CANCELED);
+        order.getState().cancelOrder(order,productRepository);
         for (OrderItem item : order.getItems()) {
             Product product = item.getProduct();
             product.setStockCount(product.getStockCount() + item.getQuantity());
