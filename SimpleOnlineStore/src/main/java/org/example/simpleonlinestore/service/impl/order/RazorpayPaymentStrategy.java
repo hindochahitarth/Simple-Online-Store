@@ -8,10 +8,11 @@ import jakarta.annotation.PostConstruct;
 import org.example.simpleonlinestore.service.interfaces.PaymentStrategy;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@Component
 public class RazorpayPaymentStrategy implements PaymentStrategy {
     @Value("${razorpay.key_id}")
     private String keyId;

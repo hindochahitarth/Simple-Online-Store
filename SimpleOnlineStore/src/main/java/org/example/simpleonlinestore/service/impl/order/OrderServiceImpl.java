@@ -181,8 +181,7 @@ public class OrderServiceImpl implements OrderService {
                 // Restock items back into product listings
             for (OrderItem item : order.getItems()) {
                 Product product = item.getProduct();
-                Product.builder()
-                                .stockCount(product.getStockCount()+item.getQuantity());
+                product.setStockCount(product.getStockCount()+item.getQuantity());
                 //product.setStockCount(product.getStockCount() + item.getQuantity());
                 productRepository.save(product);
             }
