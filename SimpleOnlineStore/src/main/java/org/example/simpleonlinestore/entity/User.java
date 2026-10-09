@@ -1,19 +1,15 @@
 package org.example.simpleonlinestore.entity;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.example.simpleonlinestore.enums.Roles;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +22,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-
 //The parent entity should be annotated with @JsonManagedReference
 //The child entity should be annotated with @JsonBackReference.
 @Entity
@@ -65,7 +60,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean verified=false;
 
-
     public void addAddress(Address address) {
         addresses.add(address);
         address.setUser(this);
@@ -79,8 +73,6 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_"+role.name()));
-
-
     }
 
     @Override

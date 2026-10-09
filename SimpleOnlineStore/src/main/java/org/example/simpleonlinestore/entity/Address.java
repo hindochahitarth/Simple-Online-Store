@@ -3,7 +3,6 @@ package org.example.simpleonlinestore.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-
 @Entity
 @Table(name = "addresses")
 @Getter
@@ -47,4 +46,3 @@ public class Address {
     @JsonBackReference // Prevents infinite recursion during JSON serialization
     private User user;
 }
-

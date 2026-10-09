@@ -1,11 +1,8 @@
 package org.example.simpleonlinestore.entity;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name="product_reviews")
 @Getter
@@ -40,5 +37,4 @@ public class ProductReview {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-
 }

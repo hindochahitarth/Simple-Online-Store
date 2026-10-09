@@ -1,9 +1,7 @@
 package org.example.simpleonlinestore.entity;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-
 @Entity
 @Getter
 @Setter
@@ -27,5 +25,4 @@ public class CartItem {
 
     @Column(nullable = false)
     private Integer quantity;
-
 }
