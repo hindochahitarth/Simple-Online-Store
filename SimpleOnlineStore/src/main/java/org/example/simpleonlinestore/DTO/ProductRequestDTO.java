@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.DTO;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,9 +6,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDate;
-
 @Getter
 @Setter
 public class ProductRequestDTO {

@@ -1,9 +1,7 @@
 package org.example.simpleonlinestore.DTO;
-
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-
 @Getter
 @Setter
 public class UserRequestDTO {
@@ -29,5 +27,4 @@ public class UserRequestDTO {
     private String password;
     @NotBlank(message = "Phone number is required")
     private String phoneNumber;
-    
 }
