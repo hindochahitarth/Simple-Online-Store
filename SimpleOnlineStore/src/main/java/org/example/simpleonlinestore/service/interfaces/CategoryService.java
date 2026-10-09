@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.interfaces;
-
 import org.example.simpleonlinestore.entity.Category;
 import java.util.List;
 

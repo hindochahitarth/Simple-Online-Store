@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.interfaces;
-
 import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.entity.Product;
 

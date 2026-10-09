@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.interfaces;
-
 import java.util.Map;
 
 public interface PaymentStrategy {

@@ -8,4 +8,3 @@ public interface CartService {
     Cart updateCartItem(Long productId, int newQuantity);
     Cart clearCart();
 }
-

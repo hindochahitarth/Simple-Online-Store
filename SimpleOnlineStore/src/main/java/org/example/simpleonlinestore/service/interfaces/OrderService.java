@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.interfaces;
-
 import org.example.simpleonlinestore.entity.Order;
 import java.util.List;
 import java.util.Map;
