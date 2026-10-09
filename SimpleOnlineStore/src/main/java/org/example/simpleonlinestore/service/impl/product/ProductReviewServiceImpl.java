@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.product;
-
 import org.example.simpleonlinestore.DTO.ProductReviewRequestDTO;
 import org.example.simpleonlinestore.entity.Product;
 import org.example.simpleonlinestore.entity.ProductReview;
@@ -23,11 +22,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         this.productRepository=productRepository;
     }
     private User getLoggedInUser() {
-
         String email = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getName();
-
         return userRepository.findByEmailId(email)
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
     }
@@ -37,7 +34,6 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         }
         Product product=productRepository.findById(productId).orElseThrow(() ->new RuntimeException("Product with id "+productId+" does not exist"));
         User user=getLoggedInUser();
-
         ProductReview productReview=ProductReview
                 .builder()
                         .comment(request.getComment())
@@ -45,12 +41,6 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                         .user(user)
                         .rating(request.getRating())
                         .build();
-
-//        productReview.setComment(request.getComment());
-//        productReview.setProduct(product);
-//        productReview.setUser(user);
-//        productReview.setRating(request.getRating());
-
         return productReviewRepository.save(productReview);
     }
 }

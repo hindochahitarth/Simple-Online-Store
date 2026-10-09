@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.product;
-
 import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.ProductRequestDTO;
 import org.example.simpleonlinestore.DTO.ProductResponseDTO;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -25,14 +23,11 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final ImageRepository imageRepository;
     private final ProductMapper productMapper;
 
     public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ImageRepository imageRepository, ProductMapper productMapper) {
-
         this.productRepository = productRepository;
         this.categoryRepository=categoryRepository;
-        this.imageRepository=imageRepository;
         this.productMapper = productMapper;
     }
 
@@ -48,19 +43,18 @@ public class ProductServiceImpl implements ProductService {
                 .type(file.getContentType()) //'file.getContentType()' extracts the MIME type (jpg or png)
                 .imageData(file.getBytes()) //'file.getBytes()' reads the raw binary payload of the image directly from memory into a byte array (byte[]).
                 .build();
-
         log.info("Inside create product service");
         Product product = Product.builder()
                         .name(request.getName())
                         .price(request.getPrice())
                         .description(request.getDescription())
                         .image(image)
-                .discountPercentage(request.getDiscountPercentage())
-                .manufacturingDate(request.getManufacturingDate())
-                .isActive(request.getIsActive())
-                .expiryDate(request.getExpiryDate())
+                        .discountPercentage(request.getDiscountPercentage())
+                        .manufacturingDate(request.getManufacturingDate())
+                        .isActive(request.getIsActive())
+                        .expiryDate(request.getExpiryDate())
                         .category(category)
-                .stockCount(request.getStockCount())
+                        .stockCount(request.getStockCount())
                         .imageUrl(file.getOriginalFilename())
                         .build();
         Product savedProduct= productRepository.save(product);
@@ -68,7 +62,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Page<Product> getAllProducts(Pageable pageable) {
-
         if (pageable.getPageSize() <= 0) {
             throw new IllegalArgumentException("Page size must be greater than zero");
         }
@@ -76,7 +69,6 @@ public class ProductServiceImpl implements ProductService {
     }
     public Product updateProduct(Long id,ProductRequestDTO request){
         Product product=productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
-
         Product updatedProduct=Product.builder()
                                 .name(request.getName())
                                 .description(request.getDescription())
@@ -85,20 +77,10 @@ public class ProductServiceImpl implements ProductService {
                                 .discountPercentage(request.getDiscountPercentage())
                                 .isActive(request.getIsActive()!=null ? request.getIsActive():true)
                                 .build();
-
-//        product.setName(request.getName());
-//        product.setDescription(request.getDescription());
-//        product.setPrice(request.getPrice());
-//        //product.setUrl(request.getUrl());
-//        product.setStockCount(request.getStockCount());
-//        product.setDiscountPercentage(request.getDiscountPercentage());
-//        product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
         return productRepository.save(product);
-
     }
     public Optional<Product> getProductById(Long id){
         Product product=productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
-
         return productRepository.findById(id);
     }
 
@@ -112,25 +94,21 @@ public class ProductServiceImpl implements ProductService {
     public Product addStock(Long id, Long quantityToAdd) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
-
         Product updatedProduct=product.toBuilder()
                 .stockCount(product.getStockCount()+quantityToAdd)
                 .build();
-//        product.setStockCount(product.getStockCount() + quantityToAdd);
-        return productRepository.save(product);
+        return productRepository.save(updatedProduct);
     }
     public Product updateDiscountPercentage(Long id, Integer discountPercentage) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
-
         if (discountPercentage!=null && (discountPercentage<0 || discountPercentage>100)) {
             throw new RuntimeException("Discount percentage must be between 0 and 100");
         }
             Product updatedProduct=product.toBuilder()
                     .discountPercentage(discountPercentage)
                     .build();
-//        product.setDiscountPercentage(discountPercentage);
-        return productRepository.save(product);
+        return productRepository.save(updatedProduct);
     }
     public Page<Product> searchProducts(String keyword, Pageable pageable) {
         if (pageable.getPageSize() <= 0) {
@@ -139,4 +117,3 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
     }
 }
-
