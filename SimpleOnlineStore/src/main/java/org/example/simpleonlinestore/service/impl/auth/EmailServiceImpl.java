@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.auth;
-
 import org.example.simpleonlinestore.service.interfaces.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,7 +16,6 @@ public class EmailServiceImpl implements EmailService {
         message.setTo(toEmail);
         message.setSubject("Your OTP for Simple Store Login");
         message.setText("Your OTP is: " + otp + "\nThis OTP is valid for 2 minutes.");
-
         mailSender.send(message);
         System.out.println("OTP sent to email: " + toEmail);
     }

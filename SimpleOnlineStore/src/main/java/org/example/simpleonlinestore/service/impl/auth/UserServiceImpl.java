@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.auth;
-
 import jakarta.transaction.Transactional;
 import org.example.simpleonlinestore.DTO.AddressDTO;
 import org.example.simpleonlinestore.entity.Address;
@@ -30,18 +29,8 @@ public class UserServiceImpl implements UserService {
                         .state(dto.getState())
                         .isDefault(dto.isDefault())
                         .build();
-//        address.setAddressLine1(dto.getAddressLine1());
-//        address.setAddressLine2(dto.getAddressLine2());
-//        address.setAddressType(dto.getAddressType());
-//        address.setCity(dto.getCity());
-//        address.setCountry(dto.getCountry());
-//        address.setPostalCode(dto.getPostalCode());
-//        address.setState(dto.getState());
-//        address.setDefault(dto.isDefault());
-
         user.addAddress(address);
         return userRepository.save(user);
-
     }
 }
 

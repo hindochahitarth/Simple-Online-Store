@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.auth;
-
 import org.example.simpleonlinestore.DTO.UserRequestDTO;
 import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.enums.Roles;

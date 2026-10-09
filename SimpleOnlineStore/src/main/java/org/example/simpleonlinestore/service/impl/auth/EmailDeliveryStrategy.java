@@ -7,11 +7,9 @@ import org.springframework.stereotype.Component;
 @Component("emailDelivery")
 public class EmailDeliveryStrategy implements OtpDeliveryStrategy {
     private final EmailService emailService;
-
     public EmailDeliveryStrategy(EmailService emailService) {
         this.emailService = emailService;
     }
-
     @Override
     public void send(String email, String otp) {
             emailService.sendOtp(email,otp);

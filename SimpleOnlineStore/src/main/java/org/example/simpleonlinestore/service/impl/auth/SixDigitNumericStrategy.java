@@ -1,8 +1,6 @@
 package org.example.simpleonlinestore.service.impl.auth;
-
 import org.example.simpleonlinestore.service.interfaces.OtpGenerationStrategy;
 import org.springframework.stereotype.Component;
-
 import java.security.SecureRandom;
 
 @Component("sixDigit")
