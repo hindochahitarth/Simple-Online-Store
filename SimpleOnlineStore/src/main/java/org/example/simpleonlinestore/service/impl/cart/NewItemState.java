@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.cart;
-
 import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.entity.CartItem;
 import org.example.simpleonlinestore.entity.Product;
@@ -11,7 +10,6 @@ public class NewItemState implements CartItemState {
     public int getCurrentQuantity() {
         return 0;
     }
-
     @Override
     public void applyChange(Cart cart, Product product, int requestedQuantity) {
         CartItem cartItem=CartItem.builder()

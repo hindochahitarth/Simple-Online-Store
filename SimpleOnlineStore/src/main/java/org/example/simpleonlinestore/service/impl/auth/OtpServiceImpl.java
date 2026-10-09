@@ -15,13 +15,9 @@ public class OtpServiceImpl implements OtpService {
 
     //in memory data storage where otp and timestamp are stored
     private final Map<String, OtpHolder> otpStore = new HashMap<>();
-    private final EmailServiceImpl emailService;
-    private final UserRepository userRepo;
     private final OtpGenerationStrategy otpGenerationStrategy;
     private final OtpDeliveryStrategy otpDeliveryStrategy;
-    public OtpServiceImpl(EmailServiceImpl emailService, UserRepository userRepo, @Qualifier("alphaNumeric") OtpGenerationStrategy otpGenerationStrategy, @Qualifier("emailDelivery") OtpDeliveryStrategy otpDeliveryStrategy){
-        this.emailService=emailService;
-        this.userRepo=userRepo;
+    public OtpServiceImpl(@Qualifier("alphaNumeric") OtpGenerationStrategy otpGenerationStrategy, @Qualifier("emailDelivery") OtpDeliveryStrategy otpDeliveryStrategy){
         this.otpGenerationStrategy=otpGenerationStrategy;
         this.otpDeliveryStrategy=otpDeliveryStrategy;
     }

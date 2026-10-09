@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.cart;
-
 import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.entity.User;
 import org.springframework.stereotype.Component;
