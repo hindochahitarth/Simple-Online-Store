@@ -61,7 +61,7 @@ public class CartServiceImpl implements CartService {
 //            newQuant+=existItem.get().getQuantity();
 //        }
         int newQuant=state.getCurrentQuantity()+quantity;
-        log.info("product.getStockCount()"+product.getStockCount());
+        log.info("product.getStockCount()"+product.getStockCount()+" new quant"+newQuant);
 
         if(newQuant > product.getStockCount()){
             throw new RuntimeException("Insufficient Stock ");

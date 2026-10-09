@@ -27,12 +27,15 @@ public class StockAndPricingHandler implements OrderHandler {
         for (CartItem cartItem : context.getCart().getItems()) {
             Product product = cartItem.getProduct();
 
+            int rowsUpdated = productRepository.decreaseStock(product.getId(),cartItem.getQuantity());
+            if (rowsUpdated == 0) {
+                throw new RuntimeException("Not enough stock available for this product.");
+            }
+
             // 1. Stock Check & Update
             if (product.getStockCount() < cartItem.getQuantity()) {
                 throw new RuntimeException("Insufficient Stock");
             }
-            product.setStockCount(product.getStockCount() - cartItem.getQuantity());
-            productRepository.save(product);
 
             // 2. Dynamic Price Calculation
             long calculatedPrice = product.getPrice();
