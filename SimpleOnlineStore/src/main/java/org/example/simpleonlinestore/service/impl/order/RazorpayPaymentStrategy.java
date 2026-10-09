@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.order;
-
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -9,7 +8,6 @@ import org.example.simpleonlinestore.service.interfaces.PaymentStrategy;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 @Component
@@ -42,7 +40,6 @@ public class RazorpayPaymentStrategy implements PaymentStrategy {
             orderRequest.put("amount", amountInPaise);
             orderRequest.put("currency", "INR");
             orderRequest.put("receipt", receipt);
-
             // Create Razorpay order
             //makes network call
             Order order = client.orders.create(orderRequest);
@@ -57,7 +54,6 @@ public class RazorpayPaymentStrategy implements PaymentStrategy {
             throw new RuntimeException("Razorpay order failed ");
         }
     }
-
     @Override
     public boolean verifySignature(Map<String, String> paymentDetails) {
         try {
@@ -65,7 +61,6 @@ public class RazorpayPaymentStrategy implements PaymentStrategy {
             options.put("razorpay_order_id", paymentDetails.get("razorpayOrderId"));
             options.put("razorpay_payment_id", paymentDetails.get("razorpayPaymentId"));
             options.put("razorpay_signature", paymentDetails.get("razorpaySignature"));
-
             // Validates attributes using the static verification utility alongside your properties secret
             return Utils.verifyPaymentSignature(options, keySecret);
         } catch (Exception e) {

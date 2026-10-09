@@ -15,18 +15,14 @@ public class InvoiceNotificationListener {
         this.orderService = orderService;
         this.emailService = emailService;
     }
-
     @EventListener
     public void handleOrderPlacedEvent(OrderPlacedEvent event) {
         Long orderId = event.getOrderId();
-
         // Fetch the order and details
         Order order = orderService.getOrderById(orderId);
         String customerEmail = order.getUser().getEmailId();
         String summary = orderService.generateInvoiceSummary(orderId, "TAX_PLAIN");
-
         // Send the email
         emailService.sendNotification(customerEmail, summary);
     }
 }
-

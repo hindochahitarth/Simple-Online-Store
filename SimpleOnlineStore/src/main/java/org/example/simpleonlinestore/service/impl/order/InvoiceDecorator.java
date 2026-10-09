@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.order;
-
 import org.example.simpleonlinestore.entity.Order;
 import org.example.simpleonlinestore.service.interfaces.InvoiceGenerator;
 

@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.order;
-
 import lombok.RequiredArgsConstructor;
 import org.example.simpleonlinestore.entity.CartItem;
 import org.example.simpleonlinestore.entity.OrderItem;
@@ -8,7 +7,6 @@ import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.service.interfaces.OrderHandler;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,32 +29,26 @@ public class StockAndPricingHandler implements OrderHandler {
             if (rowsUpdated == 0) {
                 throw new RuntimeException("Not enough stock available for this product.");
             }
-
             // 1. Stock Check & Update
             if (product.getStockCount() < cartItem.getQuantity()) {
                 throw new RuntimeException("Insufficient Stock");
             }
-
             // 2. Dynamic Price Calculation
             long calculatedPrice = product.getPrice();
             if (product.getDiscountPercentage() != null && product.getDiscountPercentage() > 0) {
                 long discountAmount = (product.getPrice() * product.getDiscountPercentage()) / 100;
                 calculatedPrice = product.getPrice() - discountAmount;
             }
-
             BigDecimal price = BigDecimal.valueOf(calculatedPrice);
             OrderItem orderItem = OrderItem.builder()
                     .product(product)
                     .quantity(cartItem.getQuantity())
                     .price(price)
                     .build();
-
             totalAmount = totalAmount.add(price.multiply(BigDecimal.valueOf(cartItem.getQuantity())));
             orderItemList.add(orderItem);
         }
-
         context.setOrderItems(orderItemList);
         context.setTotalAmount(totalAmount);
     }
 }
-

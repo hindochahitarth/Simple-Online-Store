@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.order;
-
 import lombok.RequiredArgsConstructor;
 import org.example.simpleonlinestore.entity.Address;
 import org.example.simpleonlinestore.repository.AddressRepository;
@@ -17,11 +16,9 @@ public class AddressValidationHandler implements OrderHandler {
     public void handle(OrderContext context) {
         Address address = addressRepository.findById(context.getAddressId())
                 .orElseThrow(() -> new RuntimeException("Address Not Found"));
-
         if (!address.getUser().getId().equals(context.getUser().getId())) {
             throw new RuntimeException("This address does not belong to you.");
         }
         context.setAddress(address);
     }
 }
-

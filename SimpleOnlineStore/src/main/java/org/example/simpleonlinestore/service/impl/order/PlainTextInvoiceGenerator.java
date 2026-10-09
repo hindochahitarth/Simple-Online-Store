@@ -1,9 +1,7 @@
 package org.example.simpleonlinestore.service.impl.order;
-
 import org.example.simpleonlinestore.entity.Order;
 import org.example.simpleonlinestore.entity.OrderItem;
 import org.example.simpleonlinestore.service.interfaces.InvoiceGenerator;
-
 import java.math.BigDecimal;
 
 public class PlainTextInvoiceGenerator implements InvoiceGenerator {

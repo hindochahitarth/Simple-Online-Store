@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.order;
-
 import lombok.RequiredArgsConstructor;
 import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.repository.CartRepository;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CartValidationHandler implements OrderHandler {
     private final CartRepository cartRepository;
-
     @Override
     public void handle(OrderContext context) {
         Cart cart = cartRepository.findByUserId(context.getUser().getId())
@@ -24,4 +22,3 @@ public class CartValidationHandler implements OrderHandler {
         context.setCart(cart);
     }
 }
-

@@ -1,5 +1,4 @@
 package org.example.simpleonlinestore.service.impl.order;
-
 import org.example.simpleonlinestore.entity.Order;
 import org.example.simpleonlinestore.entity.OrderItem;
 import org.example.simpleonlinestore.entity.Product;
@@ -14,14 +13,12 @@ public class PaymentPendingState implements OrderState {
         order.setRazorpayPaymentId(paymentId);
         order.setState(new PlacedState());
     }
-
     @Override
     public void paymentFailed(Order order, ProductRepository productRepository) {
         order.setStatus(OrderStatus.PAYMENT_FAILED);
         restockInventory(order,productRepository);
         order.setState(new PaymentFailedState());
     }
-
     @Override
     public void cancelOrder(Order order, ProductRepository productRepository) {
         order.setStatus(OrderStatus.CANCELED);
