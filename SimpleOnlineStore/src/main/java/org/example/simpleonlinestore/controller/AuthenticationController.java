@@ -1,10 +1,7 @@
 package org.example.simpleonlinestore.controller;
 
 import jakarta.validation.Valid;
-import org.example.simpleonlinestore.DTO.LoginResponseDTO;
-import org.example.simpleonlinestore.DTO.LoginUserDTO;
-import org.example.simpleonlinestore.DTO.ResetPasswordRequestDTO;
-import org.example.simpleonlinestore.DTO.UserRequestDTO;
+import org.example.simpleonlinestore.DTO.*;
 import org.example.simpleonlinestore.config.JwtService;
 import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.service.impl.auth.AuthenticationServiceImpl;
@@ -17,7 +14,6 @@ import java.util.Map;
 @RestController
 public class AuthenticationController {
     private final JwtService jwtService;
-
     private final AuthenticationServiceImpl authenticationService;
 
     public AuthenticationController(JwtService jwtService, AuthenticationServiceImpl authenticationService) {
@@ -36,8 +32,9 @@ public class AuthenticationController {
         );
     }
     @PostMapping("/verify")
-    public ResponseEntity<Map<String, String>> verifyOtp(@RequestParam String email, @RequestParam String otp) {
-        authenticationService.verifyOtp(email, otp);
+    public ResponseEntity<Map<String, String>> verifyOtp(@RequestBody OtpRequest otpRequest) {
+
+        authenticationService.verifyOtp(otpRequest.getEmail(),otpRequest.getOtp());
         return ResponseEntity.ok(
                 Map.of(
                         "status","Success",

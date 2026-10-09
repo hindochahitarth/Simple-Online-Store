@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
                                 .discountPercentage(request.getDiscountPercentage())
                                 .isActive(request.getIsActive()!=null ? request.getIsActive():true)
                                 .build();
-        return productRepository.save(product);
+        return productRepository.save(updatedProduct);
     }
     public Optional<Product> getProductById(Long id){
         Product product=productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
