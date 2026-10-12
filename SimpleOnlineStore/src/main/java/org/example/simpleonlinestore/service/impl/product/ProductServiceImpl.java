@@ -92,6 +92,9 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByCategoryName(categoryName);
     }
     public Product addStock(Long id, Long quantityToAdd) {
+        if(quantityToAdd<0){
+            throw new RuntimeException("New Stock Quantity cannot be less than 0");
+        }
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
         Product updatedProduct=product.toBuilder()
