@@ -51,8 +51,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(loginResponse);
     }
     @PostMapping("/resendOtp")
-    public ResponseEntity<Map<String,String>> resendOtp(@RequestParam String email){
-        authenticationService.resendOtp(email);
+    public ResponseEntity<Map<String,String>> resendOtp(@RequestBody ResendOtpRequest resendOtpRequest){
+        authenticationService.resendOtp(resendOtpRequest.getEmail());
         return ResponseEntity.ok(
                 Map.of(
                         "status","Success",
