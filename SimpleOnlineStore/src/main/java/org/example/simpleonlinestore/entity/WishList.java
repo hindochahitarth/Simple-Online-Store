@@ -19,16 +19,17 @@ import java.util.List;
 public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private Long id;
 
     @OneToOne
     private User user;
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "wishlist_products",
+            joinColumns = @JoinColumn(name = "wishlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    @JoinColumn(name = "wishlist_id")
     private List<Product> productList=new ArrayList<>();
     private LocalDateTime createdAt=LocalDateTime.now();
     private LocalDateTime updatedAt=LocalDateTime.now();

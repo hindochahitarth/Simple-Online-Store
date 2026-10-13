@@ -1,5 +1,6 @@
 package org.example.simpleonlinestore.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -58,6 +59,10 @@ public class Product {
     @JsonManagedReference
     private List<ProductReview> reviews;
     private Boolean isActive;
+
+    @ManyToMany(mappedBy = "productList")
+    @JsonIgnore
+    private List<WishList> wishList;
 
     @PrePersist
     protected void onCreate() {
