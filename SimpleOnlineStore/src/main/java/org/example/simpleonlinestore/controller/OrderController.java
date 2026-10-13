@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +69,12 @@ public class OrderController {
         applicationEventPublisher.publishEvent(new OrderPlacedEvent(orderId));
         return ResponseEntity.ok("Invoice email sent successfully to ");
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/total-revenue")
+    public ResponseEntity<BigDecimal> getTotalAmountofAllOrders(){
+        BigDecimal totalAmount=orderService.getTotalAmountAllOrders();
+        return ResponseEntity.ok(totalAmount);
+    }
 }
 
+    

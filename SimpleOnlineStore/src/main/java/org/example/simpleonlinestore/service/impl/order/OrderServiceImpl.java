@@ -11,6 +11,8 @@ import org.example.simpleonlinestore.service.interfaces.OrderService;
 import org.example.simpleonlinestore.service.interfaces.PaymentStrategy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -126,5 +128,11 @@ public class OrderServiceImpl implements OrderService {
             generator=new HtmlInvoiceDecorator(new TaxInvoiceDecorator(new PlainTextInvoiceGenerator()));
         }
         return generator.generate(order);
+    }
+
+    @Override
+    public BigDecimal getTotalAmountAllOrders() {
+        BigDecimal total=orderRepository.getTotalAmountAllOrders();
+        return total!=null ?total:BigDecimal.ZERO;
     }
 }
