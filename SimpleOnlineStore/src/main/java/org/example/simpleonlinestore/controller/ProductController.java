@@ -6,6 +6,7 @@ import org.example.simpleonlinestore.DTO.ProductRequestDTO;
 import org.example.simpleonlinestore.DTO.ProductResponseDTO;
 import org.example.simpleonlinestore.entity.Product;
 import org.example.simpleonlinestore.service.impl.product.ProductServiceImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,10 +42,11 @@ public class ProductController {
     @GetMapping("/get-all-products")
     public ResponseEntity<Page<Product>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sort)
+    {
+        Sort.Direction direction="desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC:Sort.Direction.ASC;
+        Pageable pageable=PageRequest.of(page,size,Sort.by(direction,"price"));
         return ResponseEntity.ok(
                 productService.getAllProducts(pageable)
         );

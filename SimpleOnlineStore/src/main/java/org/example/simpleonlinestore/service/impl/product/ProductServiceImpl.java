@@ -10,6 +10,8 @@ import org.example.simpleonlinestore.repository.CategoryRepository;
 import org.example.simpleonlinestore.repository.ImageRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.service.interfaces.ProductService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,6 +66,13 @@ public class ProductServiceImpl implements ProductService {
     public Page<Product> getAllProducts(Pageable pageable) {
         if (pageable.getPageSize() <= 0) {
             throw new IllegalArgumentException("Page size must be greater than zero");
+        }
+        if(pageable.getSort().isUnsorted()){
+            pageable= PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    Sort.by(Sort.Direction.ASC,"price")
+            );
         }
         return productRepository.findAll(pageable);
     }

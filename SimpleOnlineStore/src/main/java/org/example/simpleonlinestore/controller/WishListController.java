@@ -24,5 +24,10 @@ public class WishListController {
         WishList updatedList=wishListService.addProductToWishList(productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(updatedList);
     }
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<WishList> removeProductFromWishList(@PathVariable Long productId){
+        WishList updatedWishList=wishListService.removeProductFromWishList(productId);
+        return ResponseEntity.ok(updatedWishList);
+    }
 
 }

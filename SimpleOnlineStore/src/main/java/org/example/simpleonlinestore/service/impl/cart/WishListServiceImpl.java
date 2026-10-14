@@ -50,4 +50,15 @@ public class WishListServiceImpl implements WishListService {
         wishList.addProduct(product);
         return wishListRepository.saveAndFlush(wishList);
     }
+
+    @Override
+    @Transactional
+    public WishList removeProductFromWishList(Long productId) {
+        WishList wishList=getWishList();
+
+        Product product=productRepository.findById(productId).orElseThrow(()->new RuntimeException("Product with given id does not exist"));
+        wishList.removeProduct(product);
+        return wishListRepository.saveAndFlush(wishList);
+    }
+
 }
