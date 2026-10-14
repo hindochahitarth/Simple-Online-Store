@@ -8,6 +8,6 @@ import java.util.Set;
 
 public interface UserService {
     User addAddress(String email, AddressDTO dto);
-    Set<Address> getAllAddresses();
-    User removeAddress(Address address);
+    List<Address> getAllAddresses();
+    User removeAddress(Long addressId);
 }

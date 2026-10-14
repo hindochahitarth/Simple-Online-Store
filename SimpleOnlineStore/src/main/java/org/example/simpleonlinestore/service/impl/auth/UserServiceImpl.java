@@ -3,32 +3,37 @@ import jakarta.transaction.Transactional;
 import org.example.simpleonlinestore.DTO.AddressDTO;
 import org.example.simpleonlinestore.entity.Address;
 import org.example.simpleonlinestore.entity.User;
+import org.example.simpleonlinestore.exception.ResourceNotFoundException;
+import org.example.simpleonlinestore.repository.AddressRepository;
 import org.example.simpleonlinestore.repository.UserRepository;
 import org.example.simpleonlinestore.service.interfaces.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
 
-    public UserServiceImpl(UserRepository userRepository){
+    public UserServiceImpl(UserRepository userRepository, AddressRepository addressRepository){
         this.userRepository=userRepository;
+        this.addressRepository = addressRepository;
     }
     @Transactional
     public User addAddress(String email, AddressDTO dto){
-        User user=userRepository.findByEmailId(email).orElseThrow(() -> new RuntimeException(
-                "User with email "+email+" does not exist"
-        ));
-        for (Address existing : user.getAddresses()) {
-            if (existing.getAddressLine1().equals(dto.getAddressLine1()) &&
-                    existing.getPostalCode().equals(dto.getPostalCode())) {
-
-                throw new RuntimeException("This Address already exists");
-            }
+        User user = getLoggedInUser();
+// Check if the current logged-in user already has this specific address details
+        boolean addressExistsForUser = user.getAddresses().stream()
+                .anyMatch(existing ->
+                        Objects.equals(existing.getAddressLine2(), dto.getAddressLine2()) &&
+                                Objects.equals(existing.getPostalCode(), dto.getPostalCode())
+                );
+        if (addressExistsForUser) {
+            throw new RuntimeException("You have already added this address to your profile.");
         }
         Address address=Address.builder()
                         .addressLine1(dto.getAddressLine1())
@@ -51,15 +56,24 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
     }
     @Override
-    public Set<Address> getAllAddresses() {
+    public List<Address> getAllAddresses() {
         User user=getLoggedInUser();
         return user.getAddresses();
     }
 
     @Override
-    public User removeAddress(Address address) {
-        User user=getLoggedInUser();
-        user.removeAddress(address);
+    public User removeAddress(Long addressId) {
+        User user = getLoggedInUser();
+        boolean removed = user.getAddresses().removeIf(address -> {
+            if (address.getId().equals(addressId)) {
+                address.setUser(null); // Triggers orphan removal safely
+                return true;
+            }
+            return false;
+        });
+        if (!removed) {
+            throw new ResourceNotFoundException("Address not found or doesn't belong to this user");
+        }
         return userRepository.save(user);
     }
 }

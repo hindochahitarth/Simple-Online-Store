@@ -30,13 +30,13 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
     @GetMapping("/addresses")
-    public ResponseEntity<Set<Address>> getAddresses(){
-        Set<Address> addressList=userService.getAllAddresses();
+    public ResponseEntity<List<Address>> getAddresses(){
+        List<Address> addressList=userService.getAllAddresses();
         return ResponseEntity.ok(addressList);
     }
     @DeleteMapping("/delete-address/{addressId}")
-    public ResponseEntity<User> removeAddress(@PathVariable Address id){
-        userService.removeAddress(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<User> removeAddress(@PathVariable Long addressId){
+        User updatedUser=userService.removeAddress(addressId);
+        return ResponseEntity.ok(updatedUser);
     }
 }

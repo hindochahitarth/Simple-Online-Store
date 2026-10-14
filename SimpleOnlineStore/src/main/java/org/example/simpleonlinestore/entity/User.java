@@ -54,7 +54,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Prevents infinite recursion during JSON serialization
-    private Set<Address> addresses = new HashSet<>();
+    private List<Address> addresses = new ArrayList<>();
 
     @Column(nullable = false)
     private boolean verified=false;
@@ -65,7 +65,7 @@ public class User implements UserDetails {
     }
 
     public void removeAddress(Address address) {
-        addresses.remove(address);
+        this.addresses.remove(address);
         address.setUser(null);
     }
 
