@@ -1,8 +1,7 @@
 package org.example.simpleonlinestore.entity;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+
 import org.example.simpleonlinestore.enums.Roles;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -55,7 +54,7 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Prevents infinite recursion during JSON serialization
-    private List<Address> addresses = new ArrayList<>();
+    private Set<Address> addresses = new HashSet<>();
 
     @Column(nullable = false)
     private boolean verified=false;

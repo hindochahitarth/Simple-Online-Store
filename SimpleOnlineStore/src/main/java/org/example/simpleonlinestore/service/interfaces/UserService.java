@@ -4,8 +4,10 @@ import org.example.simpleonlinestore.entity.Address;
 import org.example.simpleonlinestore.entity.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
     User addAddress(String email, AddressDTO dto);
-    List<Address> getAllAddresses();
+    Set<Address> getAllAddresses();
+    User removeAddress(Address address);
 }

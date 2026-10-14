@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,6 +23,13 @@ public class UserServiceImpl implements UserService {
         User user=userRepository.findByEmailId(email).orElseThrow(() -> new RuntimeException(
                 "User with email "+email+" does not exist"
         ));
+        for (Address existing : user.getAddresses()) {
+            if (existing.getAddressLine1().equals(dto.getAddressLine1()) &&
+                    existing.getPostalCode().equals(dto.getPostalCode())) {
+
+                throw new RuntimeException("This Address already exists");
+            }
+        }
         Address address=Address.builder()
                         .addressLine1(dto.getAddressLine1())
                         .addressLine2(dto.getAddressLine2())
@@ -43,8 +51,15 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
     }
     @Override
-    public List<Address> getAllAddresses() {
+    public Set<Address> getAllAddresses() {
         User user=getLoggedInUser();
         return user.getAddresses();
+    }
+
+    @Override
+    public User removeAddress(Address address) {
+        User user=getLoggedInUser();
+        user.removeAddress(address);
+        return userRepository.save(user);
     }
 }
