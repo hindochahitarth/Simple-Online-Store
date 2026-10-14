@@ -5,7 +5,10 @@ import org.example.simpleonlinestore.entity.Address;
 import org.example.simpleonlinestore.entity.User;
 import org.example.simpleonlinestore.repository.UserRepository;
 import org.example.simpleonlinestore.service.interfaces.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,6 +35,16 @@ public class UserServiceImpl implements UserService {
         user.addAddress(address);
         return userRepository.save(user);
     }
+    private User getLoggedInUser() {
+        String email = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getName();
+        return userRepository.findByEmailId(email)
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
+    }
+    @Override
+    public List<Address> getAllAddresses() {
+        User user=getLoggedInUser();
+        return user.getAddresses();
+    }
 }
-
-
