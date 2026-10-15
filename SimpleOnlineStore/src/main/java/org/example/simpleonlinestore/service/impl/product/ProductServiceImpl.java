@@ -12,6 +12,7 @@ import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.service.interfaces.ProductService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableArgumentResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,11 +27,13 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
+    private final PageableArgumentResolver pageableArgumentResolver;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ImageRepository imageRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ImageRepository imageRepository, ProductMapper productMapper, PageableArgumentResolver pageableArgumentResolver) {
         this.productRepository = productRepository;
         this.categoryRepository=categoryRepository;
         this.productMapper = productMapper;
+        this.pageableArgumentResolver = pageableArgumentResolver;
     }
 
     public ProductResponseDTO createProduct(ProductRequestDTO request) throws IOException {
@@ -89,6 +92,8 @@ public class ProductServiceImpl implements ProductService {
                                 .price(request.getPrice())
                                 .stockCount(request.getStockCount())
                                 .discountPercentage(request.getDiscountPercentage())
+                                .colors(request.getColors())
+                                .sizes(request.getSizes())
                                 .isActive(request.getIsActive()!=null ? request.getIsActive():true)
                                 .build();
         return productRepository.save(updatedProduct);
@@ -132,5 +137,22 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalArgumentException("Page size must be greater than zero");
         }
         return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
+    }
+
+    @Override
+    public Page<ProductResponseDTO> getProductsByPriceRange(Long minPrice, Long maxPrice, Pageable pageable) {
+        if(minPrice==null){
+            Long dbMin=productRepository.getMinPrice();
+            minPrice=(dbMin!=null) ? dbMin:0L;
+        }
+        if(maxPrice==null){
+            Long dbMax=productRepository.getMaxPrice();
+            maxPrice=(dbMax!=null)?dbMax:Long.MAX_VALUE;
+        }
+        if(pageable.getSort().isUnsorted()){
+            pageable=PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),Sort.by("price").ascending());
+        }
+        Page<Product> productPage=productRepository.findByPriceRange(minPrice,maxPrice,pageable);
+        return productPage.map(productMapper::toResponseDTO);
     }
 }

@@ -7,13 +7,16 @@ import org.example.simpleonlinestore.DTO.ProductResponseDTO;
 import org.example.simpleonlinestore.entity.Product;
 import org.example.simpleonlinestore.service.impl.product.ProductServiceImpl;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -110,4 +113,19 @@ public class ProductController {
                 productService.searchProducts(keyword, pageable)
         );
     }
+    @GetMapping("/filter-price")
+    public ResponseEntity<?> getProductsByPriceRange(
+        @RequestParam(value = "minPrice",required = false) Long minPrice,
+        @RequestParam(value = "maxPrice",required = false) Long maxPrice,
+        @PageableDefault(size = 10) Pageable pageable)
+        {
+            Page<ProductResponseDTO> resultPage=productService.getProductsByPriceRange(minPrice,maxPrice,pageable);
+
+            if(resultPage.isEmpty()){
+                Map<String,String> fallbackResponse=new HashMap<>();
+                fallbackResponse.put("message","No products found within specified range");
+                return new ResponseEntity<>(fallbackResponse,HttpStatus.NOT_FOUND);
+            }
+            return ResponseEntity.ok(resultPage);
+        }
 }

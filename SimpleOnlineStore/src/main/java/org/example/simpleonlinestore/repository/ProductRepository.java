@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findByCategoryName(String categoryName);
@@ -24,5 +25,13 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     @Query("UPDATE Product p SET p.stockCount = p.stockCount - :quantity WHERE p.id = :productId AND p.stockCount >= :quantity")
     int decreaseStock(@Param("productId") Long productId, @Param("quantity") Integer quantity);
 
+    @Query("SELECT p FROM Product p WHERE p.price >= :minPrice AND p.price <= :maxPrice")
+    Page<Product> findByPriceRange(@Param("minPrice") Long minPrice, @Param("maxPrice") Long maxPrice, Pageable pageable);
+    
+    @Query("SELECT MIN(p.price) FROM Product p")
+    Long getMinPrice();
+
+    @Query("SELECT MAX(p.price) FROM Product p")
+    Long getMaxPrice();
 
 }

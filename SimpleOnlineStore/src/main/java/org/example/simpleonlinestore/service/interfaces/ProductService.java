@@ -18,4 +18,5 @@ public interface ProductService {
     Product addStock(Long id, Long quantityToAdd);
     Product updateDiscountPercentage(Long id, Integer discountPercentage);
     Page<Product> searchProducts(String keyword, Pageable pageable);
+    Page<ProductResponseDTO> getProductsByPriceRange(Long minPrice, Long maxPrice, Pageable pageable);
 }
