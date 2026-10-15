@@ -64,6 +64,16 @@ public class Product {
     @JsonIgnore
     private List<WishList> wishList;
 
+    @ElementCollection
+    @CollectionTable(name = "product_colors", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "color")
+    private List<String> colors;
+
+    @ElementCollection
+    @CollectionTable(name = "product_sizes", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "size")
+    private List<String> sizes;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

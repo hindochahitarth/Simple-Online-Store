@@ -2,6 +2,8 @@ package org.example.simpleonlinestore.DTO;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.List;
+
 @Getter
 @Setter
 public class ProductResponseDTO {
@@ -17,4 +19,6 @@ public class ProductResponseDTO {
     private LocalDate manufacturingDate;
     private LocalDate expiryDate;
     private Boolean isActive;
+    private List<String> colors;
+    private List<String> sizes;
 }

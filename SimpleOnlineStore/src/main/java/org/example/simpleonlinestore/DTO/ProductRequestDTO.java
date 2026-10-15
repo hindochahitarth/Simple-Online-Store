@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
+import java.util.List;
+
 @Getter
 @Setter
 public class ProductRequestDTO {
@@ -19,7 +21,7 @@ public class ProductRequestDTO {
     @NotNull(message = "Price cannot be empty")
     private Long price;
 
-    private String url; 
+    private String url;
 
     private Long categoryId;
     @Min(value = 0, message = "Discount cannot be a negative number.")
@@ -38,4 +40,6 @@ public class ProductRequestDTO {
     private Boolean isActive;
 
     private MultipartFile file;
+    private List<String> colors;
+    private List<String> sizes;
 }

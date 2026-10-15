@@ -58,9 +58,14 @@ public class ProductServiceImpl implements ProductService {
                         .category(category)
                         .stockCount(request.getStockCount())
                         .imageUrl(file.getOriginalFilename())
+                        .colors(request.getColors())
+                        .sizes(request.getSizes())
                         .build();
         Product savedProduct= productRepository.save(product);
-        return productMapper.toResponseDTO(savedProduct);
+        ProductResponseDTO responseDTO=productMapper.toResponseDTO(savedProduct);
+        responseDTO.setColors(request.getColors());
+        responseDTO.setSizes(request.getSizes());
+        return responseDTO;
     }
 
     public Page<Product> getAllProducts(Pageable pageable) {
