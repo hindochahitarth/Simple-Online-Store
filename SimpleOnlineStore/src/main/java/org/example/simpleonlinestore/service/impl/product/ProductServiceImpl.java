@@ -155,4 +155,17 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> productPage=productRepository.findByPriceRange(minPrice,maxPrice,pageable);
         return productPage.map(productMapper::toResponseDTO);
     }
+    public Page<Product> getProductsByName(Pageable pageable) {
+        if (pageable.getPageSize() <= 0) {
+            throw new IllegalArgumentException("Page size must be greater than zero");
+        }
+        if(pageable.getSort().isUnsorted()){
+            pageable= PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    Sort.by(Sort.Direction.ASC,"name")
+            );
+        }
+        return productRepository.findAll(pageable);
+    }
 }

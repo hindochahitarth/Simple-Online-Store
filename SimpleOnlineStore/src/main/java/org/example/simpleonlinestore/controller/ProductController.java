@@ -128,4 +128,17 @@ public class ProductController {
             }
             return ResponseEntity.ok(resultPage);
         }
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/get-products-by-name")
+    public ResponseEntity<Page<Product>> getProductsByName(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sort)
+    {
+        Sort.Direction direction="desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC:Sort.Direction.ASC;
+        Pageable pageable=PageRequest.of(page,size,Sort.by(direction,"name"));
+        return ResponseEntity.ok(
+                productService.getAllProducts(pageable)
+        );
+    }
 }

@@ -19,4 +19,5 @@ public interface ProductService {
     Product updateDiscountPercentage(Long id, Integer discountPercentage);
     Page<Product> searchProducts(String keyword, Pageable pageable);
     Page<ProductResponseDTO> getProductsByPriceRange(Long minPrice, Long maxPrice, Pageable pageable);
+    Page<Product> getProductsByName(Pageable pageable);
 }
