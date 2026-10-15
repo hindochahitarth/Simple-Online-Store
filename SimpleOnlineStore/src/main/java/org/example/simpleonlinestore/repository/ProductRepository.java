@@ -27,11 +27,17 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     @Query("SELECT p FROM Product p WHERE p.price >= :minPrice AND p.price <= :maxPrice")
     Page<Product> findByPriceRange(@Param("minPrice") Long minPrice, @Param("maxPrice") Long maxPrice, Pageable pageable);
-    
+
     @Query("SELECT MIN(p.price) FROM Product p")
     Long getMinPrice();
 
     @Query("SELECT MAX(p.price) FROM Product p")
     Long getMaxPrice();
+    @Query(value = "SELECT DISTINCT p FROM Product p JOIN p.colors c WHERE p.category.id = :categoryId AND LOWER(c) IN :colors",
+            countQuery = "SELECT COUNT(DISTINCT p) FROM Product p JOIN p.colors c WHERE p.category.id = :categoryId AND LOWER(c) IN :colors")
+    Page<Product> searchByCategoryAndColors(
+            @Param("categoryId") Long categoryId,
+            @Param("colors") List<String> colors,
+            Pageable pageable);
 
 }

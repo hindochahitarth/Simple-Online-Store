@@ -168,4 +168,12 @@ public class ProductServiceImpl implements ProductService {
         }
         return productRepository.findAll(pageable);
     }
+
+    @Override
+    public Page<Product> getProductsByCategoryAndColors(Long categoryId, List<String> colors, Pageable pageable) {
+        List<String> lowerCaseColors = colors.stream()
+                .map(color -> color.trim().toLowerCase())
+                .toList();
+        return productRepository.searchByCategoryAndColors(categoryId,lowerCaseColors,pageable);
+    }
 }

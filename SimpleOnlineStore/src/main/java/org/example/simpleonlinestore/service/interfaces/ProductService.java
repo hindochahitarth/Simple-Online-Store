@@ -20,4 +20,5 @@ public interface ProductService {
     Page<Product> searchProducts(String keyword, Pageable pageable);
     Page<ProductResponseDTO> getProductsByPriceRange(Long minPrice, Long maxPrice, Pageable pageable);
     Page<Product> getProductsByName(Pageable pageable);
+    Page<Product> getProductsByCategoryAndColors(Long categoryId, List<String> colors, Pageable pageable);
 }

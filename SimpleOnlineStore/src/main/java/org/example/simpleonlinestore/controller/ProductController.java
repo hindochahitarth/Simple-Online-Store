@@ -141,4 +141,33 @@ public class ProductController {
                 productService.getAllProducts(pageable)
         );
     }
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/get-products-by-discount")
+    public ResponseEntity<Page<Product>> getProductsByDiscount(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sort)
+    {
+        Sort.Direction direction="desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC:Sort.Direction.ASC;
+        Pageable pageable=PageRequest.of(page,size,Sort.by(direction,"discountPercentage"));
+        return ResponseEntity.ok(
+                productService.getAllProducts(pageable)
+        );
+    }
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/{categoryId}/get-products-by-colors")
+    public ResponseEntity<Page<Product>> getProductsByCategoryAndColor(
+            @PathVariable Long categoryId,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sort)
+    {
+        Sort.Direction direction="desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC:Sort.Direction.ASC;
+        Pageable pageable=PageRequest.of(page,size,Sort.by(direction,"discountPercentage"));
+        return ResponseEntity.ok(
+                productService.getProductsByCategoryAndColors(categoryId,colors,pageable)
+        );
+    }
+
 }
