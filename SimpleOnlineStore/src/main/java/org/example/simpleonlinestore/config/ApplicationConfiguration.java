@@ -22,6 +22,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService() {
+        // during login we are using username for fetching user
         // during login by fetching user details
         return username -> {
 
