@@ -24,5 +24,6 @@ public interface ProductService {
     Page<Product> getDiscountedProducts(Pageable pageable);
     Page<Product> getRecentArrivalsProducts(Pageable pageable);
     Page<Product> getProductsByCategoryAndSizes(Long categoryId, List<String> sizes, Pageable pageable);
+    Page<Product> getProductsByCategoryAndSizesAndColors(Long categoryId, List<String> colors,List<String> sizes, Pageable pageable);
 
 }

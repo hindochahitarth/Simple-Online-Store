@@ -60,4 +60,11 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
             @Param("sizes") List<String> sizes,
             Pageable pageable);
 
+    @Query(value = "SELECT DISTINCT p FROM Product p JOIN p.sizes s JOIN p.colors c WHERE p.category.id = :categoryId AND LOWER(s) IN :sizes AND LOWER(c) IN :colors")
+    Page<Product> searchByCategoryAndSizesAndColors(
+            @Param("categoryId") Long categoryId,
+            @Param("sizes") List<String> sizes,
+            @Param("colors") List<String> colors,
+            Pageable pageable
+    );
 }

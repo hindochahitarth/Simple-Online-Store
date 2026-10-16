@@ -203,4 +203,21 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.searchByCategoryAndSizes(categoryId,lowerCaseSizes,pageable);
 
     }
+
+    @Override
+    public Page<Product> getProductsByCategoryAndSizesAndColors(Long categoryId, List<String> colors, List<String> sizes, Pageable pageable) {
+        if(sizes==null || sizes.isEmpty()){
+            return  productRepository.findByCategoryId(categoryId,pageable);
+        }
+        List<String>  lowerCaseSizes = sizes.stream()
+                .map(size-> size.trim().toLowerCase())
+                .toList();
+        if(colors==null || colors.isEmpty()){
+            return  productRepository.findByCategoryId(categoryId,pageable);
+        }
+        List<String> lowerCaseColors = colors.stream()
+                .map(color -> color.trim().toLowerCase())
+                .toList();
+        return productRepository.searchByCategoryAndSizesAndColors(categoryId,sizes,colors,pageable);
+    }
 }

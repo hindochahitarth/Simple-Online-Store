@@ -198,5 +198,19 @@ public class ProductController {
                 productService.getProductsByCategoryAndSizes(categoryId, sizes, pageable)
         );
     }
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/{categoryId}/get-products-by-sizes-colors")
+    public ResponseEntity<Page<Product>> getProductsByCategoryAndSizeAndColors(
+            @PathVariable Long categoryId,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sort,
+            @RequestParam(required = false) List<String> colors) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, "discountPercentage"));
+        return ResponseEntity.ok(
+                productService.getProductsByCategoryAndSizesAndColors(categoryId,colors,sizes,pageable));
+    }
 
 }
