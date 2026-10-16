@@ -22,7 +22,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        // during login
+        // during login by fetching user details
         return username -> {
 
             return userRepository.findByEmailId(username)
