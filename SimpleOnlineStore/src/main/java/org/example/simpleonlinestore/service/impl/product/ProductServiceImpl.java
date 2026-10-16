@@ -172,6 +172,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> getProductsByCategoryAndColors(Long categoryId, List<String> colors, Pageable pageable) {
+        if(colors==null || colors.isEmpty()){
+            return  productRepository.findByCategoryId(categoryId,pageable);
+        }
         List<String> lowerCaseColors = colors.stream()
                 .map(color -> color.trim().toLowerCase())
                 .toList();
@@ -191,7 +194,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> getProductsByCategoryAndSizes(Long categoryId, List<String> sizes, Pageable pageable) {
-        List<String> lowerCaseSizes = sizes.stream()
+        if(sizes==null || sizes.isEmpty()){
+            return  productRepository.findByCategoryId(categoryId,pageable);
+        }
+        List<String>  lowerCaseSizes = sizes.stream()
                 .map(size-> size.trim().toLowerCase())
                 .toList();
         return productRepository.searchByCategoryAndSizes(categoryId,lowerCaseSizes,pageable);
