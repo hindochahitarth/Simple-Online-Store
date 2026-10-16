@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -125,7 +126,7 @@ public class ControllerExceptionHandler {
                     // Check if it's a type mismatch conversion error (like letters in a number field)
                     if ("typeMismatch".equals(fieldError.getCode())) {
                         Object rejectedValue = fieldError.getRejectedValue();
-                        return "Invalid value '" + rejectedValue + "' for field '" + fieldError.getField() + "'. Please enter a valid number.";
+                        return "Invalid value '" + rejectedValue + "' for field '" + fieldError.getField() + "'. Please enter a valid value.";
                     }
                     return fieldError.getDefaultMessage();
                 })
@@ -139,7 +140,27 @@ public class ControllerExceptionHandler {
         errorResponse.put("errors",errors);
         return errorResponse;
     }
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorMessage> handleMethodArgumentTypeMismatch(
+            MethodArgumentTypeMismatchException e, WebRequest request) {
 
+        String propertyName = e.getName();
+        Object invalidValue = e.getValue();
+        String customMessage = String.format(
+                "Invalid value '%s' provided for parameter '%s'. Please enter a valid number.",
+                invalidValue,
+                propertyName
+        );
+
+        ErrorMessage errorMessage = new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                customMessage,
+                request.getDescription(false)
+        );
+
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
 
 
 }
