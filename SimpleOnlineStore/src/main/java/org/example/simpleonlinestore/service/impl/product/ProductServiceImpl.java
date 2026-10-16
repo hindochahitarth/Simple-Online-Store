@@ -188,4 +188,13 @@ public class ProductServiceImpl implements ProductService {
         LocalDateTime dateTime=LocalDateTime.now().minusDays(15);
         return productRepository.findRecentArrivals(dateTime,pageable);
     }
+
+    @Override
+    public Page<Product> getProductsByCategoryAndSizes(Long categoryId, List<String> sizes, Pageable pageable) {
+        List<String> lowerCaseSizes = sizes.stream()
+                .map(size-> size.trim().toLowerCase())
+                .toList();
+        return productRepository.searchByCategoryAndSizes(categoryId,lowerCaseSizes,pageable);
+
+    }
 }

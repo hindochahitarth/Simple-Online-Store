@@ -51,4 +51,12 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     @Query("SELECT p FROM Product p WHERE p.createdAt >= :cutOffDate ORDER BY p.createdAt DESC")
     Page<Product> findRecentArrivals(@Param("cutOffDate") LocalDateTime cutOffDate, Pageable pageable);
+
+    @Query(value = "SELECT DISTINCT p FROM Product p JOIN p.sizes c WHERE p.category.id = :categoryId AND LOWER(c) IN :sizes",
+            countQuery = "SELECT COUNT(DISTINCT p) FROM Product p JOIN p.sizes c WHERE p.category.id = :categoryId AND LOWER(c) IN :sizes")
+    Page<Product> searchByCategoryAndSizes(
+            @Param("categoryId") Long categoryId,
+            @Param("sizes") List<String> sizes,
+            Pageable pageable);
+
 }

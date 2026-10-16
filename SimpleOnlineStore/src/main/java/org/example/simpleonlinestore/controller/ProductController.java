@@ -184,4 +184,19 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(productService.getRecentArrivalsProducts(pageable));
     }
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/{categoryId}/get-products-by-sizes")
+    public ResponseEntity<Page<Product>> getProductsByCategoryAndSize(
+            @PathVariable Long categoryId,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sort) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, "discountPercentage"));
+        return ResponseEntity.ok(
+                productService.getProductsByCategoryAndSizes(categoryId, sizes, pageable)
+        );
+    }
+
 }
