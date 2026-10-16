@@ -176,4 +176,9 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
         return productRepository.searchByCategoryAndColors(categoryId,lowerCaseColors,pageable);
     }
+
+    @Override
+    public Page<Product> getDiscountedProducts(Pageable pageable) {
+        return productRepository.findAllDiscountedProducts(pageable);
+    }
 }

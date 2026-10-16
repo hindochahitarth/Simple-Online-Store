@@ -169,5 +169,12 @@ public class ProductController {
                 productService.getProductsByCategoryAndColors(categoryId,colors,pageable)
         );
     }
+    @GetMapping("/discounted-products")
+    public ResponseEntity<Page<Product>> getAllDiscountedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size){
+            Pageable pageable=PageRequest.of(page,size);
+            return ResponseEntity.ok(productService.getDiscountedProducts(pageable));
+    }
 
 }

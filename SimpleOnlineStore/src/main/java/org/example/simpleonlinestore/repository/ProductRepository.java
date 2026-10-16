@@ -40,4 +40,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
             @Param("colors") List<String> colors,
             Pageable pageable);
 
+    @Query("SELECT p from Product p WHERE p.discountPercentage > 0")
+    Page<Product> findAllDiscountedProducts(Pageable pageable);
 }
