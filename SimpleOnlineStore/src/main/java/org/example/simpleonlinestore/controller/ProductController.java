@@ -28,15 +28,15 @@ public class ProductController {
 
     private final ProductServiceImpl productService;
 
-    public ProductController(ProductServiceImpl productService){
-        this.productService=productService;
+    public ProductController(ProductServiceImpl productService) {
+        this.productService = productService;
     }
 
     @PostMapping(value = "/create-product", consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @ModelAttribute ProductRequestDTO request) throws IOException {
         log.info("Inside Create product controller ");
-        ProductResponseDTO savedProduct=productService.createProduct(request);
+        ProductResponseDTO savedProduct = productService.createProduct(request);
 
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
@@ -46,10 +46,9 @@ public class ProductController {
     public ResponseEntity<Page<Product>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "asc") String sort)
-    {
-        Sort.Direction direction="desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC:Sort.Direction.ASC;
-        Pageable pageable=PageRequest.of(page,size,Sort.by(direction,"price"));
+            @RequestParam(defaultValue = "asc") String sort) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, "price"));
         return ResponseEntity.ok(
                 productService.getAllProducts(pageable)
         );
@@ -57,29 +56,29 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update-product/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id,@RequestBody ProductRequestDTO request){
-        Product updatedProduct=productService.updateProduct(id,request);
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProductRequestDTO request) {
+        Product updatedProduct = productService.updateProduct(id, request);
         return ResponseEntity.ok(updatedProduct);
     }
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{id}")
-    public Optional<Product> getProductById(@PathVariable Long id){
+    public Optional<Product> getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete-product/{id}")
-    public ResponseEntity<HttpStatus> deleteProductById(@PathVariable Long id){
+    public ResponseEntity<HttpStatus> deleteProductById(@PathVariable Long id) {
         productService.deleteProductById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/get-product-by-category/{categoryName}")
-    public ResponseEntity<List<Product>> getProductByCategory(@PathVariable String categoryName){
-        List<Product> products=productService.getProductByCategory(categoryName);
+    public ResponseEntity<List<Product>> getProductByCategory(@PathVariable String categoryName) {
+        List<Product> products = productService.getProductByCategory(categoryName);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
@@ -113,47 +112,48 @@ public class ProductController {
                 productService.searchProducts(keyword, pageable)
         );
     }
+
     @GetMapping("/filter-price")
     public ResponseEntity<?> getProductsByPriceRange(
-        @RequestParam(value = "minPrice",required = false) Long minPrice,
-        @RequestParam(value = "maxPrice",required = false) Long maxPrice,
-        @PageableDefault(size = 10) Pageable pageable)
-        {
-            Page<ProductResponseDTO> resultPage=productService.getProductsByPriceRange(minPrice,maxPrice,pageable);
+            @RequestParam(value = "minPrice", required = false) Long minPrice,
+            @RequestParam(value = "maxPrice", required = false) Long maxPrice,
+            @PageableDefault(size = 10) Pageable pageable) {
+        Page<ProductResponseDTO> resultPage = productService.getProductsByPriceRange(minPrice, maxPrice, pageable);
 
-            if(resultPage.isEmpty()){
-                Map<String,String> fallbackResponse=new HashMap<>();
-                fallbackResponse.put("message","No products found within specified range");
-                return new ResponseEntity<>(fallbackResponse,HttpStatus.NOT_FOUND);
-            }
-            return ResponseEntity.ok(resultPage);
+        if (resultPage.isEmpty()) {
+            Map<String, String> fallbackResponse = new HashMap<>();
+            fallbackResponse.put("message", "No products found within specified range");
+            return new ResponseEntity<>(fallbackResponse, HttpStatus.NOT_FOUND);
         }
+        return ResponseEntity.ok(resultPage);
+    }
+
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/get-products-by-name")
     public ResponseEntity<Page<Product>> getProductsByName(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "asc") String sort)
-    {
-        Sort.Direction direction="desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC:Sort.Direction.ASC;
-        Pageable pageable=PageRequest.of(page,size,Sort.by(direction,"name"));
+            @RequestParam(defaultValue = "asc") String sort) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, "name"));
         return ResponseEntity.ok(
                 productService.getAllProducts(pageable)
         );
     }
+
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/get-products-by-discount")
     public ResponseEntity<Page<Product>> getProductsByDiscount(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "asc") String sort)
-    {
-        Sort.Direction direction="desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC:Sort.Direction.ASC;
-        Pageable pageable=PageRequest.of(page,size,Sort.by(direction,"discountPercentage"));
+            @RequestParam(defaultValue = "asc") String sort) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, "discountPercentage"));
         return ResponseEntity.ok(
                 productService.getAllProducts(pageable)
         );
     }
+
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/{categoryId}/get-products-by-colors")
     public ResponseEntity<Page<Product>> getProductsByCategoryAndColor(
@@ -161,20 +161,27 @@ public class ProductController {
             @RequestParam(required = false) List<String> colors,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "asc") String sort)
-    {
-        Sort.Direction direction="desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC:Sort.Direction.ASC;
-        Pageable pageable=PageRequest.of(page,size,Sort.by(direction,"discountPercentage"));
+            @RequestParam(defaultValue = "asc") String sort) {
+        Sort.Direction direction = "desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, "discountPercentage"));
         return ResponseEntity.ok(
-                productService.getProductsByCategoryAndColors(categoryId,colors,pageable)
+                productService.getProductsByCategoryAndColors(categoryId, colors, pageable)
         );
     }
+
     @GetMapping("/discounted-products")
     public ResponseEntity<Page<Product>> getAllDiscountedProducts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
-            Pageable pageable=PageRequest.of(page,size);
-            return ResponseEntity.ok(productService.getDiscountedProducts(pageable));
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(productService.getDiscountedProducts(pageable));
     }
 
+    @GetMapping("/latest-arrivals")
+    public ResponseEntity<Page<Product>> getAllLatestProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok(productService.getRecentArrivalsProducts(pageable));
+    }
 }

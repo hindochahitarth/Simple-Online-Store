@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -180,5 +181,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<Product> getDiscountedProducts(Pageable pageable) {
         return productRepository.findAllDiscountedProducts(pageable);
+    }
+
+    @Override
+    public Page<Product> getRecentArrivalsProducts(Pageable pageable) {
+        LocalDateTime dateTime=LocalDateTime.now().minusDays(15);
+        return productRepository.findRecentArrivals(dateTime,pageable);
     }
 }

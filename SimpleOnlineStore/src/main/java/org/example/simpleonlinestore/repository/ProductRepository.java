@@ -9,17 +9,22 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findByCategoryName(String categoryName);
+
     Page<Product> findByNameContainingIgnoreCase(
             String name,
             Pageable pageable
     );
+
     Page<Product> findAll(Pageable pageable);
+
     boolean existsByName(String name);
+
     @Modifying
     @Transactional
     @Query("UPDATE Product p SET p.stockCount = p.stockCount - :quantity WHERE p.id = :productId AND p.stockCount >= :quantity")
@@ -33,6 +38,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     @Query("SELECT MAX(p.price) FROM Product p")
     Long getMaxPrice();
+
     @Query(value = "SELECT DISTINCT p FROM Product p JOIN p.colors c WHERE p.category.id = :categoryId AND LOWER(c) IN :colors",
             countQuery = "SELECT COUNT(DISTINCT p) FROM Product p JOIN p.colors c WHERE p.category.id = :categoryId AND LOWER(c) IN :colors")
     Page<Product> searchByCategoryAndColors(
@@ -42,4 +48,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     @Query("SELECT p from Product p WHERE p.discountPercentage > 0")
     Page<Product> findAllDiscountedProducts(Pageable pageable);
+
+    @Query("SELECT p FROM Product p WHERE p.createdAt >= :cutOffDate ORDER BY p.createdAt DESC")
+    Page<Product> findRecentArrivals(@Param("cutOffDate") LocalDateTime cutOffDate, Pageable pageable);
 }
