@@ -2,6 +2,7 @@ package org.example.simpleonlinestore.service.impl.product;
 import org.example.simpleonlinestore.entity.Category;
 import org.example.simpleonlinestore.repository.CategoryRepository;
 import org.example.simpleonlinestore.service.interfaces.CategoryService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
@@ -12,6 +13,7 @@ public class CategoryServiceImpl implements CategoryService {
         this.categoryRepository=categoryRepository;
     }
 
+    @Cacheable(value = "Categories")
     public List<Category> getAllCategories(){
         return categoryRepository.findAll();
     }

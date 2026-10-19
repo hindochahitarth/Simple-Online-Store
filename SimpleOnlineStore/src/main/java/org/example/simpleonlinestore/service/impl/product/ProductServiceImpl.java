@@ -10,6 +10,7 @@ import org.example.simpleonlinestore.repository.CategoryRepository;
 import org.example.simpleonlinestore.repository.ImageRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.service.interfaces.ProductService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableArgumentResolver;
@@ -72,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
         return responseDTO;
     }
 
+    @Cacheable(value = "Products")
     public Page<Product> getAllProducts(Pageable pageable) {
         if (pageable.getPageSize() <= 0) {
             throw new IllegalArgumentException("Page size must be greater than zero");
@@ -107,6 +109,7 @@ public class ProductServiceImpl implements ProductService {
         Product product=productRepository.findById(id) .orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
         productRepository.deleteById(id);
     }
+    @Cacheable(value = "ProductsCategory")
     public List<Product> getProductByCategory(String categoryName){
         return productRepository.findByCategoryName(categoryName);
     }
@@ -140,6 +143,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "ProductsPriceRange")
     public Page<ProductResponseDTO> getProductsByPriceRange(Long minPrice, Long maxPrice, Pageable pageable) {
         if(minPrice==null){
             Long dbMin=productRepository.getMinPrice();
@@ -155,6 +159,7 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> productPage=productRepository.findByPriceRange(minPrice,maxPrice,pageable);
         return productPage.map(productMapper::toResponseDTO);
     }
+    @Cacheable(value = "ProductsName")
     public Page<Product> getProductsByName(Pageable pageable) {
         if (pageable.getPageSize() <= 0) {
             throw new IllegalArgumentException("Page size must be greater than zero");
@@ -170,6 +175,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "ProductsCategoryColors")
     public Page<Product> getProductsByCategoryAndColors(Long categoryId, List<String> colors, Pageable pageable) {
         if(colors==null || colors.isEmpty()){
             return  productRepository.findByCategoryId(categoryId,pageable);
@@ -181,17 +187,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "DiscountedProducts")
     public Page<Product> getDiscountedProducts(Pageable pageable) {
         return productRepository.findAllDiscountedProducts(pageable);
     }
 
     @Override
+    @Cacheable(value = "RecentProducts")
     public Page<Product> getRecentArrivalsProducts(Pageable pageable) {
         LocalDateTime dateTime=LocalDateTime.now().minusDays(15);
         return productRepository.findRecentArrivals(dateTime,pageable);
     }
 
     @Override
+    @Cacheable(value = "ProductsCategorySize")
     public Page<Product> getProductsByCategoryAndSizes(Long categoryId, List<String> sizes, Pageable pageable) {
         if(sizes==null || sizes.isEmpty()){
             return  productRepository.findByCategoryId(categoryId,pageable);
@@ -204,6 +213,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "ProductsCategorySizeColor")
     public Page<Product> getProductsByCategoryAndSizesAndColors(Long categoryId, List<String> colors, List<String> sizes, Pageable pageable) {
         if(sizes==null || sizes.isEmpty()){
             return  productRepository.findByCategoryId(categoryId,pageable);
