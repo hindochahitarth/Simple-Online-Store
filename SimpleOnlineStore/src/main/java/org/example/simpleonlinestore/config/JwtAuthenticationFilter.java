@@ -44,9 +44,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         String path = request.getServletPath();
+        String method=request.getMethod();
 
 
-        if (path.startsWith("/auth/")) {
+        if (path.startsWith("/auth/") ||
+                ("GET".equalsIgnoreCase(method) && (path.equals("/api/products/get-all-products") || path.startsWith("/api/categories/")))) {
             filterChain.doFilter(request, response);
             return;
         }
