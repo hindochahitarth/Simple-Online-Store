@@ -47,6 +47,10 @@ public class CartServiceImpl implements CartService {
                 .<CartItemState> map(ExistingItemState::new)
                 .orElseGet(NewItemState::new);
         int newQuant=state.getCurrentQuantity()+quantity;
+        final int MAX_ITEM_LIMIT = 10;
+        if (newQuant > MAX_ITEM_LIMIT) {
+            throw new RuntimeException("Cannot add more than " + MAX_ITEM_LIMIT + " units of this item to the cart");
+        }
         log.info("product.getStockCount()"+product.getStockCount()+" new quant"+newQuant);
         if(newQuant > product.getStockCount()){
             throw new RuntimeException("Insufficient Stock ");
@@ -75,13 +79,23 @@ public class CartServiceImpl implements CartService {
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst()
                 .orElse(null);
-        if(newQuantity <=0){
-            cart.getItems().remove(updateItem);
-        }else{
-            updateItem.setQuantity(newQuantity);
+        if(updateItem == null && newQuantity>0){
+            throw new RuntimeException("Item does not exist in your cart");
         }
-        if (updateItem != null){
-            productRepository.save(product);
+        if(newQuantity <=0){
+            if(updateItem!=null) {
+                cart.getItems().remove(updateItem);
+            }
+        }else{
+            final int MAX_ITEM_LIMIT = 10;
+            if (newQuantity > MAX_ITEM_LIMIT) {
+                throw new RuntimeException("Cannot add more than " + MAX_ITEM_LIMIT + " units of this item to the cart");
+            }
+            // Validate stock count before updating
+            if (newQuantity > product.getStockCount()) {
+                throw new RuntimeException("Insufficient Stock ");
+            }
+            updateItem.setQuantity(newQuantity);
         }
     return cartRepository.save(cart);
     }
