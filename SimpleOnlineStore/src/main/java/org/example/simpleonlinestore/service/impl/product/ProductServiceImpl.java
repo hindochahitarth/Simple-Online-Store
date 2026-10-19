@@ -87,17 +87,16 @@ public class ProductServiceImpl implements ProductService {
     }
     public Product updateProduct(Long id,ProductRequestDTO request){
         Product product=productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
-        Product updatedProduct=Product.builder()
-                                .name(request.getName())
-                                .description(request.getDescription())
-                                .price(request.getPrice())
-                                .stockCount(request.getStockCount())
-                                .discountPercentage(request.getDiscountPercentage())
-                                .colors(request.getColors())
-                                .sizes(request.getSizes())
-                                .isActive(request.getIsActive()!=null ? request.getIsActive():true)
-                                .build();
-        return productRepository.save(updatedProduct);
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setStockCount(request.getStockCount());
+        product.setDiscountPercentage(request.getDiscountPercentage());
+        product.setColors(request.getColors());
+        product.setSizes(request.getSizes());
+        product.setIsActive(request.getIsActive() != null ? request.getIsActive() : true);
+
+        return productRepository.save(product);
     }
     public Optional<Product> getProductById(Long id){
         Product product=productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id "+id+" not found"));
