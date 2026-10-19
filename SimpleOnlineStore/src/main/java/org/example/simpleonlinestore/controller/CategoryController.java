@@ -18,7 +18,6 @@ public class CategoryController {
         this.categoryService=categoryService;
     }
 
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @GetMapping("/get-all-categories")
     public ResponseEntity<List<Category>> getAllCategories(){
         List<Category> categories=categoryService.getAllCategories();
