@@ -85,11 +85,7 @@ public class OrderServiceImpl implements OrderService {
         }
         else {
                 order.getState().paymentFailed(order,productRepository);
-                for (OrderItem item : order.getItems()) {
-                    Product product = item.getProduct();
-                    product.setStockCount(product.getStockCount()+item.getQuantity());
-                    productRepository.save(product);
-                }
+
             return orderRepository.save(order);
         }
     }
@@ -109,11 +105,7 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Unauthorized action: This order does not belong to you.");
         }
         order.getState().cancelOrder(order,productRepository);
-        for (OrderItem item : order.getItems()) {
-            Product product = item.getProduct();
-            product.setStockCount(product.getStockCount() + item.getQuantity());
-            productRepository.save(product);
-        }
+
         return orderRepository.save(order);
     }
     @Override
