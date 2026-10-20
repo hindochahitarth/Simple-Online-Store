@@ -41,6 +41,8 @@ public class User implements UserDetails {
 
     private String lastName;
 
+
+    @Column(name = "email_id",nullable = false,unique = true)
     private String emailId;
 
     @Column(name = "password", nullable = false, length = 100)
