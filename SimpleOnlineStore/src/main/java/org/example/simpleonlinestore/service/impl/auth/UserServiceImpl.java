@@ -29,8 +29,10 @@ public class UserServiceImpl implements UserService {
 // Check if the current logged-in user already has this specific address details
         boolean addressExistsForUser = user.getAddresses().stream()
                 .anyMatch(existing ->
+                        Objects.equals(existing.getAddressLine1(), dto.getAddressLine1()) &&
                         Objects.equals(existing.getAddressLine2(), dto.getAddressLine2()) &&
-                                Objects.equals(existing.getPostalCode(), dto.getPostalCode())
+                        Objects.equals(existing.getCity(), dto.getCity()) &&
+                        Objects.equals(existing.getPostalCode(), dto.getPostalCode())
                 );
         if (addressExistsForUser) {
             throw new RuntimeException("You have already added this address to your profile.");
