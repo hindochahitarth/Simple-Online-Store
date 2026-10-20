@@ -85,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
                     Sort.by(Sort.Direction.ASC, "price")
             );
         }
-        return productRepository.findAll(pageable);
+        return productRepository.findAllWithCategory(pageable);
     }
 
     public Product updateProduct(Long id, ProductRequestDTO request) {
@@ -104,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
 
     public Optional<Product> getProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
-        return productRepository.findById(id);
+        return Optional.of(product);
     }
 
     public void deleteProductById(Long id) {
