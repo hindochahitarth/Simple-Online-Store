@@ -67,4 +67,23 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
             @Param("colors") List<String> colors,
             Pageable pageable
     );
+    @Query("SELECT DISTINCT p FROM Product p " +
+            "LEFT JOIN p.colors c " +
+            "LEFT JOIN p.sizes s " +
+            "WHERE (:categoryId IS NULL OR p.category.id = :categoryId) " +
+            "AND (:colors IS NULL OR c IN :colors) " +
+            "AND (:sizes IS NULL OR s IN :sizes) " +
+            "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
+            "AND (:latestArrivals IS NULL OR :latestArrivals = FALSE OR p.createdAt >= :cutoffDate)")
+    Page<Product> findByDynamicFilters(
+            @Param("categoryId") Long categoryId,
+            @Param("colors") List<String> colors,
+            @Param("sizes") List<String> sizes,
+            @Param("minPrice") Double minPrice,
+            @Param("maxPrice") Double maxPrice,
+            @Param("latestArrivals") Boolean latestArrivals,
+            @Param("cutoffDate") LocalDateTime cutoffDate,
+            Pageable pageable
+    );
 }

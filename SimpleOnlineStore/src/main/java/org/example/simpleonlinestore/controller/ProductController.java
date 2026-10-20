@@ -211,5 +211,24 @@ public class ProductController {
         return ResponseEntity.ok(
                 productService.getProductsByCategoryAndSizesAndColors(categoryId,colors,sizes,pageable));
     }
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("/filter")
+    public ResponseEntity<Page<Product>> getFilteredProducts(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Boolean latestArrivals,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "asc") String sort) {
 
+        Sort.Direction direction = "desc".equalsIgnoreCase(sort) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, "discountPercentage"));
+
+        return ResponseEntity.ok(
+                productService.getFilteredProducts(categoryId, colors, sizes, minPrice, maxPrice, latestArrivals, pageable)
+        );
+    }
 }
