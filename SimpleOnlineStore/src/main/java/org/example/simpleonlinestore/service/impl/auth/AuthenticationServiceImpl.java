@@ -16,6 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Slf4j
 @Service
 public class  AuthenticationServiceImpl implements AuthenticationService {
@@ -27,6 +30,7 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
     private final OtpServiceImpl otpService;
     private final UserFactory userFactory;
     private final CartFactory cartFactory;
+    private final Map<String, Integer> failedAttemptsMap = new ConcurrentHashMap<>();
 
     public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                                      AuthenticationManager authenticationManager, CartRepository cartRepository, OtpServiceImpl otpService, UserFactory userFactory, CartFactory cartFactory) {
@@ -56,8 +60,15 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
     public User verifyOtp(String email,String otp){
         boolean valid=otpService.verifyOtp(email,otp);
         if(!valid){
+            int attempts=failedAttemptsMap.merge(email,1,Integer::sum);
+            if(attempts>2){
+                failedAttemptsMap.remove(email);
+                otpService.sendOtp(email);
+                throw new RuntimeException("Too many wrong attempts.A new otp is send to your email");
+            }
             throw new RuntimeException("Invalid or Expired OTP");
         }
+        failedAttemptsMap.remove(email);
         User user=userRepository.findByEmailId(email).orElseThrow(() -> new RuntimeException("User does not exist"));
         log.info("Inside auth service value of valid is "+valid);
         log.info("Before "+String.valueOf(user.isVerified()));
