@@ -10,6 +10,7 @@ import org.example.simpleonlinestore.repository.CategoryRepository;
 import org.example.simpleonlinestore.repository.ImageRepository;
 import org.example.simpleonlinestore.repository.ProductRepository;
 import org.example.simpleonlinestore.service.interfaces.ProductService;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -37,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
         this.productMapper = productMapper;
         this.pageableArgumentResolver = pageableArgumentResolver;
     }
-
+    @CacheEvict(value = "Products", allEntries = true)
     public ProductResponseDTO createProduct(ProductRequestDTO request) throws IOException {
         if (productRepository.existsByName(request.getName())) {
             throw new RuntimeException("Product Already exists");
@@ -87,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
         }
         return productRepository.findAllWithCategory(pageable);
     }
-
+    @CacheEvict(value = "Products", allEntries = true)
     public Product updateProduct(Long id, ProductRequestDTO request) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
         product.setName(request.getName());
@@ -116,7 +117,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProductByCategory(String categoryName) {
         return productRepository.findByCategoryName(categoryName);
     }
-
+    @CacheEvict(value = "Products", allEntries = true)
     public Product addStock(Long id, Long quantityToAdd) {
         if (quantityToAdd < 0) {
             throw new RuntimeException("New Stock Quantity cannot be less than 0");
@@ -128,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
                 .build();
         return productRepository.save(updatedProduct);
     }
-
+    @CacheEvict(value = "Products", allEntries = true)
     public Product updateDiscountPercentage(Long id, Integer discountPercentage) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
