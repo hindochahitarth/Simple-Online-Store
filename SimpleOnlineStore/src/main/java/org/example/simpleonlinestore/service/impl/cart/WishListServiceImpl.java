@@ -47,6 +47,13 @@ public class WishListServiceImpl implements WishListService {
     public WishList addProductToWishList(Long productId) {
         WishList wishList=getWishList();
         Product product=productRepository.findById(productId).orElseThrow(() -> new RuntimeException("Product with given id not found "));
+        boolean productExists = wishList.getProductList().stream()
+                .anyMatch(p -> p.getId().equals(productId));
+
+        if (productExists) {
+            throw new RuntimeException("Product is already in your wishlist");
+        }
+
         wishList.addProduct(product);
         return wishListRepository.saveAndFlush(wishList);
     }
