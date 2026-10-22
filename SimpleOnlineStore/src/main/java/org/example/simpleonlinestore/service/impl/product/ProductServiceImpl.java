@@ -52,6 +52,9 @@ public class ProductServiceImpl implements ProductService {
                 .imageData(file.getBytes()) //'file.getBytes()' reads the raw binary payload of the image directly from memory into a byte array (byte[]).
                 .build();
         log.info("Inside create product service");
+        if(request.getExpiryDate().isBefore(request.getManufacturingDate())){
+            throw new RuntimeException("Expiry date cannot be before manufacturing date");
+        }
         Product product = Product.builder()
                 .name(request.getName())
                 .price(request.getPrice())
@@ -91,6 +94,12 @@ public class ProductServiceImpl implements ProductService {
     @CacheEvict(value = "Products", allEntries = true)
     public Product updateProduct(Long id, ProductRequestDTO request) {
         Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product with id " + id + " not found"));
+        if(request.getStockCount()<=0 ){
+            throw new RuntimeException("Stock count value must be greater than 0.");
+        }
+        if(request.getDiscountPercentage()<0){
+            throw new RuntimeException("Discount percentage value must be greater than or equal to  0.");
+        }
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
