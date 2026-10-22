@@ -2,6 +2,7 @@ package org.example.simpleonlinestore.service.impl.auth;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simpleonlinestore.DTO.LoginUserDTO;
+import org.example.simpleonlinestore.DTO.ResetPasswordRequestDTO;
 import org.example.simpleonlinestore.DTO.UserRequestDTO;
 import org.example.simpleonlinestore.entity.Cart;
 import org.example.simpleonlinestore.entity.User;
@@ -101,18 +102,18 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
         SecurityContextHolder.clearContext();
     }
     @Override
-    public void resetPassword(String email, String newPassword) {
+    public void resetPassword(ResetPasswordRequestDTO request) {
         // Fetch the user profile
-        User user = userRepository.findByEmailId(email)
+        User user = userRepository.findByEmailId(request.getEmailId())
                 .orElseThrow(() -> new RuntimeException("User does not exist"));
         // Encrypt and save the new password
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         if (!user.isVerified()) {
             user.setVerified(true);
         }
         userRepository.save(user);
-        log.info("Password successfully reset for user: {}", email);
+        log.info("Password successfully reset for user: {}", request.getEmailId());
     }
 }
 
