@@ -1,11 +1,11 @@
 package org.example.simpleonlinestore.DTO;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,9 +17,10 @@ public class ProductRequestDTO {
     @NotNull(message = "Description cannot be empty")
     private String description;
 
-    @Min(value = 1,message = "Price cannot be less than or equal to 0")
+    @Column(nullable = false, precision = 10, scale = 2)
     @NotNull(message = "Price cannot be empty")
-    private Long price;
+    @DecimalMin(value = "0.01", message = "Price cannot be less than or equal to 0")
+    private BigDecimal price;
 
     private String url;
 

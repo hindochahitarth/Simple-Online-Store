@@ -61,11 +61,8 @@ public class AuthenticationController {
         );
     }
     @PostMapping("/resetPassword")
-    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
-        authenticationService.resetPassword(
-                request.getEmailId(),
-                request.getNewPassword()
-        );
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody  ResetPasswordRequestDTO request) {
+        authenticationService.resetPassword(request);
         return ResponseEntity.ok("Password reset successfully. You can now login with your new password.");
     }
 }

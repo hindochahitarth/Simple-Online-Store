@@ -1,6 +1,8 @@
 package org.example.simpleonlinestore.DTO;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,7 +12,7 @@ public class ProductResponseDTO {
     private Long id;
     private String name;
     private String description;
-    private Long price;
+    private BigDecimal price;
     private String url;
     private Long categoryId;
     private String categoryName; 

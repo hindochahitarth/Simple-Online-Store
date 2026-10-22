@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,8 +28,8 @@ public class Product {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private Long price;
+    @Column(precision = 15, scale = 2, nullable = false)
+    private BigDecimal price;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")

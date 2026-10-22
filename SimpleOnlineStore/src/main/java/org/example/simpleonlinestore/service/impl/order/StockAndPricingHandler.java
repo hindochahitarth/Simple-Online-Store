@@ -34,12 +34,17 @@ public class StockAndPricingHandler implements OrderHandler {
                 throw new RuntimeException("Insufficient Stock");
             }
             // 2. Dynamic Price Calculation
-            long calculatedPrice = product.getPrice();
+            BigDecimal calculatedPrice = product.getPrice();
             if (product.getDiscountPercentage() != null && product.getDiscountPercentage() > 0) {
-                long discountAmount = (product.getPrice() * product.getDiscountPercentage()) / 100;
-                calculatedPrice = product.getPrice() - discountAmount;
+                BigDecimal discountPercentBD = BigDecimal.valueOf(product.getDiscountPercentage());
+
+                BigDecimal discountAmount = product.getPrice()
+                        .multiply(discountPercentBD)
+                        .divide(BigDecimal.valueOf(100), 2, java.math.RoundingMode.HALF_UP);
+
+                calculatedPrice = product.getPrice().subtract(discountAmount);
             }
-            BigDecimal price = BigDecimal.valueOf(calculatedPrice);
+            BigDecimal price = calculatedPrice;
             OrderItem orderItem = OrderItem.builder()
                     .product(product)
                     .quantity(cartItem.getQuantity())
